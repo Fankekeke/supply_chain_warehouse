@@ -1,6 +1,6 @@
 package com.fank.f1k2.business.controller;
 
-import cc.mrbird.febs.cos.service.SseService;
+import com.fank.f1k2.business.service.SseService;
 import com.fank.f1k2.common.utils.R;
 import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.generation.GenerationParam;

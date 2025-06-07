@@ -1,10 +1,9 @@
 <template>
   <div class="container">
-    <div class="content">
+    <div class="content" style="margin: 0 auto">
       <div class="top">
         <div class="header">
-          <img alt="logo" class="logo" src="static/img/logo.png" />
-          <span class="title">{{systemName}}</span>
+          <span class="title" style="color: #4a4a48">供应链协同采购系统</span>
         </div>
         <div class="desc"></div>
       </div>
@@ -44,61 +43,62 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: auto;
-    background: #f0f2f5 url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg') no-repeat center 110px;
-    background-size: 100%;
-    .content {
-      padding: 32px 0;
-      flex: 1;
-      @media (min-width: 768px){
-        padding: 116px 0 10px;
-      }
-      .top {
-        text-align: center;
-        .header {
-          height: 50px;
-          line-height: 50px;
-          a {
-            text-decoration: none;
-          }
-          .logo {
-            width: 40px;
-            height: 19px;
-            vertical-align: center;
-            margin-right: 16px;
-          }
-          .title {
-            font-size: 28px;
-            color: rgba(0,0,0,.85);
-            font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            font-weight: 600;
-            position: relative;
-            top: 6px;
-          }
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+  background: url(../../../static/img/house.jpg) no-repeat center ;
+  background-color: white;
+  background-size: auto;
+  .content {
+    padding: 32px 0;
+    flex: 1;
+    @media (min-width: 768px){
+      padding: 116px 0 10px;
+    }
+    .top {
+      text-align: center;
+      .header {
+        height: 50px;
+        line-height: 50px;
+        a {
+          text-decoration: none;
         }
-        .desc {
+        .logo {
+          width: 40px;
+          height: 19px;
+          vertical-align: center;
+          margin-right: 16px;
+        }
+        .title {
+          font-size: 28px;
+          color: rgba(0,0,0,.85);
+          font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+          font-weight: 600;
+          position: relative;
+          top: 6px;
+        }
+      }
+      .desc {
+        font-size: 14px;
+        color: rgba(0,0,0,.45);
+        margin-top: 12px;
+        margin-bottom: 40px;
+      }
+    }
+    .main-content {
+      width: 368px;
+      margin: 0 auto;
+      @media screen and (max-width: 576px) {
+        width: 95%;
+      }
+      @media screen and (max-width: 320px) {
+        .captcha-button{
           font-size: 14px;
-          color: rgba(0,0,0,.45);
-          margin-top: 12px;
-          margin-bottom: 40px;
-        }
-      }
-      .main-content {
-        width: 368px;
-        margin: 0 auto;
-        @media screen and (max-width: 576px) {
-          width: 95%;
-        }
-        @media screen and (max-width: 320px) {
-          .captcha-button{
-            font-size: 14px;
-          }
         }
       }
     }
   }
+}
 </style>

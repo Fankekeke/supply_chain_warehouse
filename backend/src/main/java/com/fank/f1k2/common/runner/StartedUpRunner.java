@@ -25,7 +25,7 @@ public class StartedUpRunner implements ApplicationRunner {
             log.info("/ /`  / / \\ | |\\/| | |_) | |   | |_   | |  | |_  ");
             log.info("\\_\\_, \\_\\_/ |_|  | |_|   |_|__ |_|__  |_|  |_|__ ");
             log.info("                                                      ");
-            log.info("F1k2 启动完毕，时间：" + LocalDateTime.now());
+            log.info("F1k2 FanK fan1ke2ke@gmail.com（悲伤的橘子树） 启动完毕，时间：" + LocalDateTime.now());
         }
     }
 }
