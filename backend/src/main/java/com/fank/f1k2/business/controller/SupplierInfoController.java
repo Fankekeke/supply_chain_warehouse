@@ -34,7 +34,7 @@ public class SupplierInfoController {
      */
     @GetMapping("/page")
     public R page(Page<SupplierInfo> page, SupplierInfo queryFrom) {
-        return R.ok();
+        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
     }
 
     /**

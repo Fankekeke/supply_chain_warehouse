@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 员工管理 控制层
+ *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
 @RestController
@@ -27,44 +28,44 @@ public class StaffInfoController {
     private final IStaffInfoService bulletinInfoService;
 
     /**
-    * 分页获取员工管理
-    *
-    * @param page       分页对象
-    * @param queryFrom 员工管理
-    * @return 结果
-    */
+     * 分页获取员工管理
+     *
+     * @param page      分页对象
+     * @param queryFrom 员工管理
+     * @return 结果
+     */
     @GetMapping("/page")
     public R page(Page<StaffInfo> page, StaffInfo queryFrom) {
-        return R.ok();
+        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
     }
 
     /**
-    * 查询员工管理详情
-    *
-    * @param id 主键ID
-    * @return 结果
-    */
+     * 查询员工管理详情
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(bulletinInfoService.getById(id));
     }
 
     /**
-    * 查询员工管理列表
-    *
-    * @return 结果
-    */
+     * 查询员工管理列表
+     *
+     * @return 结果
+     */
     @GetMapping("/list")
     public R list() {
         return R.ok(bulletinInfoService.list());
     }
 
     /**
-    * 新增员工管理
-    *
-    * @param addFrom 员工管理对象
-    * @return 结果
-    */
+     * 新增员工管理
+     *
+     * @param addFrom 员工管理对象
+     * @return 结果
+     */
     @PostMapping
     public R save(@RequestBody StaffInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
@@ -72,22 +73,22 @@ public class StaffInfoController {
     }
 
     /**
-    * 修改员工管理
-    *
-    * @param editFrom 员工管理对象
-    * @return 结果
-    */
+     * 修改员工管理
+     *
+     * @param editFrom 员工管理对象
+     * @return 结果
+     */
     @PutMapping
     public R edit(@RequestBody StaffInfo editFrom) {
         return R.ok(bulletinInfoService.updateById(editFrom));
     }
 
     /**
-    * 删除员工管理
-    *
-    * @param ids 删除的主键ID
-    * @return 结果
-    */
+     * 删除员工管理
+     *
+     * @param ids 删除的主键ID
+     * @return 结果
+     */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(bulletinInfoService.removeByIds(ids));

@@ -35,7 +35,7 @@ public class PerformanceWeightInfoController {
     */
     @GetMapping("/page")
     public R page(Page<PerformanceWeightInfo> page, PerformanceWeightInfo queryFrom) {
-        return R.ok();
+        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
     }
 
     /**
