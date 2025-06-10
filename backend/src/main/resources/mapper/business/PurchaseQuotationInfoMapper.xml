@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.PurchaseQuotationInfoMapper">
 
+    <!-- 分页获取采购计划报价管理 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            pqi.id,
+            pqi.plan_id,
+            pqi.supplier_id,
+            pqi.status,
+            pqi.materials_code,
+            pqi.total_price,
+            pqi.create_date,
+            pqi.quotation_date,
+            pqi.unit_price,
+            pqi.end_date,
+            pqi.del_flag
+        from
+            purchase_quotation_info pqi
+        where
+            1 = 1
+        order by
+            pqi.create_date desc
+    </select>
 </mapper>

@@ -1,5 +1,9 @@
 package com.fank.f1k2.system.service.impl;
 
+import com.fank.f1k2.business.entity.StaffInfo;
+import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.service.IStaffInfoService;
+import com.fank.f1k2.business.service.ISupplierInfoService;
 import com.fank.f1k2.common.domain.F1k2Constant;
 import com.fank.f1k2.common.domain.QueryRequest;
 import com.fank.f1k2.common.service.CacheService;
@@ -43,6 +47,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserRoleService userRoleService;
     @Autowired
     private UserManager userManager;
+
+    @Autowired
+    private IStaffInfoService staffInfoService;
+
+    @Autowired
+    private ISupplierInfoService supplierInfoService;
 
 
     @Override
@@ -115,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteUsers(String[] userIds) throws Exception {
         // 先删除相应的缓存
         this.userManager.deleteUserRedisCache(userIds);
@@ -131,7 +141,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateProfile(User user) throws Exception {
         updateById(user);
         // 重新缓存用户信息
@@ -139,7 +149,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateAvatar(String username, String avatar) throws Exception {
         User user = new User();
         user.setAvatar(avatar);
@@ -150,7 +160,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updatePassword(String username, String password) throws Exception {
         User user = new User();
         user.setPassword(MD5Util.encrypt(username, password));
@@ -161,7 +171,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void regist(String username, String password) throws Exception {
         User user = new User();
         user.setPassword(MD5Util.encrypt(username, password));
@@ -185,8 +195,72 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     }
 
+    /**
+     * 注册员工
+     *
+     * @param staffInfo 员工信息
+     */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
+    public void registerStaff(StaffInfo staffInfo) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(staffInfo.getCode(), "1234qwer"));
+        user.setUsername(staffInfo.getCode());
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册员工");
+        this.save(user);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(75L);
+        this.userRoleMapper.insert(ur);
+
+        staffInfo.setSysUserId(Math.toIntExact(user.getUserId()));
+        staffInfoService.save(staffInfo);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
+    }
+
+    /**
+     * 注册供应商
+     *
+     * @param supplierInfo 供应商信息
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void registerSupplier(SupplierInfo supplierInfo) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(supplierInfo.getCode(), "1234qwer"));
+        user.setUsername(supplierInfo.getCode());
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册供应商");
+        this.save(user);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(75L);
+        this.userRoleMapper.insert(ur);
+
+        supplierInfo.setSysUserId(Math.toIntExact(user.getUserId()));
+        supplierInfoService.save(supplierInfo);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void resetPassword(String[] usernames) throws Exception {
         for (String username : usernames) {
 

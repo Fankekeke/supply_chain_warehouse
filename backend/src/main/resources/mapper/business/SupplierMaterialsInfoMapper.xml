@@ -2,4 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.SupplierMaterialsInfoMapper">
 
+    <!-- 分页获取供应商物料 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            smi.id,
+            smi.code,
+            smi.batch_record,
+            smi.package_set,
+            smi.brand,
+            smi.del_flag,
+            smi.create_date,
+            smi.status,
+            smi.supplier_id
+        from
+            supplier_materials_info smi
+        where
+            1 = 1
+        order by
+            smi.create_date desc
+    </select>
 </mapper>

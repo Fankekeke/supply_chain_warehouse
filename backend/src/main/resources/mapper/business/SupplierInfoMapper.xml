@@ -2,4 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.SupplierInfoMapper">
 
+    <!-- 分页获取供应商信息 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            si.id,
+            si.code,
+            si.name,
+            si.content,
+            si.credit_code,
+            si.charge_person,
+            si.phone,
+            si.address,
+            si.longitude,
+            si.latitude,
+            si.images,
+            si.del_flag,
+            si.supply_type,
+            si.create_date,
+            si.business_license,
+            si.bank_name,
+            si.bank_account,
+            si.status,
+            si.sys_user_id
+        from
+            supplier_info si
+        where
+            1 = 1
+        order by
+            si.create_date desc
+    </select>
 </mapper>

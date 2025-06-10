@@ -110,6 +110,11 @@ public class SupplierInfo implements Serializable {
     private String bankAccount;
 
     /**
+     * 账户ID
+     */
+    private Integer sysUserId;
+
+    /**
      * 状态（0.未审核 1.已通过）
      */
     private String status;

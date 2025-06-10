@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.WarehouseOutRecordMapper">
 
+    <!-- 分页获取库存出库记录 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            wor.id,
+            wor.code,
+            wor.name,
+            wor.total_price,
+            wor.out_user,
+            wor.remark,
+            wor.create_date,
+            wor.del_flag
+        from
+            warehouse_out_record wor
+        where
+            1 = 1
+        order by
+            wor.create_date desc
+    </select>
 </mapper>

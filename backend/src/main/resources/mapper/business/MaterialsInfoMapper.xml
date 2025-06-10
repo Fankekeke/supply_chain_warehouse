@@ -2,4 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.MaterialsInfoMapper">
 
+    <!-- 分页获取物料管理 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            mi.id,
+            mi.code,
+            mi.name,
+            mi.content,
+            mi.model,
+            mi.images,
+            mi.del_flag,
+            mi.create_date,
+            mi.`type`,
+            mi.measurement_unit
+        from
+            materials_info mi
+        where
+            1 = 1
+        order by
+            mi.create_date desc
+    </select>
 </mapper>

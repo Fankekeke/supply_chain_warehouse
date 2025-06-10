@@ -6,6 +6,7 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierInfo;
 import com.fank.f1k2.business.service.ISupplierInfoService;
+import com.fank.f1k2.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,8 @@ import java.util.List;
 public class SupplierInfoController {
 
     private final ISupplierInfoService supplierInfoService;
+
+    private final UserService userService;
 
     /**
      * 分页获取供应商信息
@@ -68,6 +71,7 @@ public class SupplierInfoController {
     public R save(@RequestBody SupplierInfo addFrom) {
         addFrom.setCode("SUP-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+        addFrom.setStatus("0");
         return R.ok(supplierInfoService.save(addFrom));
     }
 

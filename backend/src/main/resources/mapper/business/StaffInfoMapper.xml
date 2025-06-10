@@ -2,4 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.StaffInfoMapper">
 
+    <!-- 分页获取员工管理 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            si.id,
+            si.code,
+            si.name,
+            si.staff_sex,
+            si.images,
+            si.create_date,
+            si.birth_date,
+            si.content,
+            si.email,
+            si.phone,
+            si.sys_user_id,
+            si.dept_id,
+            si.del_flag
+        from
+            staff_info si
+        where
+            1 = 1
+        order by
+            si.create_date desc
+    </select>
 </mapper>

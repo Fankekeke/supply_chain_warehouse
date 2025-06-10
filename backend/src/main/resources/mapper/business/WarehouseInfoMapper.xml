@@ -2,4 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.WarehouseInfoMapper">
 
+    <!-- 分页获取库房库存 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            wi.id,
+            wi.code,
+            wi.name,
+            wi.quantity,
+            wi.transaction_type,
+            wi.create_date,
+            wi.unit_price,
+            wi.inbound_order_number,
+            wi.delivery_order_number
+        from
+            warehouse_info wi
+        where
+            1 = 1
+        order by
+            wi.create_date desc
+    </select>
 </mapper>

@@ -13,11 +13,20 @@ import java.util.LinkedHashMap;
 public interface IAgencyInfoService extends IService<AgencyInfo> {
 
     /**
-     * 分页获取代办任务
+     * 分页获取代办任务-供应商
      *
      * @param page      分页对象
      * @param queryFrom 代办任务
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<AgencyInfo> page, AgencyInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPageBySupplier(Page<AgencyInfo> page, AgencyInfo queryFrom);
+
+    /**
+     * 分页获取代办任务-员工
+     *
+     * @param page      分页对象
+     * @param queryFrom 代办任务
+     * @return 结果
+     */
+    IPage<LinkedHashMap<String, Object>> queryPageByStaff(Page<AgencyInfo> page, AgencyInfo queryFrom);
 }

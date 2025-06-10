@@ -34,9 +34,21 @@ public class AgencyInfoController {
      * @param queryFrom 代办任务
      * @return 结果
      */
-    @GetMapping("/page")
-    public R page(Page<AgencyInfo> page, AgencyInfo queryFrom) {
-        return R.ok(agencyInfoService.queryPage(page, queryFrom));
+    @GetMapping("/page/supplier")
+    public R queryPageBySupplier(Page<AgencyInfo> page, AgencyInfo queryFrom) {
+        return R.ok(agencyInfoService.queryPageBySupplier(page, queryFrom));
+    }
+
+    /**
+     * 分页获取代办任务
+     *
+     * @param page      分页对象
+     * @param queryFrom 代办任务
+     * @return 结果
+     */
+    @GetMapping("/page/staff")
+    public R queryPageByStaff(Page<AgencyInfo> page, AgencyInfo queryFrom) {
+        return R.ok(agencyInfoService.queryPageByStaff(page, queryFrom));
     }
 
     /**

@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.EarlyAlertInfoMapper">
 
+    <!-- 分页获取预警库存设置 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            eai.id,
+            eai.materials_code,
+            eai.min_value,
+            eai.create_date,
+            eai.del_flag
+        from
+            early_alert_info eai
+        where
+            1 = 1
+        order by
+            eai.create_date desc
+    </select>
 </mapper>

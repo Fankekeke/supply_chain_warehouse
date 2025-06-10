@@ -6,6 +6,7 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.StaffInfo;
 import com.fank.f1k2.business.service.IStaffInfoService;
+import com.fank.f1k2.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class StaffInfoController {
 
     private final IStaffInfoService staffInfoService;
+
+    private final UserService userService;
 
     /**
      * 分页获取员工管理
@@ -67,9 +70,11 @@ public class StaffInfoController {
      * @return 结果
      */
     @PostMapping
-    public R save(@RequestBody StaffInfo addFrom) {
+    public R save(@RequestBody StaffInfo addFrom) throws Exception {
+        addFrom.setCode("SAF-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(staffInfoService.save(addFrom));
+        userService.registerStaff(addFrom);
+        return R.ok(true);
     }
 
     /**

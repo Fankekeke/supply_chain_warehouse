@@ -2,4 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.SupplierEvaluateMapper">
 
+    <!-- 分页获取供应商绩效评价 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            se.id,
+            se.supplier_id,
+            se.`year`,
+            se.quality_score,
+            se.cost_socre,
+            se.delivery_score,
+            se.service_score,
+            se.innovation_score,
+            se.financial_score,
+            se.score,
+            se.create_date,
+            se.content,
+            se.del_flag
+        from
+            supplier_evaluate se
+        where
+            1 = 1
+        order by
+            se.create_date desc
+    </select>
 </mapper>

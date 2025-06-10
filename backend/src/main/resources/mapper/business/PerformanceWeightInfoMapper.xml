@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.PerformanceWeightInfoMapper">
 
+    <!-- 分页获取绩效评价权重 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            pwi.id,
+            pwi.name,
+            pwi.weight_rate,
+            pwi.code
+        from
+            performance_weight_info pwi
+        where
+            1 = 1
+        order by
+            pwi.code desc
+    </select>
 </mapper>

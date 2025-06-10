@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.AbnormalInfoMapper">
 
+    <!-- 分页获取异常反馈 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+        ai.id,
+        ai.order_id,
+        ai.remark,
+        ai.create_date,
+        ai.del_flag,
+
+        oi.code as orderCode,
+        oi.materials_code,
+        oi.total_price,
+        oi.status,
+
+        si.code as supplierCode,
+        si.name as supplierName,
+        si.charge_person,
+        si.phone,
+        si.images as supplierImages,
+
+        mi.name as materialsName,
+        mi.model,
+        mi.images as materialsImages,
+        mi.type,
+        mi.measurement_unit
+        from
+        abnormal_info ai
+        where
+        1 = 1
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        <if test="queryForm.orderCode != null and queryForm.orderCode != ''">
+            AND oi.code like CONCAT("%",#{queryForm.orderCode},"%")
+        </if>
+        order by
+        ai.create_date desc
+    </select>
 </mapper>

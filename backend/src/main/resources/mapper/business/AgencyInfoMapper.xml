@@ -2,4 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.AgencyInfoMapper">
 
+    <!-- 分页获取代办任务-供应商 -->
+    <select id="queryPageBySupplier" resultType="java.util.LinkedHashMap">
+        select
+        ai.id,
+        ai.code,
+        ai.content,
+        ai.status,
+        ai.user_id,
+        ai.agency_type,
+        ai.create_date,
+        ai.finish_date,
+        ai.del_flag,
+
+        si.code as supplierCode,
+        si.name as supplierName,
+        si.charge_person,
+        si.phone,
+        si.images as supplierImages
+        from
+        agency_info ai
+        left join supplier_info si on (si.id = ai.user_id )
+        where
+        1 = 1
+        AND ai.agency_type = '1'
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND ai.code like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND ai.status = #{queryForm.status}
+        </if>
+        order by
+        ai.create_date desc
+    </select>
+
+    <!-- 分页获取代办任务-员工 -->
+    <select id="queryPageByStaff" resultType="java.util.LinkedHashMap">
+        select
+        ai.id,
+        ai.code,
+        ai.content,
+        ai.status,
+        ai.user_id,
+        ai.agency_type,
+        ai.create_date,
+        ai.finish_date,
+        ai.del_flag,
+
+        si.code as staffCode,
+        si.name as staffName,
+        si.phone,
+        si.images as staffImages
+        from
+        agency_info ai
+        left join staff_info si on (si.id = ai.user_id )
+        where
+        1 = 1
+        AND ai.agency_type = '2'
+        <if test="queryForm.staffName != null and queryForm.staffName != ''">
+            AND si.name like CONCAT("%",#{queryForm.staffName},"%")
+        </if>
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND ai.code like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND ai.status = #{queryForm.status}
+        </if>
+        order by
+        ai.create_date desc
+    </select>
 </mapper>

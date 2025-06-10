@@ -2,4 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.SupplierAuditRecordMapper">
 
+    <!-- 分页获取供应商审核记录 -->
+    <select id="queryPage" resultType="java.util.LinkedHashMap">
+        select
+            sar.id,
+            sar.code,
+            sar.content,
+            sar.status,
+            sar.create_date,
+            sar.audit_date,
+            sar.del_flag
+        from
+            supplier_audit_record sar
+        where
+            1 = 1
+        order by
+            sar.create_date desc
+    </select>
 </mapper>
