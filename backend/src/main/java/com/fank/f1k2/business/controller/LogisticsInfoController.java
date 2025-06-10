@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LogisticsInfoController {
 
-    private final ILogisticsInfoService bulletinInfoService;
+    private final ILogisticsInfoService logisticsInfoService;
 
     /**
      * 分页获取采购订单物流
@@ -36,7 +36,7 @@ public class LogisticsInfoController {
      */
     @GetMapping("/page")
     public R page(Page<LogisticsInfo> page, LogisticsInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(logisticsInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class LogisticsInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(logisticsInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class LogisticsInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(logisticsInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class LogisticsInfoController {
     @PostMapping
     public R save(@RequestBody LogisticsInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(logisticsInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class LogisticsInfoController {
      */
     @PutMapping
     public R edit(@RequestBody LogisticsInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(logisticsInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class LogisticsInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(logisticsInfoService.removeByIds(ids));
     }
 
 }

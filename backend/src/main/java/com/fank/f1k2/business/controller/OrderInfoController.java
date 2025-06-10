@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OrderInfoController {
 
-    private final IOrderInfoService bulletinInfoService;
+    private final IOrderInfoService orderInfoService;
 
     /**
      * 分页获取采购订单
@@ -36,7 +36,7 @@ public class OrderInfoController {
      */
     @GetMapping("/page")
     public R page(Page<OrderInfo> page, OrderInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(orderInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class OrderInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(orderInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class OrderInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(orderInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class OrderInfoController {
     @PostMapping
     public R save(@RequestBody OrderInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(orderInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class OrderInfoController {
      */
     @PutMapping
     public R edit(@RequestBody OrderInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(orderInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class OrderInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(orderInfoService.removeByIds(ids));
     }
 
 }

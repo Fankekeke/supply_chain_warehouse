@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AgencyInfoController {
 
-    private final IAgencyInfoService bulletinInfoService;
+    private final IAgencyInfoService agencyInfoService;
 
     /**
      * 分页获取代办任务
@@ -36,7 +36,7 @@ public class AgencyInfoController {
      */
     @GetMapping("/page")
     public R page(Page<AgencyInfo> page, AgencyInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(agencyInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class AgencyInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(agencyInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class AgencyInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(agencyInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class AgencyInfoController {
     @PostMapping
     public R save(@RequestBody AgencyInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(agencyInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class AgencyInfoController {
      */
     @PutMapping
     public R edit(@RequestBody AgencyInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(agencyInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class AgencyInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(agencyInfoService.removeByIds(ids));
     }
 
 }

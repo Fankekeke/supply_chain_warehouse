@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WarehouseOutRecordController {
 
-    private final IWarehouseOutRecordService bulletinInfoService;
+    private final IWarehouseOutRecordService warehouseOutRecordService;
 
     /**
      * 分页获取库存出库记录
@@ -36,7 +36,7 @@ public class WarehouseOutRecordController {
      */
     @GetMapping("/page")
     public R page(Page<WarehouseOutRecord> page, WarehouseOutRecord queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(warehouseOutRecordService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class WarehouseOutRecordController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(warehouseOutRecordService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class WarehouseOutRecordController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(warehouseOutRecordService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class WarehouseOutRecordController {
     @PostMapping
     public R save(@RequestBody WarehouseOutRecord addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(warehouseOutRecordService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class WarehouseOutRecordController {
      */
     @PutMapping
     public R edit(@RequestBody WarehouseOutRecord editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(warehouseOutRecordService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class WarehouseOutRecordController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(warehouseOutRecordService.removeByIds(ids));
     }
 
 }

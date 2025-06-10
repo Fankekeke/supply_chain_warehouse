@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StaffInfoController {
 
-    private final IStaffInfoService bulletinInfoService;
+    private final IStaffInfoService staffInfoService;
 
     /**
      * 分页获取员工管理
@@ -36,7 +36,7 @@ public class StaffInfoController {
      */
     @GetMapping("/page")
     public R page(Page<StaffInfo> page, StaffInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(staffInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class StaffInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(staffInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class StaffInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(staffInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class StaffInfoController {
     @PostMapping
     public R save(@RequestBody StaffInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(staffInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class StaffInfoController {
      */
     @PutMapping
     public R edit(@RequestBody StaffInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(staffInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class StaffInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(staffInfoService.removeByIds(ids));
     }
 
 }

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PerformanceWeightInfoController {
 
-    private final IPerformanceWeightInfoService bulletinInfoService;
+    private final IPerformanceWeightInfoService performanceWeightInfoService;
 
     /**
     * 分页获取绩效评价权重
@@ -35,7 +35,7 @@ public class PerformanceWeightInfoController {
     */
     @GetMapping("/page")
     public R page(Page<PerformanceWeightInfo> page, PerformanceWeightInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(performanceWeightInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -46,7 +46,7 @@ public class PerformanceWeightInfoController {
     */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(performanceWeightInfoService.getById(id));
     }
 
     /**
@@ -56,7 +56,7 @@ public class PerformanceWeightInfoController {
     */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(performanceWeightInfoService.list());
     }
 
     /**
@@ -67,7 +67,7 @@ public class PerformanceWeightInfoController {
     */
     @PostMapping
     public R save(@RequestBody PerformanceWeightInfo addFrom) {
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(performanceWeightInfoService.save(addFrom));
     }
 
     /**
@@ -78,7 +78,7 @@ public class PerformanceWeightInfoController {
     */
     @PutMapping
     public R edit(@RequestBody PerformanceWeightInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(performanceWeightInfoService.updateById(editFrom));
     }
 
     /**
@@ -89,7 +89,7 @@ public class PerformanceWeightInfoController {
     */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(performanceWeightInfoService.removeByIds(ids));
     }
 
 }

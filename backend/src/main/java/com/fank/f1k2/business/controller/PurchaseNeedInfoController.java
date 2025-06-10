@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PurchaseNeedInfoController {
 
-    private final IPurchaseNeedInfoService bulletinInfoService;
+    private final IPurchaseNeedInfoService purchaseNeedInfoService;
 
     /**
      * 分页获取采购需求
@@ -36,7 +36,7 @@ public class PurchaseNeedInfoController {
      */
     @GetMapping("/page")
     public R page(Page<PurchaseNeedInfo> page, PurchaseNeedInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(purchaseNeedInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class PurchaseNeedInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(purchaseNeedInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class PurchaseNeedInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(purchaseNeedInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class PurchaseNeedInfoController {
     @PostMapping
     public R save(@RequestBody PurchaseNeedInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(purchaseNeedInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class PurchaseNeedInfoController {
      */
     @PutMapping
     public R edit(@RequestBody PurchaseNeedInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(purchaseNeedInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class PurchaseNeedInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(purchaseNeedInfoService.removeByIds(ids));
     }
 
 }

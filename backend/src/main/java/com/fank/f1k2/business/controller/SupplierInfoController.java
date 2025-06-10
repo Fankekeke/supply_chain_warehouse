@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SupplierInfoController {
 
-    private final ISupplierInfoService bulletinInfoService;
+    private final ISupplierInfoService supplierInfoService;
 
     /**
      * 分页获取供应商信息
@@ -34,7 +34,7 @@ public class SupplierInfoController {
      */
     @GetMapping("/page")
     public R page(Page<SupplierInfo> page, SupplierInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(supplierInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -45,7 +45,7 @@ public class SupplierInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(supplierInfoService.getById(id));
     }
 
     /**
@@ -55,7 +55,7 @@ public class SupplierInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(supplierInfoService.list());
     }
 
     /**
@@ -66,8 +66,9 @@ public class SupplierInfoController {
      */
     @PostMapping
     public R save(@RequestBody SupplierInfo addFrom) {
+        addFrom.setCode("SUP-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(supplierInfoService.save(addFrom));
     }
 
     /**
@@ -78,7 +79,7 @@ public class SupplierInfoController {
      */
     @PutMapping
     public R edit(@RequestBody SupplierInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(supplierInfoService.updateById(editFrom));
     }
 
     /**
@@ -89,7 +90,7 @@ public class SupplierInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(supplierInfoService.removeByIds(ids));
     }
 
 }

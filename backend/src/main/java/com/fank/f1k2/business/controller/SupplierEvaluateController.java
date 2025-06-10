@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SupplierEvaluateController {
 
-    private final ISupplierEvaluateService bulletinInfoService;
+    private final ISupplierEvaluateService supplierEvaluateService;
 
     /**
      * 分页获取供应商绩效评价
@@ -36,7 +36,7 @@ public class SupplierEvaluateController {
      */
     @GetMapping("/page")
     public R page(Page<SupplierEvaluate> page, SupplierEvaluate queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(supplierEvaluateService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class SupplierEvaluateController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(supplierEvaluateService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class SupplierEvaluateController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(supplierEvaluateService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class SupplierEvaluateController {
     @PostMapping
     public R save(@RequestBody SupplierEvaluate addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(supplierEvaluateService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class SupplierEvaluateController {
      */
     @PutMapping
     public R edit(@RequestBody SupplierEvaluate editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(supplierEvaluateService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class SupplierEvaluateController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(supplierEvaluateService.removeByIds(ids));
     }
 
 }

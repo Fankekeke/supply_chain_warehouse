@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.OrderInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @param queryFrom 采购订单
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<OrderInfo> page, OrderInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPage(Page<OrderInfo> page, @Param("queryForm") OrderInfo queryFrom);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierMaterialsInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface SupplierMaterialsInfoMapper extends BaseMapper<SupplierMaterial
      * @param queryFrom 供应商物料
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierMaterialsInfo> page, SupplierMaterialsInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierMaterialsInfo> page, @Param("queryForm") SupplierMaterialsInfo queryFrom);
 }

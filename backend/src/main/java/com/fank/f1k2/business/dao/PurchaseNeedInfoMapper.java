@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.PurchaseNeedInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface PurchaseNeedInfoMapper extends BaseMapper<PurchaseNeedInfo> {
      * @param queryFrom 采购需求
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<PurchaseNeedInfo> page, PurchaseNeedInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPage(Page<PurchaseNeedInfo> page, @Param("queryForm") PurchaseNeedInfo queryFrom);
 }

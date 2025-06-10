@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NotifyInfoController {
 
-    private final INotifyInfoService bulletinInfoService;
+    private final INotifyInfoService notifyInfoService;
 
     /**
      * 分页获取消息通知
@@ -36,7 +36,7 @@ public class NotifyInfoController {
      */
     @GetMapping("/page")
     public R page(Page<NotifyInfo> page, NotifyInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(notifyInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class NotifyInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(notifyInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class NotifyInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(notifyInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class NotifyInfoController {
     @PostMapping
     public R save(@RequestBody NotifyInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(notifyInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class NotifyInfoController {
      */
     @PutMapping
     public R edit(@RequestBody NotifyInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(notifyInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class NotifyInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(notifyInfoService.removeByIds(ids));
     }
 
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WarehouseInfoController {
 
-    private final IWarehouseInfoService bulletinInfoService;
+    private final IWarehouseInfoService warehouseInfoService;
 
     /**
      * 分页获取库房库存
@@ -36,7 +36,7 @@ public class WarehouseInfoController {
      */
     @GetMapping("/page")
     public R page(Page<WarehouseInfo> page, WarehouseInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(warehouseInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class WarehouseInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(warehouseInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class WarehouseInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(warehouseInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class WarehouseInfoController {
     @PostMapping
     public R save(@RequestBody WarehouseInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(warehouseInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class WarehouseInfoController {
      */
     @PutMapping
     public R edit(@RequestBody WarehouseInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(warehouseInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class WarehouseInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(warehouseInfoService.removeByIds(ids));
     }
 
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PurchaseQuotationInfoController {
 
-    private final IPurchaseQuotationInfoService bulletinInfoService;
+    private final IPurchaseQuotationInfoService purchaseQuotationInfoService;
 
     /**
      * 分页获取采购计划报价管理
@@ -36,7 +36,7 @@ public class PurchaseQuotationInfoController {
      */
     @GetMapping("/page")
     public R page(Page<PurchaseQuotationInfo> page, PurchaseQuotationInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(purchaseQuotationInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class PurchaseQuotationInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(purchaseQuotationInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class PurchaseQuotationInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(purchaseQuotationInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class PurchaseQuotationInfoController {
     @PostMapping
     public R save(@RequestBody PurchaseQuotationInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(purchaseQuotationInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class PurchaseQuotationInfoController {
      */
     @PutMapping
     public R edit(@RequestBody PurchaseQuotationInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(purchaseQuotationInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class PurchaseQuotationInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(purchaseQuotationInfoService.removeByIds(ids));
     }
 
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MaterialsInfoController {
 
-    private final IMaterialsInfoService bulletinInfoService;
+    private final IMaterialsInfoService materialsInfoService;
 
     /**
      * 分页获取物料管理
@@ -36,7 +36,7 @@ public class MaterialsInfoController {
      */
     @GetMapping("/page")
     public R page(Page<MaterialsInfo> page, MaterialsInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(materialsInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class MaterialsInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(materialsInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class MaterialsInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(materialsInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class MaterialsInfoController {
     @PostMapping
     public R save(@RequestBody MaterialsInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(materialsInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class MaterialsInfoController {
      */
     @PutMapping
     public R edit(@RequestBody MaterialsInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(materialsInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class MaterialsInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(materialsInfoService.removeByIds(ids));
     }
 
 }

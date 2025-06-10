@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.AgencyInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface AgencyInfoMapper extends BaseMapper<AgencyInfo> {
      * @param queryFrom 代办任务
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<AgencyInfo> page, AgencyInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPage(Page<AgencyInfo> page, @Param("queryForm") AgencyInfo queryFrom);
 }

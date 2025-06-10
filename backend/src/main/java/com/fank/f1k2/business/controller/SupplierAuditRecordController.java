@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SupplierAuditRecordController {
 
-    private final ISupplierAuditRecordService bulletinInfoService;
+    private final ISupplierAuditRecordService supplierAuditRecordService;
 
     /**
      * 分页获取供应商审核记录
@@ -36,7 +36,7 @@ public class SupplierAuditRecordController {
      */
     @GetMapping("/page")
     public R page(Page<SupplierAuditRecord> page, SupplierAuditRecord queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(supplierAuditRecordService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class SupplierAuditRecordController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(supplierAuditRecordService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class SupplierAuditRecordController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(supplierAuditRecordService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class SupplierAuditRecordController {
     @PostMapping
     public R save(@RequestBody SupplierAuditRecord addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(supplierAuditRecordService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class SupplierAuditRecordController {
      */
     @PutMapping
     public R edit(@RequestBody SupplierAuditRecord editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(supplierAuditRecordService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class SupplierAuditRecordController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(supplierAuditRecordService.removeByIds(ids));
     }
 
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.WarehouseOutRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface WarehouseOutRecordMapper extends BaseMapper<WarehouseOutRecord>
      * @param queryFrom 库存出库记录
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<WarehouseOutRecord> page, WarehouseOutRecord queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPage(Page<WarehouseOutRecord> page, @Param("queryForm") WarehouseOutRecord queryFrom);
 }

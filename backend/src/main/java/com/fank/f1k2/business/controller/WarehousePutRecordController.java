@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WarehousePutRecordController {
 
-    private final IWarehousePutRecordService bulletinInfoService;
+    private final IWarehousePutRecordService warehousePutRecordService;
 
     /**
      * 分页获取库存入库记录
@@ -36,7 +36,7 @@ public class WarehousePutRecordController {
      */
     @GetMapping("/page")
     public R page(Page<WarehousePutRecord> page, WarehousePutRecord queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(warehousePutRecordService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class WarehousePutRecordController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(warehousePutRecordService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class WarehousePutRecordController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(warehousePutRecordService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class WarehousePutRecordController {
     @PostMapping
     public R save(@RequestBody WarehousePutRecord addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(warehousePutRecordService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class WarehousePutRecordController {
      */
     @PutMapping
     public R edit(@RequestBody WarehousePutRecord editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(warehousePutRecordService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class WarehousePutRecordController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(warehousePutRecordService.removeByIds(ids));
     }
 
 }

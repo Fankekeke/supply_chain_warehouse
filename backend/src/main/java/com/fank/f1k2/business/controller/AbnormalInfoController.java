@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AbnormalInfoController {
 
-    private final IAbnormalInfoService bulletinInfoService;
+    private final IAbnormalInfoService abnormalInfoService;
 
     /**
      * 分页获取异常反馈
@@ -36,7 +36,7 @@ public class AbnormalInfoController {
      */
     @GetMapping("/page")
     public R page(Page<AbnormalInfo> page, AbnormalInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(abnormalInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class AbnormalInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(abnormalInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class AbnormalInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(abnormalInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class AbnormalInfoController {
     @PostMapping
     public R save(@RequestBody AbnormalInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(abnormalInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class AbnormalInfoController {
      */
     @PutMapping
     public R edit(@RequestBody AbnormalInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(abnormalInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class AbnormalInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(abnormalInfoService.removeByIds(ids));
     }
 
 }

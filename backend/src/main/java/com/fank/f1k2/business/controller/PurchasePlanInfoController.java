@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PurchasePlanInfoController {
 
-    private final IPurchasePlanInfoService bulletinInfoService;
+    private final IPurchasePlanInfoService purchasePlanInfoService;
 
     /**
      * 分页获取采购计划
@@ -36,7 +36,7 @@ public class PurchasePlanInfoController {
      */
     @GetMapping("/page")
     public R page(Page<PurchasePlanInfo> page, PurchasePlanInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(purchasePlanInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class PurchasePlanInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(purchasePlanInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class PurchasePlanInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(purchasePlanInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class PurchasePlanInfoController {
     @PostMapping
     public R save(@RequestBody PurchasePlanInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(purchasePlanInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class PurchasePlanInfoController {
      */
     @PutMapping
     public R edit(@RequestBody PurchasePlanInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(purchasePlanInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class PurchasePlanInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(purchasePlanInfoService.removeByIds(ids));
     }
 
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EarlyAlertInfoController {
 
-    private final IEarlyAlertInfoService bulletinInfoService;
+    private final IEarlyAlertInfoService earlyAlertInfoService;
 
     /**
      * 分页获取预警库存设置
@@ -36,7 +36,7 @@ public class EarlyAlertInfoController {
      */
     @GetMapping("/page")
     public R page(Page<EarlyAlertInfo> page, EarlyAlertInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(earlyAlertInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class EarlyAlertInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(earlyAlertInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class EarlyAlertInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(earlyAlertInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class EarlyAlertInfoController {
     @PostMapping
     public R save(@RequestBody EarlyAlertInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(earlyAlertInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class EarlyAlertInfoController {
      */
     @PutMapping
     public R edit(@RequestBody EarlyAlertInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(earlyAlertInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class EarlyAlertInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(earlyAlertInfoService.removeByIds(ids));
     }
 
 }

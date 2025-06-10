@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierAuditRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface SupplierAuditRecordMapper extends BaseMapper<SupplierAuditRecor
      * @param queryFrom 供应商审核记录
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierAuditRecord> page, SupplierAuditRecord queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierAuditRecord> page, @Param("queryForm") SupplierAuditRecord queryFrom);
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SupplierMaterialsInfoController {
 
-    private final ISupplierMaterialsInfoService bulletinInfoService;
+    private final ISupplierMaterialsInfoService supplierMaterialsInfoService;
 
     /**
      * 分页获取供应商物料
@@ -36,7 +36,7 @@ public class SupplierMaterialsInfoController {
      */
     @GetMapping("/page")
     public R page(Page<SupplierMaterialsInfo> page, SupplierMaterialsInfo queryFrom) {
-        return R.ok(bulletinInfoService.queryPage(page, queryFrom));
+        return R.ok(supplierMaterialsInfoService.queryPage(page, queryFrom));
     }
 
     /**
@@ -47,7 +47,7 @@ public class SupplierMaterialsInfoController {
      */
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(bulletinInfoService.getById(id));
+        return R.ok(supplierMaterialsInfoService.getById(id));
     }
 
     /**
@@ -57,7 +57,7 @@ public class SupplierMaterialsInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(bulletinInfoService.list());
+        return R.ok(supplierMaterialsInfoService.list());
     }
 
     /**
@@ -69,7 +69,7 @@ public class SupplierMaterialsInfoController {
     @PostMapping
     public R save(@RequestBody SupplierMaterialsInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(bulletinInfoService.save(addFrom));
+        return R.ok(supplierMaterialsInfoService.save(addFrom));
     }
 
     /**
@@ -80,7 +80,7 @@ public class SupplierMaterialsInfoController {
      */
     @PutMapping
     public R edit(@RequestBody SupplierMaterialsInfo editFrom) {
-        return R.ok(bulletinInfoService.updateById(editFrom));
+        return R.ok(supplierMaterialsInfoService.updateById(editFrom));
     }
 
     /**
@@ -91,7 +91,7 @@ public class SupplierMaterialsInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(bulletinInfoService.removeByIds(ids));
+        return R.ok(supplierMaterialsInfoService.removeByIds(ids));
     }
 
 }
