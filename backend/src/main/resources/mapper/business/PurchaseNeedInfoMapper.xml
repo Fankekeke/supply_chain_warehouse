@@ -5,18 +5,24 @@
     <!-- 分页获取采购需求 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
         select
-            pni.id,
-            pni.code,
-            pni.content,
-            pni.create_by,
-            pni.status,
-            pni.create_date,
-            pni.del_flag
+        pni.id,
+        pni.code,
+        pni.content,
+        pni.create_by,
+        pni.status,
+        pni.create_date,
+        pni.del_flag
         from
-            purchase_need_info pni
+        purchase_need_info pni
         where
-            1 = 1
+        1 = 1
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND pni.code like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND pni.status = #{queryForm.status}
+        </if>
         order by
-            pni.create_date desc
+        pni.create_date desc
     </select>
 </mapper>

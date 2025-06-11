@@ -4,18 +4,50 @@
 
     <!-- 分页获取采购订单物流 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            li.id,
-            li.order_id,
-            li.remark,
-            li.create_date,
-            li.current_logistics,
-            li.del_flag
-        from
-            logistics_info li
-        where
-            1 = 1
-        order by
-            li.create_date desc
+        SELECT
+        li.id,
+        li.order_id,
+        li.remark,
+        li.create_date,
+        li.current_logistics,
+        li.del_flag,
+
+        oi.CODE AS orderCode,
+        oi.materials_code,
+        oi.total_price,
+        oi.STATUS,
+
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit
+        FROM
+        logistics_info li
+        LEFT JOIN order_info oi ON (oi.id = li.order_id)
+        LEFT JOIN supplier_info si ON (si.id = oi.supplier_id)
+        LEFT JOIN materials_info mi ON (mi.CODE = oi.materials_code)
+        WHERE
+        1 = 1
+        AND li.current_logistics = 1
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        <if test="queryForm.orderCode != null and queryForm.orderCode != ''">
+            AND oi.code like CONCAT("%",#{queryForm.orderCode},"%")
+        </if>
+        <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
+            AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
+        </if>
+        GROUP BY
+        li.order_id
+        ORDER BY
+        li.create_date DESC
     </select>
 </mapper>

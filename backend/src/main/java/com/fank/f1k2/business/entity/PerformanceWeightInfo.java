@@ -2,6 +2,9 @@ package com.fank.f1k2.business.entity;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -42,5 +45,9 @@ public class PerformanceWeightInfo implements Serializable {
      */
     private String code;
 
-
+    /**
+     * 子项
+     */
+    @TableField(exist = false)
+    List<PerformanceWeightInfo> children;
 }

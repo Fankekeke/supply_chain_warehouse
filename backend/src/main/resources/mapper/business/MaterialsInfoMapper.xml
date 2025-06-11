@@ -5,21 +5,33 @@
     <!-- 分页获取物料管理 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
         select
-            mi.id,
-            mi.code,
-            mi.name,
-            mi.content,
-            mi.model,
-            mi.images,
-            mi.del_flag,
-            mi.create_date,
-            mi.`type`,
-            mi.measurement_unit
+        mi.id,
+        mi.code,
+        mi.name,
+        mi.content,
+        mi.model,
+        mi.images,
+        mi.del_flag,
+        mi.create_date,
+        mi.`type`,
+        mi.measurement_unit
         from
-            materials_info mi
+        materials_info mi
         where
-            1 = 1
+        1 = 1
+        <if test="queryForm.name != null and queryForm.name != ''">
+            AND mi.name like CONCAT("%",#{queryForm.name},"%")
+        </if>
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND mi.code like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.model != null and queryForm.model != ''">
+            AND mi.code like CONCAT("%",#{queryForm.model},"%")
+        </if>
+        <if test="queryForm.type != null and queryForm.type != ''">
+            AND mi.type like CONCAT("%",#{queryForm.type},"%")
+        </if>
         order by
-            mi.create_date desc
+        mi.create_date desc
     </select>
 </mapper>

@@ -16,7 +16,7 @@ public interface PurchaseNeedInfoMapper extends BaseMapper<PurchaseNeedInfo> {
     /**
      * 分页获取采购需求
      *
-     * @param page       分页对象
+     * @param page      分页对象
      * @param queryFrom 采购需求
      * @return 结果
      */

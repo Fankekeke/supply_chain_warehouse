@@ -61,7 +61,7 @@ public class PurchaseQuotationInfoController {
     }
 
     /**
-     * 新增采购计划报价管理
+     * 新增采购计划报价【采购计划下发】
      *
      * @param addFrom 采购计划报价管理对象
      * @return 结果

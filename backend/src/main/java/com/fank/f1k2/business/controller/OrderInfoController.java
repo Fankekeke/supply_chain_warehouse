@@ -40,6 +40,18 @@ public class OrderInfoController {
     }
 
     /**
+     * 设置采购订单状态
+     *
+     * @param id     主键ID
+     * @param status 状态
+     * @return 结果
+     */
+    @GetMapping("/setOrderStatus")
+    public R setOrderStatus(Integer id, String status) {
+        return R.ok(orderInfoService.setOrderStatus(id, status));
+    }
+
+    /**
      * 查询采购订单详情
      *
      * @param id 主键ID

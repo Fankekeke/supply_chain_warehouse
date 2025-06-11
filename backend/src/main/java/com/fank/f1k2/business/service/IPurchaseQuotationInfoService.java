@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.PurchaseQuotationInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fank.f1k2.common.exception.F1k2Exception;
+import com.fank.f1k2.common.utils.R;
 
 import java.util.LinkedHashMap;
 
@@ -20,4 +22,12 @@ public interface IPurchaseQuotationInfoService extends IService<PurchaseQuotatio
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> queryPage(Page<PurchaseQuotationInfo> page, PurchaseQuotationInfo queryFrom);
+
+    /**
+     * 新增采购计划报价【采购计划下发】
+     *
+     * @param addFrom 采购计划报价管理对象
+     * @return 结果
+     */
+    boolean purchasePlanIssue(PurchaseQuotationInfo addFrom) throws F1k2Exception;
 }

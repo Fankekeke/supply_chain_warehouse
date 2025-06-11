@@ -15,9 +15,18 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     /**
      * 分页获取采购订单
      *
-     * @param page       分页对象
+     * @param page      分页对象
      * @param queryFrom 采购订单
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> queryPage(Page<OrderInfo> page, OrderInfo queryFrom);
+
+    /**
+     * 设置采购订单状态
+     *
+     * @param id     主键ID
+     * @param status 状态
+     * @return 结果
+     */
+    boolean setOrderStatus(Integer id, String status);
 }

@@ -2,12 +2,15 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.fank.f1k2.business.entity.EarlyAlertInfo;
+import com.fank.f1k2.business.service.IEarlyAlertInfoService;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.MaterialsInfo;
 import com.fank.f1k2.business.service.IMaterialsInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MaterialsInfoController {
 
     private final IMaterialsInfoService materialsInfoService;
+
+    private final IEarlyAlertInfoService earlyAlertInfoService;
 
     /**
      * 分页获取物料管理
@@ -67,8 +72,21 @@ public class MaterialsInfoController {
      * @return 结果
      */
     @PostMapping
+    @Transactional(rollbackFor = Exception.class)
     public R save(@RequestBody MaterialsInfo addFrom) {
+        addFrom.setCode("MAT-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+
+        // 保存预警设置
+        EarlyAlertInfo earlyAlertInfo  = new EarlyAlertInfo();
+        earlyAlertInfo.setMaterialsCode(addFrom.getCode());
+        earlyAlertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        if (addFrom.getMinValue() != null) {
+            earlyAlertInfo.setMinValue(addFrom.getMinValue());
+        } else {
+            earlyAlertInfo.setMinValue(-1);
+        }
+        earlyAlertInfoService.save(earlyAlertInfo);
         return R.ok(materialsInfoService.save(addFrom));
     }
 

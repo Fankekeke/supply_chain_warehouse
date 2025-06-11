@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.LogisticsInfo;
@@ -40,6 +41,17 @@ public class LogisticsInfoController {
     }
 
     /**
+     * 根据订单ID查询采购订单物流
+     *
+     * @param orderId 订单ID
+     * @return 采购订单物流列表
+     */
+    @GetMapping("/queryLogisticsByOrderId")
+    public R queryLogisticsByOrderId(Integer orderId) {
+        return R.ok(logisticsInfoService.list(Wrappers.<LogisticsInfo>lambdaQuery().eq(LogisticsInfo::getOrderId, orderId)));
+    }
+
+    /**
      * 查询采购订单物流详情
      *
      * @param id 主键ID
@@ -69,6 +81,7 @@ public class LogisticsInfoController {
     @PostMapping
     public R save(@RequestBody LogisticsInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+        addFrom.setCurrentLogistics(1);
         return R.ok(logisticsInfoService.save(addFrom));
     }
 
@@ -80,7 +93,12 @@ public class LogisticsInfoController {
      */
     @PutMapping
     public R edit(@RequestBody LogisticsInfo editFrom) {
-        return R.ok(logisticsInfoService.updateById(editFrom));
+        // 更新订单其他物流记录为0
+        logisticsInfoService.update(Wrappers.<LogisticsInfo>lambdaUpdate().set(LogisticsInfo::getCurrentLogistics, 0).eq(LogisticsInfo::getOrderId, editFrom.getOrderId()));
+        // 更新新物流
+        editFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+        editFrom.setCurrentLogistics(1);
+        return R.ok(logisticsInfoService.save(editFrom));
     }
 
     /**

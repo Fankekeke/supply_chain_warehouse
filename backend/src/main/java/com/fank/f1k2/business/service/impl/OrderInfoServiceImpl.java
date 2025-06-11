@@ -19,12 +19,30 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     /**
      * 分页获取采购订单
      *
-     * @param page       分页对象
+     * @param page      分页对象
      * @param queryFrom 采购订单
      * @return 结果
      */
     @Override
     public IPage<LinkedHashMap<String, Object>> queryPage(Page<OrderInfo> page, OrderInfo queryFrom) {
         return baseMapper.queryPage(page, queryFrom);
+    }
+
+    /**
+     * 设置采购订单状态
+     *
+     * @param id     主键ID
+     * @param status 状态
+     * @return 结果
+     */
+    @Override
+    public boolean setOrderStatus(Integer id, String status) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(id);
+        orderInfo.setStatus(status);
+        // TODO 采购状态更新发送消息或者代办
+
+        // 更新采购订单状态
+        return updateById(orderInfo);
     }
 }

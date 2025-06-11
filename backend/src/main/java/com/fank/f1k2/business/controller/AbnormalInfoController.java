@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.AbnormalInfo;
@@ -37,6 +38,17 @@ public class AbnormalInfoController {
     @GetMapping("/page")
     public R page(Page<AbnormalInfo> page, AbnormalInfo queryFrom) {
         return R.ok(abnormalInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 根据订单ID查询异常反馈
+     *
+     * @param orderId 订单ID
+     * @return 列表
+     */
+    @GetMapping("/queryAbnormalByOrderId")
+    public R queryAbnormalByOrderId(String orderId) {
+        return R.ok(abnormalInfoService.list(Wrappers.<AbnormalInfo>lambdaQuery().eq(AbnormalInfo::getOrderId, orderId)));
     }
 
     /**

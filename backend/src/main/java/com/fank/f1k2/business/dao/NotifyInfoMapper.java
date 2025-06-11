@@ -14,11 +14,20 @@ import java.util.LinkedHashMap;
 public interface NotifyInfoMapper extends BaseMapper<NotifyInfo> {
 
     /**
-     * 分页获取消息通知
+     * 分页获取消息通知-供应商
      *
      * @param page       分页对象
      * @param queryFrom 消息通知
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> queryPage(Page<NotifyInfo> page, @Param("queryForm") NotifyInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryPageBySupplier(Page<NotifyInfo> page, @Param("queryForm") NotifyInfo queryFrom);
+
+    /**
+     * 分页获取消息通知-员工
+     *
+     * @param page       分页对象
+     * @param queryFrom 消息通知
+     * @return 结果
+     */
+    IPage<LinkedHashMap<String, Object>> queryPageByStaff(Page<NotifyInfo> page, @Param("queryForm") NotifyInfo queryFrom);
 }

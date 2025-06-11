@@ -29,6 +29,9 @@
         mi.measurement_unit
         from
         abnormal_info ai
+        left join order_info oi on (oi.id = bi.order_id )
+        left join supplier_info si on (si.id = oi.supplier_id )
+        left join materials_info mi on (mi.code = oi.materials_code )
         where
         1 = 1
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">

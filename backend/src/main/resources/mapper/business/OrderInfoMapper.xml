@@ -4,25 +4,51 @@
 
     <!-- 分页获取采购订单 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            oi.id,
-            oi.code,
-            oi.plan_id,
-            oi.materials_code,
-            oi.total_price,
-            oi.supplier_id,
-            oi.status,
-            oi.audit_user,
-            oi.pass_rate,
-            oi.content,
-            oi.images,
-            oi.del_flag,
-            oi.create_date
-        from
-            order_info oi
-        where
-            1 = 1
-        order by
-            oi.create_date desc
+        SELECT
+        oi.id,
+        oi.CODE,
+        oi.plan_id,
+        oi.materials_code,
+        oi.total_price,
+        oi.supplier_id,
+        oi.STATUS,
+        oi.audit_user,
+        oi.pass_rate,
+        oi.content,
+        oi.images,
+        oi.del_flag,
+        oi.create_date,
+
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit
+        FROM
+        order_info oi
+        LEFT JOIN supplier_info si ON (si.id = oi.supplier_id)
+        LEFT JOIN materials_info mi ON (mi.CODE = oi.materials_code)
+        WHERE
+        1 = 1
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        <if test="queryForm.orderCode != null and queryForm.orderCode != ''">
+            AND oi.code like CONCAT("%",#{queryForm.orderCode},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND oi.STATUS = #{queryForm.status}
+        </if>
+        <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
+            AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
+        </if>
+        ORDER BY
+        oi.create_date DESC
     </select>
 </mapper>

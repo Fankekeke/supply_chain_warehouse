@@ -2,6 +2,8 @@ package com.fank.f1k2.business.entity;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -51,6 +53,24 @@ public class LogisticsInfo implements Serializable {
      * 删除标识
      */
     private String delFlag;
+
+    /**
+     * 供应商名称
+     */
+    @TableField(exist = false)
+    private String supplierName;
+
+    /**
+     * 订单编号
+     */
+    @TableField(exist = false)
+    private String orderCode;
+
+    /**
+     * 采购物料名称
+     */
+    @TableField(exist = false)
+    private String materialsName;
 
 
 }

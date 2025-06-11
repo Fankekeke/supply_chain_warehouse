@@ -2,6 +2,8 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.business.entity.AgencyInfo;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.NotifyInfo;
@@ -28,15 +30,38 @@ public class NotifyInfoController {
     private final INotifyInfoService notifyInfoService;
 
     /**
-     * 分页获取消息通知
+     * 分页获取消息通知-供应商
      *
      * @param page      分页对象
      * @param queryFrom 消息通知
      * @return 结果
      */
-    @GetMapping("/page")
-    public R page(Page<NotifyInfo> page, NotifyInfo queryFrom) {
-        return R.ok(notifyInfoService.queryPage(page, queryFrom));
+    @GetMapping("/page/supplier")
+    public R queryPageBySupplier(Page<NotifyInfo> page, NotifyInfo queryFrom) {
+        return R.ok(notifyInfoService.queryPageBySupplier(page, queryFrom));
+    }
+
+    /**
+     * 分页获取消息通知-员工
+     *
+     * @param page      分页对象
+     * @param queryFrom 消息通知
+     * @return 结果
+     */
+    @GetMapping("/page/staff")
+    public R queryPageByStaff(Page<NotifyInfo> page, NotifyInfo queryFrom) {
+        return R.ok(notifyInfoService.queryPageByStaff(page, queryFrom));
+    }
+
+    /**
+     * 消息通知已读
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @GetMapping("/finish")
+    public R notifyFinish(Integer id) {
+        return R.ok(notifyInfoService.update(Wrappers.<NotifyInfo>lambdaUpdate().set(NotifyInfo::getStatus, "1").set(NotifyInfo::getFinishDate, DateUtil.formatDateTime(new Date())).eq(NotifyInfo::getId, id)));
     }
 
     /**

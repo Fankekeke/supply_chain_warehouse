@@ -4,17 +4,33 @@
 
     <!-- 分页获取预警库存设置 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            eai.id,
-            eai.materials_code,
-            eai.min_value,
-            eai.create_date,
-            eai.del_flag
-        from
-            early_alert_info eai
-        where
-            1 = 1
-        order by
-            eai.create_date desc
+        SELECT
+        eai.id,
+        eai.materials_code,
+        eai.min_value,
+        eai.create_date,
+        eai.del_flag,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit
+        FROM
+        early_alert_info eai
+        LEFT JOIN materials_info mi ON (mi.`code` = eai.materials_code)
+        WHERE
+        1 = 1
+        <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
+            AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
+        </if>
+        <if test="queryForm.model != null and queryForm.model != ''">
+            AND mi.model like CONCAT("%",#{queryForm.model},"%")
+        </if>
+        <if test="queryForm.materialsCode != null and queryForm.materialsCode != ''">
+            AND eai.materials_code like CONCAT("%",#{queryForm.materialsCode},"%")
+        </if>
+        ORDER BY
+        eai.create_date DESC
     </select>
 </mapper>

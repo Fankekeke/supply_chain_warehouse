@@ -15,7 +15,7 @@ public interface IPerformanceWeightInfoService extends IService<PerformanceWeigh
     /**
      * 分页获取绩效评价权重
      *
-     * @param page       分页对象
+     * @param page      分页对象
      * @param queryFrom 绩效评价权重
      * @return 结果
      */

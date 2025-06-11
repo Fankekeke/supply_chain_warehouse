@@ -16,7 +16,7 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
     /**
      * 分页获取采购订单
      *
-     * @param page       分页对象
+     * @param page      分页对象
      * @param queryFrom 采购订单
      * @return 结果
      */

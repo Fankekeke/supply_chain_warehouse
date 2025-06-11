@@ -2,6 +2,8 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.EarlyAlertInfo;
@@ -67,7 +69,12 @@ public class EarlyAlertInfoController {
      * @return 结果
      */
     @PostMapping
-    public R save(@RequestBody EarlyAlertInfo addFrom) {
+    public R save(@RequestBody EarlyAlertInfo addFrom) throws F1k2Exception {
+        // 判断此物料是否已经添加库存设置
+        int count = earlyAlertInfoService.count(Wrappers.<EarlyAlertInfo>lambdaQuery().eq(EarlyAlertInfo::getMaterialsCode, addFrom.getMaterialsCode()));
+        if (count > 0) {
+            throw new F1k2Exception("此物料已添加库存设置");
+        }
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(earlyAlertInfoService.save(addFrom));
     }

@@ -4,20 +4,55 @@
 
     <!-- 分页获取采购计划 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            ppi.id,
-            ppi.purchase_code,
-            ppi.code,
-            ppi.order_id,
-            ppi.purchase_num,
-            ppi.status,
-            ppi.create_date,
-            ppi.del_flag
-        from
-            purchase_plan_info ppi
-        where
-            1 = 1
-        order by
-            ppi.create_date desc
+        SELECT
+        ppi.id,
+        ppi.purchase_code,
+        ppi.CODE,
+        ppi.order_id,
+        ppi.purchase_num,
+        ppi.STATUS,
+        ppi.create_date,
+        ppi.del_flag,
+        pni.pni.content,
+        pni.create_by,
+
+        oi.CODE AS orderCode,
+        oi.materials_code,
+        oi.total_price,
+        oi.STATUS as orderStatus,
+
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit
+        FROM
+        purchase_plan_info ppi
+        LEFT JOIN purchase_need_info pni ON (pni.`code` = ppi.purchase_code)
+        LEFT JOIN order_info oi ON (oi.id = li.order_id)
+        LEFT JOIN supplier_info si ON (si.id = oi.supplier_id)
+        LEFT JOIN materials_info mi ON (mi.CODE = ppi.CODE)
+        WHERE
+        1 = 1
+        <if test="queryForm.purchaseCode != null and queryForm.purchaseCode != ''">
+            AND ppi.purchase_code like CONCAT("%",#{queryForm.purchaseCode},"%")
+        </if>
+        <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
+            AND mi.NAME = #{queryForm.materialsName}
+        </if>
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.NAME = #{queryForm.supplierName}
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND ppi.STATUS = #{queryForm.status}
+        </if>
+        ORDER BY
+        ppi.create_date DESC
     </select>
 </mapper>

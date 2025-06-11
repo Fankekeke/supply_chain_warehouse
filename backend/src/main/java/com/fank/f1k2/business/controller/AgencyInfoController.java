@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.AgencyInfo;
@@ -28,7 +29,7 @@ public class AgencyInfoController {
     private final IAgencyInfoService agencyInfoService;
 
     /**
-     * 分页获取代办任务
+     * 分页获取代办任务-供应商
      *
      * @param page      分页对象
      * @param queryFrom 代办任务
@@ -40,7 +41,7 @@ public class AgencyInfoController {
     }
 
     /**
-     * 分页获取代办任务
+     * 分页获取代办任务-员工
      *
      * @param page      分页对象
      * @param queryFrom 代办任务
@@ -49,6 +50,17 @@ public class AgencyInfoController {
     @GetMapping("/page/staff")
     public R queryPageByStaff(Page<AgencyInfo> page, AgencyInfo queryFrom) {
         return R.ok(agencyInfoService.queryPageByStaff(page, queryFrom));
+    }
+
+    /**
+     * 代办任务完成
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @GetMapping("/finish")
+    public R agencyTaskFinish(Integer id) {
+        return R.ok(agencyInfoService.update(Wrappers.<AgencyInfo>lambdaUpdate().set(AgencyInfo::getStatus, "1").set(AgencyInfo::getFinishDate, DateUtil.formatDateTime(new Date())).eq(AgencyInfo::getId, id)));
     }
 
     /**

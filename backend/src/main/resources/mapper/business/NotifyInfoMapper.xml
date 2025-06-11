@@ -2,22 +2,68 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fank.f1k2.business.dao.NotifyInfoMapper">
 
-    <!-- 分页获取消息通知 -->
-    <select id="queryPage" resultType="java.util.LinkedHashMap">
+    <!-- 分页获取消息通知-供应商 -->
+    <select id="queryPageBySupplier" resultType="java.util.LinkedHashMap">
         select
-            ni.id,
-            ni.content,
-            ni.status,
-            ni.user_id,
-            ni.agency_type,
-            ni.create_date,
-            ni.finish_date,
-            ni.del_flag
+        ni.id,
+        ni.content,
+        ni.status,
+        ni.user_id,
+        ni.agency_type,
+        ni.create_date,
+        ni.finish_date,
+        ni.del_flag,
+
+        si.code as supplierCode,
+        si.name as supplierName,
+        si.charge_person,
+        si.phone,
+        si.images as supplierImages
         from
-            notify_info ni
+        notify_info ni
+        left join supplier_info si on (si.id = ai.user_id )
         where
-            1 = 1
+        1 = 1
+        AND ai.agency_type = '1'
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND ni.status = #{queryForm.status}
+        </if>
         order by
-            ni.create_date desc
+        ni.create_date desc
+    </select>
+
+    <!-- 分页获取消息通知-员工 -->
+    <select id="queryPageByStaff" resultType="java.util.LinkedHashMap">
+        select
+        ni.id,
+        ni.content,
+        ni.status,
+        ni.user_id,
+        ni.agency_type,
+        ni.create_date,
+        ni.finish_date,
+        ni.del_flag,
+
+        si.code as staffCode,
+        si.name as staffName,
+        si.phone,
+        si.images as staffImages
+        from
+        notify_info ni
+        left join staff_info si on (si.id = ai.user_id )
+        where
+        1 = 1
+        AND ai.agency_type = '2'
+        <if test="queryForm.staffName != null and queryForm.staffName != ''">
+            AND si.name like CONCAT("%",#{queryForm.staffName},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND ni.status = #{queryForm.status}
+        </if>
+        order by
+        ni.create_date desc
     </select>
 </mapper>

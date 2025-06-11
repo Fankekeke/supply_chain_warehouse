@@ -3,6 +3,9 @@ package com.fank.f1k2.business.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -78,5 +81,9 @@ public class PurchaseQuotationInfo implements Serializable {
      */
     private String delFlag;
 
-
+    /**
+     * 采购计划报价管理
+     */
+    @TableField(exist = false)
+    List<PurchaseQuotationInfo> purchaseQuotationInfoList;
 }

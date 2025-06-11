@@ -17,14 +17,26 @@ import java.util.LinkedHashMap;
 public class NotifyInfoServiceImpl extends ServiceImpl<NotifyInfoMapper, NotifyInfo> implements INotifyInfoService {
 
     /**
-     * 分页获取消息通知
+     * 分页获取消息通知-供应商
      *
-     * @param page       分页对象
+     * @param page      分页对象
      * @param queryFrom 消息通知
      * @return 结果
      */
     @Override
-    public IPage<LinkedHashMap<String, Object>> queryPage(Page<NotifyInfo> page, NotifyInfo queryFrom) {
-        return baseMapper.queryPage(page, queryFrom);
+    public IPage<LinkedHashMap<String, Object>> queryPageBySupplier(Page<NotifyInfo> page, NotifyInfo queryFrom) {
+        return baseMapper.queryPageBySupplier(page, queryFrom);
+    }
+
+    /**
+     * 分页获取消息通知-员工
+     *
+     * @param page      分页对象
+     * @param queryFrom 消息通知
+     * @return 结果
+     */
+    @Override
+    public IPage<LinkedHashMap<String, Object>> queryPageByStaff(Page<NotifyInfo> page, NotifyInfo queryFrom) {
+        return baseMapper.queryPageByStaff(page, queryFrom);
     }
 }
