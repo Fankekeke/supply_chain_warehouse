@@ -80,7 +80,7 @@ export default {
   .ant-pagination-next .ant-pagination-item-link, .ant-tag, .ant-modal-content, .ant-select-selection,
   .ant-select-dropdown, .ant-input-group-addon, .ant-input-number-input, .ant-input-number,
   .ant-pagination-options-quick-jumper input, .ant-alert {
-    border-radius: 2px !important;
+    border-radius: 5px !important;
   }
 
   .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab, .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
