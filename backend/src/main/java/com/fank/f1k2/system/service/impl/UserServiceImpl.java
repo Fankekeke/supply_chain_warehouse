@@ -251,7 +251,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         this.userRoleMapper.insert(ur);
 
         supplierInfo.setSysUserId(Math.toIntExact(user.getUserId()));
-        supplierInfoService.save(supplierInfo);
+        supplierInfo.setStatus("1");
+        supplierInfoService.updateById(supplierInfo);
 
         // 创建用户默认的个性化配置
         userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));

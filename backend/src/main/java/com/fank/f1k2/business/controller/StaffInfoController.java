@@ -43,6 +43,17 @@ public class StaffInfoController {
     }
 
     /**
+     * 查询员工列表
+     *
+     * @param queryFrom 员工管理
+     * @return 列表
+     */
+    @GetMapping("/queryStaffList")
+    public R queryStaffList(StaffInfo queryFrom) {
+        return R.ok(staffInfoService.queryStaffList(queryFrom));
+    }
+
+    /**
      * 查询员工管理详情
      *
      * @param id 主键ID

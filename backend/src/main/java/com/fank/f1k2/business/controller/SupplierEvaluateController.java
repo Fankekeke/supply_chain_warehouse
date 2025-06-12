@@ -2,6 +2,8 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierEvaluate;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +43,17 @@ public class SupplierEvaluateController {
     }
 
     /**
+     * 查询供应商绩效评价历史
+     *
+     * @param supplierId 供应商ID
+     * @return 列表
+     */
+    @GetMapping("/queryEvaluateHistoryBySupplierId")
+    public R queryEvaluateHistoryBySupplierId(Integer supplierId) {
+        return R.ok(supplierEvaluateService.list(Wrappers.<SupplierEvaluate>lambdaQuery().eq(SupplierEvaluate::getSupplierId, supplierId)));
+    }
+
+    /**
      * 查询供应商绩效评价详情
      *
      * @param id 主键ID
@@ -67,8 +81,17 @@ public class SupplierEvaluateController {
      * @return 结果
      */
     @PostMapping
-    public R save(@RequestBody SupplierEvaluate addFrom) {
+    public R save(@RequestBody SupplierEvaluate addFrom) throws F1k2Exception {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+        // 判断今年是否已评价
+        int year = DateUtil.year(new Date());
+        int count = supplierEvaluateService.count(Wrappers.<SupplierEvaluate>lambdaQuery().eq(SupplierEvaluate::getYear, year).eq(SupplierEvaluate::getSupplierId, addFrom.getSupplierId()));
+        if (count > 0) {
+            throw new F1k2Exception("该供应商今年已评价");
+        }
+        BigDecimal totalScore = supplierEvaluateService.calculateTotalScore(addFrom);
+        addFrom.setScore(totalScore);
+        addFrom.setYear(String.valueOf(year));
         return R.ok(supplierEvaluateService.save(addFrom));
     }
 
@@ -79,7 +102,9 @@ public class SupplierEvaluateController {
      * @return 结果
      */
     @PutMapping
-    public R edit(@RequestBody SupplierEvaluate editFrom) {
+    public R edit(@RequestBody SupplierEvaluate editFrom) throws F1k2Exception {
+        BigDecimal totalScore = supplierEvaluateService.calculateTotalScore(editFrom);
+        editFrom.setScore(totalScore);
         return R.ok(supplierEvaluateService.updateById(editFrom));
     }
 

@@ -25,8 +25,8 @@ public class PurchaseQuotationInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-    * 主键ID
-    */
+     * 主键ID
+     */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -80,6 +80,24 @@ public class PurchaseQuotationInfo implements Serializable {
      * 删除标识
      */
     private String delFlag;
+
+    /**
+     * 采购计划编号
+     */
+    @TableField(exist = false)
+    private String planCode;
+
+    /**
+     * 供应商名称
+     */
+    @TableField(exist = false)
+    private String supplierName;
+
+    /**
+     * 物料名称
+     */
+    @TableField(exist = false)
+    private String materialsName;
 
     /**
      * 采购计划报价管理

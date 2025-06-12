@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.PurchaseQuotationInfo;
@@ -40,6 +41,29 @@ public class PurchaseQuotationInfoController {
     }
 
     /**
+     * 根据采购计划ID查询采购计划报价
+     *
+     * @param planId 采购计划ID
+     * @return 结果
+     */
+    @GetMapping("/queryQuotationByPlanId")
+    public R queryQuotationByPlanId(Integer planId) {
+        return R.ok(purchaseQuotationInfoService.queryQuotationByPlanId(planId));
+    }
+
+    /**
+     * 修改采购计划报价状态
+     *
+     * @param id     主键ID
+     * @param status 采购计划报价状态
+     * @return 结果
+     */
+    @GetMapping("/setQuotationStatus")
+    public R setQuotationStatus(Integer id, String status) {
+        return R.ok(purchaseQuotationInfoService.setQuotationStatus(id, status));
+    }
+
+    /**
      * 查询采购计划报价管理详情
      *
      * @param id 主键ID
@@ -67,9 +91,9 @@ public class PurchaseQuotationInfoController {
      * @return 结果
      */
     @PostMapping
-    public R save(@RequestBody PurchaseQuotationInfo addFrom) {
+    public R save(@RequestBody PurchaseQuotationInfo addFrom) throws F1k2Exception {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(purchaseQuotationInfoService.save(addFrom));
+        return R.ok(purchaseQuotationInfoService.purchasePlanIssue(addFrom));
     }
 
     /**

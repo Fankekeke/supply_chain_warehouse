@@ -4,19 +4,35 @@
 
     <!-- 分页获取供应商审核记录 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            sar.id,
-            sar.code,
-            sar.content,
-            sar.status,
-            sar.create_date,
-            sar.audit_date,
-            sar.del_flag
-        from
-            supplier_audit_record sar
-        where
-            1 = 1
-        order by
-            sar.create_date desc
+        SELECT
+        sar.id,
+        sar.CODE,
+        sar.supplier_id,
+        sar.content,
+        sar.STATUS,
+        sar.create_date,
+        sar.audit_date,
+        sar.del_flag,
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+        FROM
+        supplier_audit_record sar
+        LEFT JOIN supplier_info si ON (si.id = sar.supplier_id)
+        WHERE
+        1 = 1
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND sar.CODE like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND sar.STATUS = #{queryForm.status}
+        </if>
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.NAME like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        ORDER BY
+        sar.create_date DESC
     </select>
 </mapper>

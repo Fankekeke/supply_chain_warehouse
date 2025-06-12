@@ -58,10 +58,40 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
             purchaseQuotationInfo.setStatus("0");
             purchaseQuotationInfo.setCreateDate(addFrom.getCreateDate());
         }
-
-        purchasePlanInfoMapper.update(Wrappers.<PurchasePlanInfo>lambdaUpdate().set(PurchasePlanInfo::getStatus, "1").eq(PurchasePlanInfo::getId, addFrom.getPlanId()));
-
         // 更新采购计划
+        PurchasePlanInfo purchasePlanInfo = purchasePlanInfoMapper.selectById(addFrom.getPlanId());
+        if (purchasePlanInfo != null) {
+            purchasePlanInfo.setStatus("1");
+            purchasePlanInfoMapper.updateById(purchasePlanInfo);
+        }
+        // TODO 采购计划状态更新发送消息或者代办
+
+        // 保存
         return this.saveBatch(purchaseQuotationInfoList);
+    }
+
+    /**
+     * 修改采购计划报价状态
+     *
+     * @param id     主键ID
+     * @param status 采购计划报价状态
+     * @return 结果
+     */
+    @Override
+    public boolean setQuotationStatus(Integer id, String status) {
+        // TODO 校验状态发送消息通知或代办
+
+        return this.update(Wrappers.<PurchaseQuotationInfo>lambdaUpdate().set(PurchaseQuotationInfo::getStatus, status).eq(PurchaseQuotationInfo::getId, id));
+    }
+
+    /**
+     * 根据采购计划ID查询采购计划报价
+     *
+     * @param planId 采购计划ID
+     * @return 采购计划报价列表
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryQuotationByPlanId(Integer planId) {
+        return baseMapper.queryQuotationByPlanId(planId);
     }
 }

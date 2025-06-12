@@ -40,6 +40,17 @@ public class SupplierAuditRecordController {
     }
 
     /**
+     * 供应商审核
+     *
+     * @param supplierAuditRecord 审核信息
+     * @return 结果
+     */
+    @PutMapping("/supplierAudit")
+    public R supplierAudit(SupplierAuditRecord supplierAuditRecord) throws Exception {
+        return R.ok(supplierAuditRecordService.supplierAudit(supplierAuditRecord));
+    }
+
+    /**
      * 查询供应商审核记录详情
      *
      * @param id 主键ID

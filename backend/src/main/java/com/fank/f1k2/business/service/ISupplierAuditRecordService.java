@@ -20,4 +20,12 @@ public interface ISupplierAuditRecordService extends IService<SupplierAuditRecor
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierAuditRecord> page, SupplierAuditRecord queryFrom);
+
+    /**
+     * 供应商审核
+     *
+     * @param supplierAuditRecord 审核信息
+     * @return 结果
+     */
+    boolean supplierAudit(SupplierAuditRecord supplierAuditRecord) throws Exception;
 }

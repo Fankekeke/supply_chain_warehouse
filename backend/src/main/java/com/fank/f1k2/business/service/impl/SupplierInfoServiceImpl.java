@@ -6,15 +6,22 @@ import com.fank.f1k2.business.entity.SupplierInfo;
 import com.fank.f1k2.business.dao.SupplierInfoMapper;
 import com.fank.f1k2.business.service.ISupplierInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fank.f1k2.business.service.ISupplierMaterialsInfoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SupplierInfoServiceImpl extends ServiceImpl<SupplierInfoMapper, SupplierInfo> implements ISupplierInfoService {
+
+    private final ISupplierMaterialsInfoService supplierMaterialsInfoService;
 
     /**
      * 分页获取供应商信息
@@ -26,5 +33,18 @@ public class SupplierInfoServiceImpl extends ServiceImpl<SupplierInfoMapper, Sup
     @Override
     public IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierInfo> page, SupplierInfo queryFrom) {
         return baseMapper.queryPage(page, queryFrom);
+    }
+
+    /**
+     * 查询匹配的供应商信息
+     *
+     * @param materialsCode 匹配码
+     * @return 结果
+     */
+    @Override
+    public List<SupplierInfo> querySupplierByMatch(String materialsCode) {
+        // 获取可以供应的供应商信息
+
+        return null;
     }
 }

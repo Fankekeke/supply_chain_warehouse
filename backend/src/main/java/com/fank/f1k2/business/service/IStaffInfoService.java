@@ -6,6 +6,7 @@ import com.fank.f1k2.business.entity.StaffInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
@@ -20,4 +21,12 @@ public interface IStaffInfoService extends IService<StaffInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> queryPage(Page<StaffInfo> page, StaffInfo queryFrom);
+
+    /**
+     * 查询员工列表
+     *
+     * @param queryFrom 员工管理
+     * @return 列表
+     */
+    List<LinkedHashMap<String, Object>> queryStaffList(StaffInfo queryFrom);
 }

@@ -41,6 +41,16 @@ public class SupplierInfoController {
     }
 
     /**
+     * 查询匹配的供应商信息
+     *
+     * @return 列表
+     */
+    @GetMapping("/querySupplierByMatch")
+    public R querySupplierByMatch(String materialsCode) {
+        return R.ok(supplierInfoService.querySupplierByMatch(materialsCode));
+    }
+
+    /**
      * 查询供应商信息详情
      *
      * @param id 主键ID

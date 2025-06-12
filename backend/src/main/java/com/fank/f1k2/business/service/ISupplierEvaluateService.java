@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierEvaluate;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fank.f1k2.common.exception.F1k2Exception;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 
 /**
@@ -20,4 +22,12 @@ public interface ISupplierEvaluateService extends IService<SupplierEvaluate> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> queryPage(Page<SupplierEvaluate> page, SupplierEvaluate queryFrom);
+
+    /**
+     * 计算供应商绩效评价总分
+     *
+     * @param supplierEvaluate 供应商绩效评价
+     * @return 结果
+     */
+    BigDecimal calculateTotalScore(SupplierEvaluate supplierEvaluate) throws F1k2Exception;
 }

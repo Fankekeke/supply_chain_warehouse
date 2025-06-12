@@ -5,30 +5,39 @@
     <!-- 分页获取供应商信息 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
         select
-            si.id,
-            si.code,
-            si.name,
-            si.content,
-            si.credit_code,
-            si.charge_person,
-            si.phone,
-            si.address,
-            si.longitude,
-            si.latitude,
-            si.images,
-            si.del_flag,
-            si.supply_type,
-            si.create_date,
-            si.business_license,
-            si.bank_name,
-            si.bank_account,
-            si.status,
-            si.sys_user_id
+        si.id,
+        si.code,
+        si.name,
+        si.content,
+        si.credit_code,
+        si.charge_person,
+        si.phone,
+        si.address,
+        si.longitude,
+        si.latitude,
+        si.images,
+        si.del_flag,
+        si.supply_type,
+        si.create_date,
+        si.business_license,
+        si.bank_name,
+        si.bank_account,
+        si.status,
+        si.sys_user_id
         from
-            supplier_info si
+        supplier_info si
         where
-            1 = 1
+        1 = 1
+        <if test="queryForm.name != null and queryForm.name != ''">
+            AND si.NAME like CONCAT("%",#{queryForm.name},"%")
+        </if>
+        <if test="queryForm.creditCode != null and queryForm.creditCode != ''">
+            AND si.credit_code like CONCAT("%",#{queryForm.creditCode},"%")
+        </if>
+        <if test="queryForm.chargePerson != null and queryForm.chargePerson != ''">
+            AND si.charge_person like CONCAT("%",#{queryForm.chargePerson},"%")
+        </if>
         order by
-            si.create_date desc
+        si.create_date desc
     </select>
 </mapper>

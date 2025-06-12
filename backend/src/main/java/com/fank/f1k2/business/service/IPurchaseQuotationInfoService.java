@@ -8,6 +8,7 @@ import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
@@ -30,4 +31,21 @@ public interface IPurchaseQuotationInfoService extends IService<PurchaseQuotatio
      * @return 结果
      */
     boolean purchasePlanIssue(PurchaseQuotationInfo addFrom) throws F1k2Exception;
+
+    /**
+     * 修改采购计划报价状态
+     *
+     * @param id     主键ID
+     * @param status 采购计划报价状态
+     * @return 结果
+     */
+    boolean setQuotationStatus(Integer id, String status);
+
+    /**
+     * 根据采购计划ID查询采购计划报价
+     *
+     * @param planId 采购计划ID
+     * @return 采购计划报价列表
+     */
+    List<LinkedHashMap<String, Object>> queryQuotationByPlanId(Integer planId);
 }

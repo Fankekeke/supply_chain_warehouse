@@ -4,25 +4,71 @@
 
     <!-- 分页获取员工管理 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            si.id,
-            si.code,
-            si.name,
-            si.staff_sex,
-            si.images,
-            si.create_date,
-            si.birth_date,
-            si.content,
-            si.email,
-            si.phone,
-            si.sys_user_id,
-            si.dept_id,
-            si.del_flag
-        from
-            staff_info si
-        where
-            1 = 1
-        order by
-            si.create_date desc
+        SELECT
+        si.id,
+        si.CODE,
+        si.NAME,
+        si.staff_sex,
+        si.images,
+        si.create_date,
+        si.birth_date,
+        si.content,
+        si.email,
+        si.phone,
+        si.sys_user_id,
+        si.dept_id,
+        si.del_flag,
+        dept.DEPT_NAME AS deptName
+        FROM
+        staff_info si
+        LEFT JOIN t_dept dept ON (dept.DEPT_ID = si.dept_id)
+        WHERE
+        1 = 1
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND si.CODE like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.name != null and queryForm.name != ''">
+            AND si.name like CONCAT("%",#{queryForm.name},"%")
+        </if>
+        <if test="queryForm.deptName != null and queryForm.deptName != ''">
+            AND dept.DEPT_NAME like CONCAT("%",#{queryForm.deptName},"%")
+        </if>
+        ORDER BY
+        si.create_date DESC
+    </select>
+
+    <!-- 查询员工列表 -->
+    <select id="queryStaffList" resultType="java.util.LinkedHashMap">
+        SELECT
+        si.id,
+        si.CODE,
+        si.NAME,
+        si.staff_sex,
+        si.images,
+        si.create_date,
+        si.birth_date,
+        si.content,
+        si.email,
+        si.phone,
+        si.sys_user_id,
+        si.dept_id,
+        si.del_flag,
+        dept.DEPT_NAME AS deptName
+        FROM
+        staff_info si
+        LEFT JOIN t_dept dept ON (dept.DEPT_ID = si.dept_id)
+        WHERE
+        1 = 1
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND si.CODE like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.name != null and queryForm.name != ''">
+            AND si.name like CONCAT("%",#{queryForm.name},"%")
+        </if>
+        <if test="queryForm.deptName != null and queryForm.deptName != ''">
+            AND dept.DEPT_NAME like CONCAT("%",#{queryForm.deptName},"%")
+        </if>
+        ORDER BY
+        si.create_date DESC
     </select>
 </mapper>
