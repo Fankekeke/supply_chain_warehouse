@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.StaffInfo;
@@ -40,6 +41,17 @@ public class StaffInfoController {
     @GetMapping("/page")
     public R page(Page<StaffInfo> page, StaffInfo queryFrom) {
         return R.ok(staffInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 根据系统用户ID查询员工信息
+     *
+     * @param sysUserId 系统用户ID
+     * @return 员工信息
+     */
+    @GetMapping("/queryStaffBySysUserId")
+    public R queryStaffBySysUserId(Integer sysUserId) {
+        return R.ok(staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getSysUserId, sysUserId)));
     }
 
     /**

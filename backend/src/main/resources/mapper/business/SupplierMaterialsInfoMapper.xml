@@ -4,21 +4,77 @@
 
     <!-- 分页获取供应商物料 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
-            smi.id,
-            smi.code,
-            smi.batch_record,
-            smi.package_set,
-            smi.brand,
-            smi.del_flag,
-            smi.create_date,
-            smi.status,
-            smi.supplier_id
-        from
-            supplier_materials_info smi
-        where
-            1 = 1
-        order by
-            smi.create_date desc
+        SELECT
+        smi.id,
+        smi.CODE,
+        smi.batch_record,
+        smi.package_set,
+        smi.brand,
+        smi.del_flag,
+        smi.create_date,
+        smi.STATUS,
+        smi.supplier_id,
+
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit,
+        FROM
+        supplier_materials_info smi
+        LEFT JOIN supplier_info si ON (si.id = smi.supplier_info)
+        LEFT JOIN materials_info mi ON (mi.`code` = smi.`code`)
+        WHERE
+        1 = 1
+        <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
+            AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
+        </if>
+        <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
+            AND si.NAME like CONCAT("%",#{queryForm.supplierName},"%")
+        </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND smi.STATUS = #{queryForm.status}
+        </if>
+        ORDER BY smi.create_date DESC
+    </select>
+
+    <!-- 根据供应商ID查询供应商物料 -->
+    <select id="queryMaterialsBySupplierId" resultType="java.util.LinkedHashMap">
+        SELECT
+        smi.id,
+        smi.CODE,
+        smi.batch_record,
+        smi.package_set,
+        smi.brand,
+        smi.del_flag,
+        smi.create_date,
+        smi.STATUS,
+        smi.supplier_id,
+
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit,
+        FROM
+        supplier_materials_info smi
+        LEFT JOIN supplier_info si ON (si.id = smi.supplier_info)
+        LEFT JOIN materials_info mi ON (mi.`code` = smi.`code`)
+        WHERE
+        1 = 1
+        AND smi.supplier_id = #{supplierId}
+        ORDER BY smi.create_date DESC
     </select>
 </mapper>

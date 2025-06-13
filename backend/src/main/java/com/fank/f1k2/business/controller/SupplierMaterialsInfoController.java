@@ -2,6 +2,9 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.service.ISupplierInfoService;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierMaterialsInfo;
@@ -27,6 +30,8 @@ public class SupplierMaterialsInfoController {
 
     private final ISupplierMaterialsInfoService supplierMaterialsInfoService;
 
+    private final ISupplierInfoService supplierInfoService;
+
     /**
      * 分页获取供应商物料
      *
@@ -37,6 +42,17 @@ public class SupplierMaterialsInfoController {
     @GetMapping("/page")
     public R page(Page<SupplierMaterialsInfo> page, SupplierMaterialsInfo queryFrom) {
         return R.ok(supplierMaterialsInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 根据供应商ID查询供应商物料
+     *
+     * @param supplierId 供应商ID
+     * @return 结果
+     */
+    @GetMapping("/queryMaterialsBySupplierId")
+    public R queryMaterialsBySupplierId(Integer supplierId) {
+        return R.ok(supplierMaterialsInfoService.queryMaterialsBySupplierId(supplierId));
     }
 
     /**
@@ -68,6 +84,11 @@ public class SupplierMaterialsInfoController {
      */
     @PostMapping
     public R save(@RequestBody SupplierMaterialsInfo addFrom) {
+        // 绑定供应商ID
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, addFrom.getSupplierId()));
+        if (supplierInfo != null) {
+            addFrom.setSupplierId(supplierInfo.getId());
+        }
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(supplierMaterialsInfoService.save(addFrom));
     }

@@ -43,10 +43,10 @@
             AND ppi.CODE like CONCAT("%",#{queryForm.planCode},"%")
         </if>
         <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
-            AND mi.NAME = #{queryForm.materialsName}
+            AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
         </if>
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
-            AND si.NAME = #{queryForm.supplierName}
+            AND si.NAME like CONCAT("%",#{queryForm.supplierName},"%")
         </if>
         <if test="queryForm.status != null and queryForm.status != ''">
             AND pqi.STATUS = #{queryForm.status}

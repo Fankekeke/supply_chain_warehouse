@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierInfo;
@@ -38,6 +39,17 @@ public class SupplierInfoController {
     @GetMapping("/page")
     public R page(Page<SupplierInfo> page, SupplierInfo queryFrom) {
         return R.ok(supplierInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 根据系统用户ID查询供应商
+     *
+     * @param sysUserId 系统用户ID
+     * @return 供应商列表
+     */
+    @GetMapping("/querySupplierBySysUserId")
+    public R querySupplierBySysUserId(Integer sysUserId) {
+        return R.ok(supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, sysUserId)));
     }
 
     /**

@@ -4,21 +4,29 @@
 
     <!-- 分页获取库房库存 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
-        select
+        SELECT
             wi.id,
-            wi.code,
-            wi.name,
+            wi.CODE,
+            wi.NAME,
             wi.quantity,
             wi.transaction_type,
             wi.create_date,
             wi.unit_price,
             wi.inbound_order_number,
-            wi.delivery_order_number
-        from
+            wi.delivery_order_number,
+
+            mi.NAME AS materialsName,
+            mi.model,
+            mi.images AS materialsImages,
+            mi.type,
+            mi.measurement_unit,
+        FROM
             warehouse_info wi
-        where
+                LEFT JOIN materials_info mi ON (mi.`code` = wi.`code`)
+        WHERE
             1 = 1
-        order by
-            wi.create_date desc
+          AND wi.transaction_type = 0
+        ORDER BY
+            wi.create_date DESC
     </select>
 </mapper>
