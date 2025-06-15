@@ -1,6 +1,6 @@
 <template>
-  <a-card :bordered="false" hoverable style="margin-top: 30px;background-color: #f9f9f9">
-    <div style="text-align: left;font-size: 14px;margin-bottom: 30px"><b></b></div>
+  <a-card :bordered="false" hoverable style="margin-top: 130px">
+    <div style="text-align: left;font-size: 20px;margin-bottom: 30px"><b>供应链协同采购系统</b></div>
     <div class="login">
       <a-form @submit.prevent="doLogin" :autoFormCreate="(form) => this.form = form">
         <div>
@@ -9,25 +9,25 @@
           <a-form-item
             fieldDecoratorId="name"
             :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入账户名', whitespace: true}]}">
-            <a-input>
+            <a-input size="large">
               <a-icon slot="prefix" type="user"></a-icon>
             </a-input>
           </a-form-item>
           <a-form-item
             fieldDecoratorId="password"
             :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入密码', whitespace: true}]}">
-            <a-input type="password">
+            <a-input size="large" type="password">
               <a-icon slot="prefix" type="lock"></a-icon>
             </a-input>
           </a-form-item>
         </div>
-        <a-form-item style="margin-top: 15px">
+        <a-form-item>
           <a-button :loading="loading" style="width: 100%; margin-top: 4px" size="large" htmlType="submit" type="primary">
             登录
           </a-button>
         </a-form-item>
         <div>
-          <!--          <a style="float: right" @click="regist">注册账户</a>-->
+          <a style="float: right" @click="regist">注册账户</a>
         </div>
       </a-form>
     </div>
@@ -131,18 +131,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login {
-  .icon {
-    font-size: 24px;
-    color: rgba(0, 0, 0, 0.2);
-    margin-left: 16px;
-    vertical-align: middle;
-    cursor: pointer;
-    transition: color 0.3s;
+  .login {
+    .icon {
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.2);
+      margin-left: 16px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color 0.3s;
 
-    &:hover {
-      color: #1890ff;
+      &:hover {
+        color: #1890ff;
+      }
     }
   }
-}
 </style>

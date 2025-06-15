@@ -30,6 +30,6 @@ public class F1k2Constant {
     public static final String TYPE_MENU = "0";
 
     // 网络资源 Url
-    public static final String MEIZU_WEATHER_URL = "http://aider.meizu.com/app/weather/listWeather";
+    public static final String MEIZU_WEATHER_URL = "https://aider.meizu.com/app/weather/listWeather";
 
 }

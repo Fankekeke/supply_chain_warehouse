@@ -94,4 +94,6 @@ public class WarehouseOutRecordController {
         return R.ok(warehouseOutRecordService.removeByIds(ids));
     }
 
+
+
 }

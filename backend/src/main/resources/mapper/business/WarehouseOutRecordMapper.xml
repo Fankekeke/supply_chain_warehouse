@@ -5,19 +5,28 @@
     <!-- 分页获取库存出库记录 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
         select
-            wor.id,
-            wor.code,
-            wor.name,
-            wor.total_price,
-            wor.out_user,
-            wor.remark,
-            wor.create_date,
-            wor.del_flag
+        wor.id,
+        wor.code,
+        wor.name,
+        wor.total_price,
+        wor.out_user,
+        wor.remark,
+        wor.create_date,
+        wor.del_flag
         from
-            warehouse_out_record wor
+        warehouse_out_record wor
         where
-            1 = 1
+        1 = 1
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND wor.code like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.name != null and queryForm.name != ''">
+            AND wor.name like CONCAT("%",#{queryForm.name},"%")
+        </if>
+        <if test="queryForm.outUser != null and queryForm.outUser != ''">
+            AND wor.out_user like CONCAT("%",#{queryForm.outUser},"%")
+        </if>
         order by
-            wor.create_date desc
+        wor.create_date desc
     </select>
 </mapper>

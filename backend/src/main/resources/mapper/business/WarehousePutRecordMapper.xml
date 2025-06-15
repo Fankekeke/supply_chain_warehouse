@@ -5,19 +5,28 @@
     <!-- 分页获取库存入库记录 -->
     <select id="queryPage" resultType="java.util.LinkedHashMap">
         select
-            wpr.id,
-            wpr.code,
-            wpr.name,
-            wpr.total_price,
-            wpr.put_user,
-            wpr.remark,
-            wpr.create_date,
-            wpr.del_flag
+        wpr.id,
+        wpr.code,
+        wpr.name,
+        wpr.total_price,
+        wpr.put_user,
+        wpr.remark,
+        wpr.create_date,
+        wpr.del_flag
         from
-            warehouse_put_record wpr
+        warehouse_put_record wpr
         where
-            1 = 1
+        1 = 1
+        <if test="queryForm.code != null and queryForm.code != ''">
+            AND wor.code like CONCAT("%",#{queryForm.code},"%")
+        </if>
+        <if test="queryForm.name != null and queryForm.name != ''">
+            AND wor.name like CONCAT("%",#{queryForm.name},"%")
+        </if>
+        <if test="queryForm.putUser != null and queryForm.putUser != ''">
+            AND wor.put_user like CONCAT("%",#{queryForm.putUser},"%")
+        </if>
         order by
-            wpr.create_date desc
+        wpr.create_date desc
     </select>
 </mapper>

@@ -3,9 +3,6 @@
     <a-row :gutter="8" class="head-info">
       <a-card class="head-info-card">
         <a-col :span="12">
-          <div class="head-info-avatar">
-            <img alt="头像" :src="avatar">
-          </div>
           <div class="head-info-count">
             <div class="head-info-welcome">
               {{welcomeMessage}}
@@ -214,21 +211,7 @@ export default {
       const date = new Date()
       const hour = date.getHours()
       let time = hour < 6 ? '早上好' : (hour <= 11 ? '上午好' : (hour <= 13 ? '中午好' : (hour <= 18 ? '下午好' : '晚上好')))
-      let welcomeArr = [
-        '喝杯咖啡休息下吧☕',
-        '要不要和朋友打局LOL',
-        '要不要和朋友打局王者荣耀',
-        '几天没见又更好看了呢😍',
-        '今天又写了几个Bug🐞呢',
-        '今天在群里吹水了吗',
-        '今天吃了什么好吃的呢',
-        '今天您微笑了吗😊',
-        '今天帮助别人解决问题了吗',
-        '准备吃些什么呢',
-        '周末要不要去看电影？'
-      ]
-      let index = Math.floor((Math.random() * welcomeArr.length))
-      return `${time}，${this.user.username}，${welcomeArr[index]}`
+      return `${time}，${this.user.username}`
     }
   },
   mounted () {
