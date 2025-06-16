@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 公共信息 控制层
+ *
  * @author FanK
  */
 @RestController
