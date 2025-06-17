@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Api(tags = "公告信息")
 @RestController
-@RequestMapping("/cos/bulletin-info")
+@RequestMapping("/business/bulletin-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BulletinInfoController {
 
