@@ -9,6 +9,8 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.PerformanceWeightInfo;
 import com.fank.f1k2.business.service.IPerformanceWeightInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
+@Api(tags = "绩效评价权重")
 @RestController
 @RequestMapping("/business/performance-weight-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -37,6 +40,7 @@ public class PerformanceWeightInfoController {
      * @param queryFrom 绩效评价权重
      * @return 结果
      */
+    @ApiOperation(value = "分页查询绩效权重", notes = "根据分页和筛选条件获取绩效评价权重信息")
     @GetMapping("/page")
     public R page(Page<PerformanceWeightInfo> page, PerformanceWeightInfo queryFrom) {
         return R.ok(performanceWeightInfoService.queryPage(page, queryFrom));
@@ -48,6 +52,7 @@ public class PerformanceWeightInfoController {
      * @param id 主键ID
      * @return 结果
      */
+    @ApiOperation(value = "绩效权重详情", notes = "通过ID获取绩效评价权重详细信息")
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(performanceWeightInfoService.getById(id));
@@ -58,6 +63,7 @@ public class PerformanceWeightInfoController {
      *
      * @return 结果
      */
+    @ApiOperation(value = "获取绩效权重列表", notes = "列出所有绩效评价权重信息")
     @GetMapping("/list")
     public R list() {
         return R.ok(performanceWeightInfoService.list());
@@ -69,6 +75,7 @@ public class PerformanceWeightInfoController {
      * @param addFrom 绩效评价权重对象
      * @return 结果
      */
+    @ApiOperation(value = "新增绩效权重", notes = "创建一个新的绩效评价权重记录")
     @PostMapping
     public R save(@RequestBody PerformanceWeightInfo addFrom) {
         return R.ok(performanceWeightInfoService.save(addFrom));
@@ -80,13 +87,13 @@ public class PerformanceWeightInfoController {
      * @param editFrom 绩效评价权重对象
      * @return 结果
      */
+    @ApiOperation(value = "修改绩效权重", notes = "更新已有的绩效权重配置并校验权重项合理性")
     @PutMapping
     public R edit(@RequestBody PerformanceWeightInfo editFrom) throws F1k2Exception {
         List<PerformanceWeightInfo> children = editFrom.getChildren();
         if (CollectionUtil.isEmpty(children)) {
             throw new F1k2Exception("请选择子项");
         }
-        // 校验权重项编号是否重复
         Set<String> seenCodes = new HashSet<>();
         BigDecimal sum = BigDecimal.ZERO;
         for (PerformanceWeightInfo child : children) {
@@ -104,11 +111,9 @@ public class PerformanceWeightInfoController {
             }
             sum = sum.add(weightRate);
         }
-        // 校验权重比率相加是否等于100
         if (sum.compareTo(BigDecimal.valueOf(100)) != 0) {
             throw new F1k2Exception("权重比率相加不等于100");
         }
-        // 删除旧数据
         performanceWeightInfoService.remove(Wrappers.<PerformanceWeightInfo>lambdaQuery());
         return R.ok(performanceWeightInfoService.saveBatch(children));
     }
@@ -119,6 +124,7 @@ public class PerformanceWeightInfoController {
      * @param ids 删除的主键ID
      * @return 结果
      */
+    @ApiOperation(value = "删除绩效权重", notes = "根据ID集合批量删除绩效评价权重记录")
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(performanceWeightInfoService.removeByIds(ids));

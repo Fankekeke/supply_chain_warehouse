@@ -8,6 +8,8 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.EarlyAlertInfo;
 import com.fank.f1k2.business.service.IEarlyAlertInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
+@Api(tags = "预警库存设置")
 @RestController
 @RequestMapping("/business/early-alert-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -36,6 +39,7 @@ public class EarlyAlertInfoController {
      * @param queryFrom 预警库存设置
      * @return 结果
      */
+    @ApiOperation(value = "分页查询预警库存", notes = "根据分页和筛选条件获取预警库存设置")
     @GetMapping("/page")
     public R page(Page<EarlyAlertInfo> page, EarlyAlertInfo queryFrom) {
         return R.ok(earlyAlertInfoService.queryPage(page, queryFrom));
@@ -47,6 +51,7 @@ public class EarlyAlertInfoController {
      * @param id 主键ID
      * @return 结果
      */
+    @ApiOperation(value = "预警库存详情", notes = "通过ID获取预警库存详细信息")
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(earlyAlertInfoService.getById(id));
@@ -57,6 +62,7 @@ public class EarlyAlertInfoController {
      *
      * @return 结果
      */
+    @ApiOperation(value = "获取预警库存列表", notes = "列出所有预警库存设置信息")
     @GetMapping("/list")
     public R list() {
         return R.ok(earlyAlertInfoService.list());
@@ -68,9 +74,9 @@ public class EarlyAlertInfoController {
      * @param addFrom 预警库存设置对象
      * @return 结果
      */
+    @ApiOperation(value = "新增预警库存", notes = "创建一个新的预警库存设置")
     @PostMapping
     public R save(@RequestBody EarlyAlertInfo addFrom) throws F1k2Exception {
-        // 判断此物料是否已经添加库存设置
         int count = earlyAlertInfoService.count(Wrappers.<EarlyAlertInfo>lambdaQuery().eq(EarlyAlertInfo::getMaterialsCode, addFrom.getMaterialsCode()));
         if (count > 0) {
             throw new F1k2Exception("此物料已添加库存设置");
@@ -85,6 +91,7 @@ public class EarlyAlertInfoController {
      * @param editFrom 预警库存设置对象
      * @return 结果
      */
+    @ApiOperation(value = "修改预警库存", notes = "根据传入的预警库存信息更新已有的设置")
     @PutMapping
     public R edit(@RequestBody EarlyAlertInfo editFrom) {
         return R.ok(earlyAlertInfoService.updateById(editFrom));
@@ -96,6 +103,7 @@ public class EarlyAlertInfoController {
      * @param ids 删除的主键ID
      * @return 结果
      */
+    @ApiOperation(value = "删除预警库存", notes = "根据ID集合批量删除预警库存设置")
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(earlyAlertInfoService.removeByIds(ids));

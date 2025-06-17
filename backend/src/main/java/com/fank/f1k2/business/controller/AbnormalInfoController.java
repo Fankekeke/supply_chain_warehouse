@@ -7,6 +7,8 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.AbnormalInfo;
 import com.fank.f1k2.business.service.IAbnormalInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
+@Api(tags = "异常反馈")
 @RestController
 @RequestMapping("/business/abnormal-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -35,6 +38,7 @@ public class AbnormalInfoController {
      * @param queryFrom 异常反馈
      * @return 结果
      */
+    @ApiOperation(value = "分页获取异常反馈", notes = "分页获取异常反馈")
     @GetMapping("/page")
     public R page(Page<AbnormalInfo> page, AbnormalInfo queryFrom) {
         return R.ok(abnormalInfoService.queryPage(page, queryFrom));
@@ -46,6 +50,7 @@ public class AbnormalInfoController {
      * @param orderId 订单ID
      * @return 列表
      */
+    @ApiOperation(value = "根据订单ID查询异常反馈", notes = "根据订单ID查询异常反馈")
     @GetMapping("/queryAbnormalByOrderId")
     public R queryAbnormalByOrderId(String orderId) {
         return R.ok(abnormalInfoService.list(Wrappers.<AbnormalInfo>lambdaQuery().eq(AbnormalInfo::getOrderId, orderId)));
@@ -57,6 +62,7 @@ public class AbnormalInfoController {
      * @param id 主键ID
      * @return 结果
      */
+    @ApiOperation(value = "查询异常反馈详情", notes = "查询异常反馈详情")
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(abnormalInfoService.getById(id));
@@ -67,6 +73,7 @@ public class AbnormalInfoController {
      *
      * @return 结果
      */
+    @ApiOperation(value = "查询异常反馈列表", notes = "查询异常反馈列表")
     @GetMapping("/list")
     public R list() {
         return R.ok(abnormalInfoService.list());
@@ -78,6 +85,7 @@ public class AbnormalInfoController {
      * @param addFrom 异常反馈对象
      * @return 结果
      */
+    @ApiOperation(value = "新增异常反馈", notes = "新增异常反馈")
     @PostMapping
     public R save(@RequestBody AbnormalInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
@@ -90,6 +98,7 @@ public class AbnormalInfoController {
      * @param editFrom 异常反馈对象
      * @return 结果
      */
+    @ApiOperation(value = "修改异常反馈", notes = "修改异常反馈")
     @PutMapping
     public R edit(@RequestBody AbnormalInfo editFrom) {
         return R.ok(abnormalInfoService.updateById(editFrom));
@@ -101,6 +110,7 @@ public class AbnormalInfoController {
      * @param ids 删除的主键ID
      * @return 结果
      */
+    @ApiOperation(value = "删除异常反馈", notes = "删除异常反馈")
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(abnormalInfoService.removeByIds(ids));

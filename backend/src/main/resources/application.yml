@@ -1,7 +1,22 @@
 server:
   port: 9527
 
+knife4j:
+  # 开启增强配置
+  enable: true
+  # 是否开启生产环境屏蔽   true:关闭swagger，false:开启swagger
+  production: false
+  basic:
+    # 是否开启认证
+    enable: false
+    # Basic认证用户名
+    username: admin
+    # Basic认证密码
+    password: 123456
+
 spring:
+  application:
+    name: test-knife4j
   # 文件上传
   servlet:
     multipart:
@@ -39,7 +54,7 @@ spring:
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/supply_chain_warehouse?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://127.0.0.1:3306/fan1ke2_cos?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
         # 数据源-2，名称为 test
 #        test:
 #          username: root
@@ -101,6 +116,6 @@ febs:
         num: 1000
   shiro:
     # 后端免认证接口 url
-    anonUrl: /login,/logout/**,/regist,/user/check/**,/file/**,/api/**,/imagesWeb/**
+    anonUrl: /login,/logout/**,/regist,/user/check/**,/file/**,/api/**,/imagesWeb/**,/doc.html,/webjars/**,/swagger-resources/**,/v2/api-docs,/druid/**,/favicon.ico
     # token有效期，单位秒
     jwtTimeOut: 3600

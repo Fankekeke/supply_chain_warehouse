@@ -6,6 +6,8 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierAuditRecord;
 import com.fank.f1k2.business.service.ISupplierAuditRecordService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
+@Api(tags = "供应商审核记录")
 @RestController
 @RequestMapping("/business/supplier-audit-record")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -34,6 +37,7 @@ public class SupplierAuditRecordController {
      * @param queryFrom 供应商审核记录
      * @return 结果
      */
+    @ApiOperation(value = "分页查询供应商审核", notes = "根据分页和筛选条件获取供应商审核记录信息")
     @GetMapping("/page")
     public R page(Page<SupplierAuditRecord> page, SupplierAuditRecord queryFrom) {
         return R.ok(supplierAuditRecordService.queryPage(page, queryFrom));
@@ -45,6 +49,7 @@ public class SupplierAuditRecordController {
      * @param supplierAuditRecord 审核信息
      * @return 结果
      */
+    @ApiOperation(value = "执行供应商审核", notes = "对供应商进行审核操作并保存审核记录")
     @PutMapping("/supplierAudit")
     public R supplierAudit(SupplierAuditRecord supplierAuditRecord) throws Exception {
         return R.ok(supplierAuditRecordService.supplierAudit(supplierAuditRecord));
@@ -56,6 +61,7 @@ public class SupplierAuditRecordController {
      * @param id 主键ID
      * @return 结果
      */
+    @ApiOperation(value = "审核记录详情", notes = "通过ID获取供应商审核详细信息")
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(supplierAuditRecordService.getById(id));
@@ -66,6 +72,7 @@ public class SupplierAuditRecordController {
      *
      * @return 结果
      */
+    @ApiOperation(value = "获取审核记录列表", notes = "列出所有供应商审核记录")
     @GetMapping("/list")
     public R list() {
         return R.ok(supplierAuditRecordService.list());
@@ -77,6 +84,7 @@ public class SupplierAuditRecordController {
      * @param addFrom 供应商审核记录对象
      * @return 结果
      */
+    @ApiOperation(value = "新增审核记录", notes = "创建一个新的供应商审核记录")
     @PostMapping
     public R save(@RequestBody SupplierAuditRecord addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
@@ -89,6 +97,7 @@ public class SupplierAuditRecordController {
      * @param editFrom 供应商审核记录对象
      * @return 结果
      */
+    @ApiOperation(value = "修改审核记录", notes = "更新已有的供应商审核记录信息")
     @PutMapping
     public R edit(@RequestBody SupplierAuditRecord editFrom) {
         return R.ok(supplierAuditRecordService.updateById(editFrom));
@@ -100,6 +109,7 @@ public class SupplierAuditRecordController {
      * @param ids 删除的主键ID
      * @return 结果
      */
+    @ApiOperation(value = "删除审核记录", notes = "根据ID集合批量删除供应商审核记录")
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(supplierAuditRecordService.removeByIds(ids));

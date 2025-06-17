@@ -1,6 +1,7 @@
 package com.fank.f1k2.business.controller;
 
 import com.fank.f1k2.common.utils.FileUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class FileController {
      */
     @ResponseBody
     @RequestMapping("/fileUpload")
+    @ApiOperation(value = "文件上传", notes = "文件上传")
     public String upload(@RequestParam("avatar") MultipartFile file) {
         // 1定义要上传文件 的存放路径
         String localPath = "G:/Project/20250111药房在线管理系统/db";

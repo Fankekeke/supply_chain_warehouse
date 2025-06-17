@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.StaffInfo;
 import com.fank.f1k2.business.service.IStaffInfoService;
 import com.fank.f1k2.system.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
+@Api(tags = "员工管理")
 @RestController
 @RequestMapping("/business/staff-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -38,6 +41,7 @@ public class StaffInfoController {
      * @param queryFrom 员工管理
      * @return 结果
      */
+    @ApiOperation(value = "分页查询员工", notes = "根据分页和筛选条件获取员工信息")
     @GetMapping("/page")
     public R page(Page<StaffInfo> page, StaffInfo queryFrom) {
         return R.ok(staffInfoService.queryPage(page, queryFrom));
@@ -49,9 +53,11 @@ public class StaffInfoController {
      * @param sysUserId 系统用户ID
      * @return 员工信息
      */
+    @ApiOperation(value = "按用户ID查员工", notes = "通过系统用户ID获取对应的员工信息")
     @GetMapping("/queryStaffBySysUserId")
     public R queryStaffBySysUserId(Integer sysUserId) {
-        return R.ok(staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getSysUserId, sysUserId)));
+        return R.ok(staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery()
+                .eq(StaffInfo::getSysUserId, sysUserId)));
     }
 
     /**
@@ -60,6 +66,7 @@ public class StaffInfoController {
      * @param queryFrom 员工管理
      * @return 列表
      */
+    @ApiOperation(value = "查询员工列表", notes = "根据条件列出当前所有员工信息")
     @GetMapping("/queryStaffList")
     public R queryStaffList(StaffInfo queryFrom) {
         return R.ok(staffInfoService.queryStaffList(queryFrom));
@@ -71,6 +78,7 @@ public class StaffInfoController {
      * @param id 主键ID
      * @return 结果
      */
+    @ApiOperation(value = "员工详情", notes = "通过ID获取员工详细信息")
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(staffInfoService.getById(id));
@@ -81,6 +89,7 @@ public class StaffInfoController {
      *
      * @return 结果
      */
+    @ApiOperation(value = "获取员工集合", notes = "列出所有员工记录")
     @GetMapping("/list")
     public R list() {
         return R.ok(staffInfoService.list());
@@ -92,6 +101,7 @@ public class StaffInfoController {
      * @param addFrom 员工管理对象
      * @return 结果
      */
+    @ApiOperation(value = "新增员工", notes = "创建一个新的员工并注册关联的系统用户")
     @PostMapping
     public R save(@RequestBody StaffInfo addFrom) throws Exception {
         addFrom.setCode("SAF-" + System.currentTimeMillis());
@@ -106,6 +116,7 @@ public class StaffInfoController {
      * @param editFrom 员工管理对象
      * @return 结果
      */
+    @ApiOperation(value = "修改员工信息", notes = "更新已有的员工信息")
     @PutMapping
     public R edit(@RequestBody StaffInfo editFrom) {
         return R.ok(staffInfoService.updateById(editFrom));
@@ -117,9 +128,9 @@ public class StaffInfoController {
      * @param ids 删除的主键ID
      * @return 结果
      */
+    @ApiOperation(value = "删除员工", notes = "根据ID集合批量删除员工记录")
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(staffInfoService.removeByIds(ids));
     }
-
 }

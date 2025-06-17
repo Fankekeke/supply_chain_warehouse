@@ -8,6 +8,8 @@ import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.MaterialsInfo;
 import com.fank.f1k2.business.service.IMaterialsInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
  */
+@Api(tags = "物料管理")
 @RestController
 @RequestMapping("/business/materials-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -39,6 +42,7 @@ public class MaterialsInfoController {
      * @param queryFrom 物料管理
      * @return 结果
      */
+    @ApiOperation(value = "分页查询物料", notes = "根据分页和筛选条件获取物料信息")
     @GetMapping("/page")
     public R page(Page<MaterialsInfo> page, MaterialsInfo queryFrom) {
         return R.ok(materialsInfoService.queryPage(page, queryFrom));
@@ -50,6 +54,7 @@ public class MaterialsInfoController {
      * @param id 主键ID
      * @return 结果
      */
+    @ApiOperation(value = "物料详情", notes = "通过ID获取物料详细信息")
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(materialsInfoService.getById(id));
@@ -60,6 +65,7 @@ public class MaterialsInfoController {
      *
      * @return 结果
      */
+    @ApiOperation(value = "获取物料列表", notes = "列出所有物料信息")
     @GetMapping("/list")
     public R list() {
         return R.ok(materialsInfoService.list());
@@ -71,14 +77,14 @@ public class MaterialsInfoController {
      * @param addFrom 物料管理对象
      * @return 结果
      */
+    @ApiOperation(value = "新增物料", notes = "创建一个新的物料并同步创建对应的预警设置")
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
     public R save(@RequestBody MaterialsInfo addFrom) {
         addFrom.setCode("MAT-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
 
-        // 保存预警设置
-        EarlyAlertInfo earlyAlertInfo  = new EarlyAlertInfo();
+        EarlyAlertInfo earlyAlertInfo = new EarlyAlertInfo();
         earlyAlertInfo.setMaterialsCode(addFrom.getCode());
         earlyAlertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         if (addFrom.getMinValue() != null) {
@@ -96,6 +102,7 @@ public class MaterialsInfoController {
      * @param editFrom 物料管理对象
      * @return 结果
      */
+    @ApiOperation(value = "修改物料", notes = "更新已有的物料信息")
     @PutMapping
     public R edit(@RequestBody MaterialsInfo editFrom) {
         return R.ok(materialsInfoService.updateById(editFrom));
@@ -107,9 +114,9 @@ public class MaterialsInfoController {
      * @param ids 删除的主键ID
      * @return 结果
      */
+    @ApiOperation(value = "删除物料", notes = "根据ID集合批量删除物料记录")
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
         return R.ok(materialsInfoService.removeByIds(ids));
     }
-
 }
