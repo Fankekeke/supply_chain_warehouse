@@ -44,6 +44,43 @@ public class WarehouseInfoController {
     }
 
     /**
+     * 分页获取预警库存
+     *
+     * @param page      分页对象
+     * @param queryFrom 库房库存
+     * @return 结果
+     */
+    @ApiOperation(value = "分页查询预警库存", notes = "根据分页和筛选条件获取预警库存信息")
+    @GetMapping("/queryAlertStockPage")
+    public R queryAlertStockPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom) {
+        return R.ok(warehouseInfoService.queryAlertStockPage(page, queryFrom));
+    }
+
+    /**
+     * 查询入库库存记录
+     *
+     * @param code 入库编码
+     * @return 列表
+     */
+    @ApiOperation(value = "查询入库库存记录", notes = "根据编码查询入库库存记录")
+    @GetMapping("/queryPutRecordDetail")
+    public R queryPutRecordDetail(@RequestParam(value = "code") String code) {
+        return R.ok(warehouseInfoService.queryPutRecordDetail(code));
+    }
+
+    /**
+     * 查询出库库存记录
+     *
+     * @param code 出库编码
+     * @return 列表
+     */
+    @ApiOperation(value = "查询出库库存记录", notes = "根据编码查询出库库存记录")
+    @GetMapping("/queryOutRecordDetail")
+    public R queryOutRecordDetail(@RequestParam(value = "code") String code) {
+        return R.ok(warehouseInfoService.queryOutRecordDetail(code));
+    }
+
+    /**
      * 查询库房库存详情
      *
      * @param id 主键ID

@@ -2,6 +2,9 @@ package com.fank.f1k2.business.entity;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -57,5 +60,10 @@ public class PurchaseNeedInfo implements Serializable {
      */
     private String delFlag;
 
+    /**
+     * 需求物料
+     */
+    @TableField(exist = false)
+    private List<MaterialsInfo> materialsInfoList;
 
 }

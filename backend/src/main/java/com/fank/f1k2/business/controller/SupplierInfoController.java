@@ -100,11 +100,12 @@ public class SupplierInfoController {
      */
     @ApiOperation(value = "新增供应商", notes = "创建一个新的供应商信息并设置初始状态为未启用")
     @PostMapping
-    public R save(@RequestBody SupplierInfo addFrom) {
+    public R save(@RequestBody SupplierInfo addFrom) throws Exception {
         addFrom.setCode("SUP-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        addFrom.setStatus("0");
-        return R.ok(supplierInfoService.save(addFrom));
+        addFrom.setStatus("1");
+        userService.registerSupplier(addFrom);
+        return R.ok(true);
     }
 
     /**

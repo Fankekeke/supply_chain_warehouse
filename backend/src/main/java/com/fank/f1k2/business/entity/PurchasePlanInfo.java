@@ -2,6 +2,7 @@ package com.fank.f1k2.business.entity;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
@@ -76,5 +77,9 @@ public class PurchasePlanInfo implements Serializable {
     @TableField(exist = false)
     private String supplierName;
 
-
+    /**
+     * 供应商信息
+     */
+    @TableField(exist = false)
+    private List<Integer> supplierIdList;
 }

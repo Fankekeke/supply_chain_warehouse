@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -94,6 +95,27 @@ public class MaterialsInfoController {
         }
         earlyAlertInfoService.save(earlyAlertInfo);
         return R.ok(materialsInfoService.save(addFrom));
+    }
+
+    /**
+     * 批量新增预警库存
+     *
+     * @return 批量结果
+     */
+    @ApiOperation(value = "批量新增预警库存", notes = "批量创建预警库存设置")
+    @PostMapping("/batchAddAlert")
+    public R batchAddAlert() {
+        // 获取所有物料信息
+        List<MaterialsInfo> materialsInfoList = materialsInfoService.list();
+        List<EarlyAlertInfo> earlyAlertInfoList = new ArrayList<>();
+        for (MaterialsInfo materialsInfo : materialsInfoList) {
+            EarlyAlertInfo earlyAlertInfo = new EarlyAlertInfo();
+            earlyAlertInfo.setMaterialsCode(materialsInfo.getCode());
+            earlyAlertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+            earlyAlertInfo.setMinValue(-1);
+            earlyAlertInfoList.add(earlyAlertInfo);
+        }
+        return R.ok(earlyAlertInfoService.saveBatch(earlyAlertInfoList));
     }
 
     /**

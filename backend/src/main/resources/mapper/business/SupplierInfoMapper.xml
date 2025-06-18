@@ -37,6 +37,9 @@
         <if test="queryForm.chargePerson != null and queryForm.chargePerson != ''">
             AND si.charge_person like CONCAT("%",#{queryForm.chargePerson},"%")
         </if>
+        <if test="queryForm.status != null and queryForm.status != ''">
+            AND si.status = #{queryForm.status}
+        </if>
         order by
         si.create_date desc
     </select>
