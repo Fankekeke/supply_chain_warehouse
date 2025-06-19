@@ -18,6 +18,6 @@
         1 = 1
         AND del_flag = 0
         order by
-        efi.create_date dessc
+        efi.create_date desc
     </select>
 </mapper>

@@ -7,37 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="信用代码"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.creditCode"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="供应商名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
+                <a-input v-model="queryParams.supplierName"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="负责人"
+                label="订单编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.chargePerson"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="审核状态"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.status" allowClear>
-                  <a-select-option value="0">未审核</a-select-option>
-                  <a-select-option value="1">已通过</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.orderCode"/>
               </a-form-item>
             </a-col>
           </div>
@@ -50,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -92,9 +73,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './SupplierAdd.vue'
-import moduleEdit from './SupplierEdit.vue'
-import moduleView from './SupplierView.vue'
+import moduleAdd from './MaterialsAdd.vue'
+import moduleEdit from './MaterialsEdit.vue'
+import moduleView from './MaterialsView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -140,23 +121,12 @@ export default {
     }),
     columns () {
       return [{
-        title: '供应商编号',
-        dataIndex: 'code',
+        title: '订单编号',
+        dataIndex: 'orderCode',
         ellipsis: true
       }, {
-        title: '供应商名称',
-        dataIndex: 'name',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '信用代码',
-        dataIndex: 'creditCode',
+        title: '异常供应商',
+        dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -188,57 +158,68 @@ export default {
           }
         }
       }, {
-        title: '可供类型',
-        dataIndex: 'supplyType',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '地址',
-        dataIndex: 'address',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '状态',
-        dataIndex: 'status',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          switch (text) {
-            case '0':
-              return <a-tag color="red">未审核</a-tag>
-            case '1':
-              return <a-tag color="green">已通过</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
         title: '供应商图片',
-        dataIndex: 'images',
+        dataIndex: 'supplierImages',
         customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user"/>
+          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
-        title: '创建时间',
+        title: '采购物料',
+        dataIndex: 'materialsName',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料型号',
+        dataIndex: 'model',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料图片',
+        dataIndex: 'materialsImages',
+        customRender: (text, record, index) => {
+          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user"
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+            </template>
+            <a-avatar shape="square" icon="user"
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+          </a-popover>
+        }
+      }, {
+        title: '异常内容',
+        dataIndex: 'remark',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '反馈时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -279,7 +260,7 @@ export default {
     },
     handleModuleAddSuccess () {
       this.moduleAdd.visiable = false
-      this.$message.success('新增供应商成功')
+      this.$message.success('新增异常反馈成功')
       this.search()
     },
     edit (record) {
@@ -291,7 +272,7 @@ export default {
     },
     handleModuleEditSuccess () {
       this.moduleEdit.visiable = false
-      this.$message.success('修改供应商成功')
+      this.$message.success('修改异常反馈成功')
       this.search()
     },
     batchDelete () {
@@ -306,7 +287,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/supplier-info/' + ids).then(() => {
+          that.$delete('/business/abnormal-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -379,7 +360,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/supplier-info/page', {
+      this.$get('/business/abnormal-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

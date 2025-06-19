@@ -102,7 +102,7 @@ import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -131,7 +131,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       loading: false,
       fileList: [],
@@ -155,7 +155,7 @@ export default {
     }
   },
   methods: {
-    local(module) {
+    local (module) {
       baiduMap.clearOverlays()
       baiduMap.rMap().enableScrollWheelZoom(true)
       let point = new BMap.Point(module.longitude, module.latitude)
@@ -164,7 +164,7 @@ export default {
       // let driving = new BMap.DrivingRoute(baiduMap.rMap(), {renderOptions:{map: baiduMap.rMap(), autoViewport: true}});
       // driving.search(new BMap.Point(this.nowPoint.lng,this.nowPoint.lat), new BMap.Point(scenic.point.split(",")[0],scenic.point.split(",")[1]));
     },
-    imagesInit(images) {
+    imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []
         images.split(',').forEach((image, index) => {
@@ -173,20 +173,20 @@ export default {
         this.fileList = imageList
       }
     },
-    handleCancel() {
+    handleCancel () {
       this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
       }
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange({fileList}) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    onClose() {
+    onClose () {
       this.$emit('close')
     }
   }

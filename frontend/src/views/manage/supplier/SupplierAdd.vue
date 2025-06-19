@@ -136,7 +136,7 @@
 
     <drawerMap :childrenDrawerShow="childrenDrawer" @handlerClosed="handlerClosed"></drawerMap>
 
-    <div class="drawer-bottom-button">
+    <div class="drawer-bootom-button">
       <a-popconfirm title="确定放弃编辑？" @confirm="onClose" okText="确定" cancelText="取消">
         <a-button style="margin-right: .8rem">取消</a-button>
       </a-popconfirm>
@@ -150,7 +150,7 @@ import baiduMap from '@/utils/map/baiduMap'
 import drawerMap from '@/utils/map/searchmap/drawerMap'
 import {mapState} from 'vuex'
 
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -185,7 +185,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       formItemLayout,
       form: this.$form.createForm(this),
@@ -199,7 +199,7 @@ export default {
     }
   },
   methods: {
-    handlerClosed(localPoint) {
+    handlerClosed (localPoint) {
       this.childrenDrawer = false
       if (localPoint !== null && localPoint !== undefined) {
         this.localPoint = localPoint
@@ -224,34 +224,34 @@ export default {
         })
       }
     },
-    showChildrenDrawer() {
+    showChildrenDrawer () {
       this.childrenDrawer = true
     },
-    onChildrenDrawerClose() {
+    onChildrenDrawerClose () {
       this.childrenDrawer = false
     },
-    handleCancel() {
+    handleCancel () {
       this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
       }
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange({fileList}) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    reset() {
+    reset () {
       this.loading = false
       this.form.resetFields()
     },
-    onClose() {
+    onClose () {
       this.reset()
       this.$emit('close')
     },
-    handleSubmit() {
+    handleSubmit () {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {

@@ -7,37 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="信用代码"
+                label="标题"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.creditCode"/>
+                <a-input v-model="queryParams.title"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="供应商名称"
+                label="内容"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="负责人"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.chargePerson"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="审核状态"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.status" allowClear>
-                  <a-select-option value="0">未审核</a-select-option>
-                  <a-select-option value="1">已通过</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.content"/>
               </a-form-item>
             </a-col>
           </div>
@@ -63,58 +44,67 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
+        <template slot="titleShow" slot-scope="text, record">
+          <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.title }}
+              </template>
+              {{ record.title.slice(0, 8) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.content }}
+              </template>
+              {{ record.content.slice(0, 30) }} ...
+            </a-tooltip>
+          </template>
+        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
         </template>
       </a-table>
     </div>
-    <module-add
-      v-if="moduleAdd.visiable"
-      @close="handleModuleAddClose"
-      @success="handleModuleAddSuccess"
-      :moduleAddVisiable="moduleAdd.visiable">
-    </module-add>
-    <module-edit
-      ref="moduleEdit"
-      @close="handleModuleEditClose"
-      @success="handleModuleEditSuccess"
-      :moduleEditVisiable="moduleEdit.visiable">
-    </module-edit>
-    <module-view
-      @close="handleModuleViewClose"
-      :moduleShow="moduleView.visiable"
-      :moduleData="moduleView.data">
-    </module-view>
+    <bulletin-add
+      v-if="bulletinAdd.visiable"
+      @close="handleBulletinAddClose"
+      @success="handleBulletinAddSuccess"
+      :bulletinAddVisiable="bulletinAdd.visiable">
+    </bulletin-add>
+    <bulletin-edit
+      ref="bulletinEdit"
+      @close="handleBulletinEditClose"
+      @success="handleBulletinEditSuccess"
+      :bulletinEditVisiable="bulletinEdit.visiable">
+    </bulletin-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './SupplierAdd.vue'
-import moduleEdit from './SupplierEdit.vue'
-import moduleView from './SupplierView.vue'
+import BulletinAdd from './BulletinAdd'
+import BulletinEdit from './BulletinEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
-
 moment.locale('zh-cn')
 
 export default {
-  name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  name: 'Bulletin',
+  components: {BulletinAdd, BulletinEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      moduleAdd: {
+      bulletinAdd: {
         visiable: false
       },
-      moduleEdit: {
+      bulletinEdit: {
         visiable: false
-      },
-      moduleView: {
-        visiable: false,
-        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -140,105 +130,15 @@ export default {
     }),
     columns () {
       return [{
-        title: '供应商编号',
-        dataIndex: 'code',
+        title: '标题',
+        dataIndex: 'title',
         ellipsis: true
       }, {
-        title: '供应商名称',
-        dataIndex: 'name',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        title: '公告内容',
+        dataIndex: 'content',
+        ellipsis: true
       }, {
-        title: '信用代码',
-        dataIndex: 'creditCode',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '可供类型',
-        dataIndex: 'supplyType',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '地址',
-        dataIndex: 'address',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '状态',
-        dataIndex: 'status',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          switch (text) {
-            case '0':
-              return <a-tag color="red">未审核</a-tag>
-            case '1':
-              return <a-tag color="green">已通过</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '供应商图片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '创建时间',
+        title: '发布时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -246,7 +146,32 @@ export default {
           } else {
             return '- -'
           }
+        },
+        ellipsis: true
+      }, {
+        title: '消息类型',
+        dataIndex: 'type',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag>通知</a-tag>
+            case 2:
+              return <a-tag>公告</a-tag>
+            default:
+              return '- -'
+          }
         }
+      }, {
+        title: '上传人',
+        dataIndex: 'publisher',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -258,13 +183,6 @@ export default {
     this.fetch()
   },
   methods: {
-    handleModuleViewOpen (row) {
-      this.moduleView.data = row
-      this.moduleView.visiable = true
-    },
-    handleModuleViewClose () {
-      this.moduleView.visiable = false
-    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -272,27 +190,30 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.moduleAdd.visiable = true
+      this.bulletinAdd.visiable = true
     },
-    handleModuleAddClose () {
-      this.moduleAdd.visiable = false
+    handleBulletinAddClose () {
+      this.bulletinAdd.visiable = false
     },
-    handleModuleAddSuccess () {
-      this.moduleAdd.visiable = false
-      this.$message.success('新增供应商成功')
+    handleBulletinAddSuccess () {
+      this.bulletinAdd.visiable = false
+      this.$message.success('新增公告成功')
       this.search()
     },
     edit (record) {
-      this.$refs.moduleEdit.setFormValues(record)
-      this.moduleEdit.visiable = true
+      this.$refs.bulletinEdit.setFormValues(record)
+      this.bulletinEdit.visiable = true
     },
-    handleModuleEditClose () {
-      this.moduleEdit.visiable = false
+    handleBulletinEditClose () {
+      this.bulletinEdit.visiable = false
     },
-    handleModuleEditSuccess () {
-      this.moduleEdit.visiable = false
-      this.$message.success('修改供应商成功')
+    handleBulletinEditSuccess () {
+      this.bulletinEdit.visiable = false
+      this.$message.success('修改公告成功')
       this.search()
+    },
+    handleDeptChange (value) {
+      this.queryParams.deptId = value || ''
     },
     batchDelete () {
       if (!this.selectedRowKeys.length) {
@@ -306,7 +227,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/supplier-info/' + ids).then(() => {
+          that.$delete('/business/bulletin-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -376,10 +297,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.status === undefined) {
-        delete params.status
-      }
-      this.$get('/business/supplier-info/page', {
+      this.$get('/business/bulletin-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

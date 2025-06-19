@@ -11,7 +11,6 @@
 
 <script>
 import moment from 'moment'
-import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 

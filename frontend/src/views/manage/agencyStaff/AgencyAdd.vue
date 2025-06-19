@@ -1,39 +1,38 @@
 <template>
   <a-drawer
-    title="修改预警库存"
+    title="新增代办任务"
     :maskClosable="false"
-    width=850
+    width=450
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="moduleEditVisiable"
+    :visible="moduleAddVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
-        <a-col :span="12">
-          <a-form-item label='选择物料'>
+        <a-col :span="24">
+          <a-form-item label='供应商'>
             <a-select v-decorator="[
-              'materialsCode',
-              { rules: [{ required: true, message: '请选择物料!' }] }
+              'userId',
+              { rules: [{ required: true, message: '请选择代办供应商!' }] }
               ]">
-              <a-select-option :value="item.code" v-for="(item, index) in materialsList" :key="index">{{ item.name }}
+              <a-select-option :value="item.id" v-for="(item, index) in supplierList" :key="index">{{ item.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='预警值' v-bind="formItemLayout">
-            <a-input-number style="width: 100%"
-                            v-decorator="[
-            'minValue',
-            { rules: [{ required: true, message: '请输入预警值!' }] }
+        <a-col :span="24">
+          <a-form-item label='代办内容' v-bind="formItemLayout">
+            <a-textarea :rows="8" v-decorator="[
+            'content',
+            { rules: [{ required: true, message: '请输入代办内容!' }] }
             ]"/>
           </a-form-item>
         </a-col>
       </a-row>
     </a-form>
 
-    <div class="drawer-bottom-button">
+    <div class="drawer-bootom-button">
       <a-popconfirm title="确定放弃编辑？" @confirm="onClose" okText="确定" cancelText="取消">
         <a-button style="margin-right: .8rem">取消</a-button>
       </a-popconfirm>
@@ -45,7 +44,7 @@
 <script>
 import {mapState} from 'vuex'
 
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -59,9 +58,9 @@ const formItemLayout = {
   wrapperCol: {span: 24}
 }
 export default {
-  name: 'moduleEdit',
+  name: 'moduleAdd',
   props: {
-    moduleEditVisiable: {
+    moduleAddVisiable: {
       default: false
     }
   },
@@ -71,95 +70,65 @@ export default {
     }),
     show: {
       get: function () {
-        return this.moduleEditVisiable
+        return this.moduleAddVisiable
       },
       set: function () {
       }
     }
   },
-  data() {
+  data () {
     return {
-      rowId: null,
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
       previewVisible: false,
       previewImage: '',
-      materialsList: []
+      supplierList: []
     }
   },
-  mounted() {
-    this.queryMaterialsList()
+  mounted () {
+    this.querySupplier()
   },
   methods: {
-    queryMaterialsList() {
-      this.$get('/business/materials-info/list').then((r) => {
-        this.materialsList = r.data
+    querySupplier () {
+      this.$get('/business/supplier-info/list').then((r) => {
+        this.supplierList = r.data.data
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
       }
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange({fileList}) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    imagesInit(images) {
-      if (images !== null && images !== '') {
-        let imageList = []
-        images.split(',').forEach((image, index) => {
-          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
-        })
-        this.fileList = imageList
-      }
-    },
-    setFormValues({...module}) {
-      this.rowId = module.id
-      let fields = ['materialsCode', 'minValue']
-      let obj = {}
-      Object.keys(module).forEach((key) => {
-        if (key === 'images') {
-          this.fileList = []
-          this.imagesInit(module['images'])
-        }
-        if (fields.indexOf(key) !== -1) {
-          this.form.getFieldDecorator(key)
-          obj[key] = module[key]
-        }
-      })
-      this.form.setFieldsValue(obj)
-    },
-    reset() {
+    reset () {
       this.loading = false
       this.form.resetFields()
     },
-    onClose() {
+    onClose () {
       this.reset()
       this.$emit('close')
     },
-    handleSubmit() {
+    handleSubmit () {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {
-        if (image.response !== undefined) {
-          images.push(image.response)
-        } else {
-          images.push(image.name)
-        }
+        images.push(image.response)
       })
       this.form.validateFields((err, values) => {
-        values.id = this.rowId
         values.images = images.length > 0 ? images.join(',') : null
+        values.agencyType = '1'
         if (!err) {
           this.loading = true
-          this.$put('/business/early-alert-info', {
+          this.$post('/business/agency-info', {
             ...values
           }).then((r) => {
             this.reset()

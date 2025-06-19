@@ -81,9 +81,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AlertAdd.vue'
-import moduleEdit from './AlertEdit.vue'
-import moduleView from './AlertView.vue'
+import moduleAdd from './EarlyAdd.vue'
+import moduleEdit from './EarlyEdit.vue'
+import moduleView from './EarlyView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
