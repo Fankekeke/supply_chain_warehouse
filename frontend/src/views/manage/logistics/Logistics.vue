@@ -21,6 +21,14 @@
                 <a-input v-model="queryParams.orderCode"/>
               </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="物料名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.materialsName"/>
+              </a-form-item>
+            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -73,9 +81,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AbnormalAdd.vue'
-import moduleEdit from './AbnormalEdit.vue'
-import moduleView from './AbnormalView.vue'
+import moduleAdd from './LogisticsAdd.vue'
+import moduleEdit from './LogisticsEdit.vue'
+import moduleView from './LogisticsView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -125,7 +133,7 @@ export default {
         dataIndex: 'orderCode',
         ellipsis: true
       }, {
-        title: '异常供应商',
+        title: '供应商名称',
         dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -183,32 +191,7 @@ export default {
           }
         }
       }, {
-        title: '物料型号',
-        dataIndex: 'model',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '物料图片',
-        dataIndex: 'materialsImages',
-        customRender: (text, record, index) => {
-          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '异常内容',
+        title: '当前物流',
         dataIndex: 'remark',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -219,7 +202,7 @@ export default {
           }
         }
       }, {
-        title: '反馈时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -260,7 +243,7 @@ export default {
     },
     handleModuleAddSuccess() {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增订单物流成功')
       this.search()
     },
     edit(record) {
@@ -272,7 +255,7 @@ export default {
     },
     handleModuleEditSuccess() {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改订单物流成功')
       this.search()
     },
     batchDelete() {
@@ -287,7 +270,7 @@ export default {
         centered: true,
         onOk() {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/logistics-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +343,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/logistics-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

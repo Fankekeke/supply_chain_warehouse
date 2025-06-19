@@ -15,10 +15,22 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="审核编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.code"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="完成状态"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParams.status" allowClear>
+                  <a-select-option value="0">未审核</a-select-option>
+                  <a-select-option value="1">通过</a-select-option>
+                  <a-select-option value="2">驳回</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -45,8 +57,8 @@
                :scroll="{ x: 900 }"
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
+          <a-icon v-if="record.status != 0" type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
+          <a-icon v-else type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="handleModuleViewOpen(record)" title="修 改"
                   style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -65,6 +77,7 @@
     </module-edit>
     <module-view
       @close="handleModuleViewClose"
+      @success="handleModuleViewSuccess"
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
@@ -73,9 +86,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AbnormalAdd.vue'
-import moduleEdit from './AbnormalEdit.vue'
-import moduleView from './AbnormalView.vue'
+import moduleAdd from './AuditAdd.vue'
+import moduleEdit from './AuditEdit.vue'
+import moduleView from './AuditView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -121,11 +134,38 @@ export default {
     }),
     columns() {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '审核编号',
+        dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '异常供应商',
+        title: '审核备注',
+        dataIndex: 'content',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '审核状态',
+        dataIndex: 'status',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag>未审核</a-tag>
+            case '1':
+              return <a-tag color="green">通过</a-tag>
+            case '2':
+              return <a-tag color="red">驳回</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '供应商名称',
         dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -183,8 +223,8 @@ export default {
           }
         }
       }, {
-        title: '物料型号',
-        dataIndex: 'model',
+        title: '审核时间',
+        dataIndex: 'auditDate',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -194,32 +234,7 @@ export default {
           }
         }
       }, {
-        title: '物料图片',
-        dataIndex: 'materialsImages',
-        customRender: (text, record, index) => {
-          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '异常内容',
-        dataIndex: 'remark',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '反馈时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -246,6 +261,11 @@ export default {
     handleModuleViewClose() {
       this.moduleView.visiable = false
     },
+    handleModuleViewSuccess() {
+      this.moduleView.visiable = false
+      this.$message.success('审核成功')
+      this.search()
+    },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -260,7 +280,7 @@ export default {
     },
     handleModuleAddSuccess() {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增审核成功')
       this.search()
     },
     edit(record) {
@@ -272,7 +292,7 @@ export default {
     },
     handleModuleEditSuccess() {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改审核成功')
       this.search()
     },
     batchDelete() {
@@ -287,7 +307,7 @@ export default {
         centered: true,
         onOk() {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/supplier-audit-record/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +380,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/supplier-audit-record/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

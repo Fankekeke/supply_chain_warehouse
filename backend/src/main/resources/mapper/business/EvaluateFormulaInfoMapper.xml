@@ -6,6 +6,8 @@
     <select id="queryPage" resultType="java.util.LinkedHashMap">
         select
         id,
+        `code`,
+        name,
         formula_content,
         use_flag,
         create_date,

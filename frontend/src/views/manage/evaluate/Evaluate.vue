@@ -15,10 +15,10 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="所属年份"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.year"/>
               </a-form-item>
             </a-col>
           </div>
@@ -73,9 +73,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AbnormalAdd.vue'
-import moduleEdit from './AbnormalEdit.vue'
-import moduleView from './AbnormalView.vue'
+import moduleAdd from './EvaluateAdd.vue'
+import moduleEdit from './EvaluateEdit.vue'
+import moduleView from './EvaluateView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -121,34 +121,12 @@ export default {
     }),
     columns() {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '评价年份',
+        dataIndex: 'year',
         ellipsis: true
       }, {
-        title: '异常供应商',
+        title: '供应商名称',
         dataIndex: 'supplierName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -172,54 +150,84 @@ export default {
           </a-popover>
         }
       }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
+        title: '质量评分',
+        dataIndex: 'qualityScore',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+            return text + '分'
           } else {
             return '- -'
           }
         }
       }, {
-        title: '物料型号',
-        dataIndex: 'model',
+        title: '成品评分',
+        dataIndex: 'costSocre',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + '分'
           } else {
             return '- -'
           }
         }
       }, {
-        title: '物料图片',
-        dataIndex: 'materialsImages',
-        customRender: (text, record, index) => {
-          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '异常内容',
-        dataIndex: 'remark',
+        title: '交付评分',
+        dataIndex: 'deliveryScore',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + '分'
           } else {
             return '- -'
           }
         }
       }, {
-        title: '反馈时间',
+        title: '服务评分',
+        dataIndex: 'serviceScore',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '分'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '创新与合作评分',
+        dataIndex: 'innovationScore',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '分'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '财务评分',
+        dataIndex: 'financialScore',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '分'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '综合评分',
+        dataIndex: 'score',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '分'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '评价时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -260,7 +268,7 @@ export default {
     },
     handleModuleAddSuccess() {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增供应商评价成功')
       this.search()
     },
     edit(record) {
@@ -272,7 +280,7 @@ export default {
     },
     handleModuleEditSuccess() {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改供应商评价成功')
       this.search()
     },
     batchDelete() {
@@ -287,7 +295,7 @@ export default {
         centered: true,
         onOk() {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/supplier-evaluate/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +368,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/supplier-evaluate/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

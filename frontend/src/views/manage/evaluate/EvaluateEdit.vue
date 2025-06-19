@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="修改异常反馈"
+    title="修改供应商评价"
     :maskClosable="false"
     width=850
     placement="right"
@@ -11,66 +11,89 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='异常反馈名称'>
-            <a-input v-decorator="[
-            'name',
-            { rules: [{ required: true, message: '请输入名称!' }] }
+          <a-form-item label='评价供应商'>
+            <a-select v-decorator="[
+              'supplierId',
+              { rules: [{ required: true, message: '请选择评价供应商!' }] }
+              ]">
+              <a-select-option :value="item.id" v-for="(item, index) in supplierList" :key="index">{{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='评价年份' v-bind="formItemLayout">
+            <a-select disabled v-decorator="[
+            'year',
+            { rules: [{ required: true, message: '请输入评价年份!' }] }
+            ]">
+              <a-select-option value="2022">2022</a-select-option>
+              <a-select-option value="2023">2023</a-select-option>
+              <a-select-option value="2024">2024</a-select-option>
+              <a-select-option value="2025">2025</a-select-option>
+              <a-select-option value="2026">2026</a-select-option>
+              <a-select-option value="2027">2027</a-select-option>
+              <a-select-option value="2028">2028</a-select-option>
+              <a-select-option value="2029">2029</a-select-option>
+              <a-select-option value="2030">2030</a-select-option>
+              <a-select-option value="2031">2031</a-select-option>
+              <a-select-option value="2032">2032</a-select-option>
+              <a-select-option value="2033">2033</a-select-option>
+              <a-select-option value="2034">2034</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='质量评分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'qualityScore',
+            { rules: [{ required: true, message: '请输入质量评分!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='可供类型'>
-            <a-input v-decorator="[
-            'supplyType',
-            { rules: [{ required: true, message: '请输入可供类型!' }] }
+          <a-form-item label='成品评分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'costSocre',
+            { rules: [{ required: true, message: '请输入成品评分!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='信用代码'>
-            <a-input v-decorator="[
-            'creditCode',
-            { rules: [{ required: true, message: '请输入信用代码!' }] }
+          <a-form-item label='交付评分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'deliveryScore',
+            { rules: [{ required: true, message: '请输入交付评分!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='营业执照号'>
-            <a-input v-decorator="[
-            'businessLicense',
-            { rules: [{ required: true, message: '请输入营业执照号!' }] }
+          <a-form-item label='服务评分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'serviceScore',
+            { rules: [{ required: true, message: '请输入服务评分!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='开户银行'>
-            <a-input v-decorator="[
-            'bankName',
-            { rules: [{ required: true, message: '请输入开户银行!' }] }
+          <a-form-item label='创新与合作评分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'innovationScore',
+            { rules: [{ required: true, message: '请输入创新与合作评分!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='银行账号'>
-            <a-input v-decorator="[
-            'bankAccount',
-            { rules: [{ required: true, message: '请输入银行账号!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='负责人'>
-            <a-input v-decorator="[
-            'chargePerson',
-            { rules: [{ required: true, message: '请输入负责人!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='联系电话'>
-            <a-input v-decorator="[
-            'phone',
-            { rules: [{ required: true, message: '请输入联系电话!' }] }
+          <a-form-item label='财务评分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'financialScore',
+            { rules: [{ required: true, message: '请输入财务评分!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -82,7 +105,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='异常反馈图片' v-bind="formItemLayout">
+          <a-form-item label='供应商评价图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -159,9 +182,18 @@ export default {
       fileList: [],
       previewVisible: false,
       previewImage: '',
+      supplierList: []
     }
   },
+  mounted() {
+    this.querySupplier()
+  },
   methods: {
+    querySupplier() {
+      this.$get('/business/supplier-info/list').then((r) => {
+        this.supplierList = r.data
+      })
+    },
     handleCancel() {
       this.previewVisible = false
     },
@@ -186,7 +218,7 @@ export default {
     },
     setFormValues({...module}) {
       this.rowId = module.id
-      let fields = ['name', 'address', 'content', 'longitude', 'latitude', 'content', 'creditCode', 'chargePerson', 'phone', 'supplyType', 'businessLicense', 'bankName', 'bankAccount']
+      let fields = ['supplierId', 'year', 'qualityScore', 'costSocre', 'deliveryScore', 'serviceScore', 'innovationScore', 'financialScore', 'score', 'content']
       let obj = {}
       Object.keys(module).forEach((key) => {
         if (key === 'images') {
@@ -223,7 +255,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/business/abnormal-info', {
+          this.$put('/business/supplier-evaluate', {
             ...values
           }).then((r) => {
             this.reset()

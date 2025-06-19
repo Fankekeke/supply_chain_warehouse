@@ -17,6 +17,7 @@
         se.score,
         se.create_date,
         se.content,
+        se.formula,
         se.del_flag,
 
         si.CODE AS supplierCode,

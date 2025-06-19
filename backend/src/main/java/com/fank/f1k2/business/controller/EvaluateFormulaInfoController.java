@@ -76,6 +76,7 @@ public class EvaluateFormulaInfoController {
     @ApiOperation(value = "新增计算公式", notes = "创建一个新的计算公式，并设置默认状态")
     @PostMapping
     public R save(@RequestBody EvaluateFormulaInfo addFrom) {
+        addFrom.setCode("FOR-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         if ("1".equals(addFrom.getUseFlag())) {
             evaluateFormulaInfoService.update(Wrappers.<EvaluateFormulaInfo>lambdaUpdate().set(EvaluateFormulaInfo::getUseFlag, "0"));

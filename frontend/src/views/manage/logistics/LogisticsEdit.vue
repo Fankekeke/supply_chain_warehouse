@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="修改异常反馈"
+    title="修改订单物流"
     :maskClosable="false"
     width=850
     placement="right"
@@ -11,7 +11,7 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='异常反馈名称'>
+          <a-form-item label='订单物流名称'>
             <a-input v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -82,7 +82,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='异常反馈图片' v-bind="formItemLayout">
+          <a-form-item label='订单物流图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -223,7 +223,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/business/abnormal-info', {
+          this.$put('/business/logistics-info', {
             ...values
           }).then((r) => {
             this.reset()

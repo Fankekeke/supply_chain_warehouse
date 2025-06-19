@@ -15,10 +15,21 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="代办编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.orderCode"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="完成状态"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParams.status" allowClear>
+                  <a-select-option value="0">未完成</a-select-option>
+                  <a-select-option value="1">已完成</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -73,9 +84,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AbnormalAdd.vue'
-import moduleEdit from './AbnormalEdit.vue'
-import moduleView from './AbnormalView.vue'
+import moduleAdd from './AgencyAdd.vue'
+import moduleEdit from './AgencyEdit.vue'
+import moduleView from './AgencyView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -121,12 +132,12 @@ export default {
     }),
     columns() {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '代办编号',
+        dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '异常供应商',
-        dataIndex: 'supplierName',
+        title: '代办内容',
+        dataIndex: 'content',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -136,8 +147,22 @@ export default {
           }
         }
       }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
+        title: '完成状态',
+        dataIndex: 'status',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag color="red">未完成</a-tag>
+            case '1':
+              return <a-tag color="green">已完成</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '供应商名称',
+        dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -172,20 +197,8 @@ export default {
           </a-popover>
         }
       }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '物料型号',
-        dataIndex: 'model',
-        ellipsis: true,
+        title: '完成时间',
+        dataIndex: 'finishDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -194,32 +207,7 @@ export default {
           }
         }
       }, {
-        title: '物料图片',
-        dataIndex: 'materialsImages',
-        customRender: (text, record, index) => {
-          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '异常内容',
-        dataIndex: 'remark',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '反馈时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -260,7 +248,7 @@ export default {
     },
     handleModuleAddSuccess() {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增代办任务成功')
       this.search()
     },
     edit(record) {
@@ -272,7 +260,7 @@ export default {
     },
     handleModuleEditSuccess() {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改代办任务成功')
       this.search()
     },
     batchDelete() {
@@ -287,7 +275,7 @@ export default {
         centered: true,
         onOk() {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/agency-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +348,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/agency-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

@@ -5,22 +5,6 @@
       <a-form layout="horizontal">
         <a-row :gutter="15">
           <div :class="advanced ? null: 'fold'">
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="供应商名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.supplierName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="订单编号"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -45,7 +29,6 @@
                :scroll="{ x: 900 }"
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
                   style="margin-left: 15px"></a-icon>
         </template>
@@ -73,9 +56,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AbnormalAdd.vue'
-import moduleEdit from './AbnormalEdit.vue'
-import moduleView from './AbnormalView.vue'
+import moduleAdd from './FormulaAdd.vue'
+import moduleEdit from './FormulaEdit.vue'
+import moduleView from './FormulaView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -121,12 +104,12 @@ export default {
     }),
     columns() {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '公式编号',
+        dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '异常供应商',
-        dataIndex: 'supplierName',
+        title: '公式名称',
+        dataIndex: 'name',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -136,8 +119,8 @@ export default {
           }
         }
       }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
+        title: '公式内容',
+        dataIndex: 'formulaContent',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -147,79 +130,21 @@ export default {
           }
         }
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
+        title: '是否默认',
+        dataIndex: 'useFlag',
         ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case '0':
+              return <a-tag>否</a-tag>
+            case '1':
+              return <a-tag color="green">是</a-tag>
+            default:
+              return '- -'
           }
         }
       }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '物料型号',
-        dataIndex: 'model',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '物料图片',
-        dataIndex: 'materialsImages',
-        customRender: (text, record, index) => {
-          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '异常内容',
-        dataIndex: 'remark',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '反馈时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -260,7 +185,7 @@ export default {
     },
     handleModuleAddSuccess() {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增评价公式成功')
       this.search()
     },
     edit(record) {
@@ -272,7 +197,7 @@ export default {
     },
     handleModuleEditSuccess() {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改评价公式成功')
       this.search()
     },
     batchDelete() {
@@ -287,7 +212,7 @@ export default {
         centered: true,
         onOk() {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/evaluate-formula-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +285,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/evaluate-formula-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

@@ -7,18 +7,26 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="供应商名称"
+                label="物料编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.supplierName"/>
+                <a-input v-model="queryParams.materialsCode"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="物料名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.materialsName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="型号"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.model"/>
               </a-form-item>
             </a-col>
           </div>
@@ -73,9 +81,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AbnormalAdd.vue'
-import moduleEdit from './AbnormalEdit.vue'
-import moduleView from './AbnormalView.vue'
+import moduleAdd from './AlertAdd.vue'
+import moduleEdit from './AlertEdit.vue'
+import moduleView from './AlertView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -121,70 +129,34 @@ export default {
     }),
     columns() {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '物料编号',
+        dataIndex: 'materialsCode',
         ellipsis: true
       }, {
-        title: '异常供应商',
-        dataIndex: 'supplierName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '采购物料',
+        title: '物料名称',
         dataIndex: 'materialsName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+            return text
           } else {
             return '- -'
           }
         }
       }, {
-        title: '物料型号',
+        title: '型号',
         dataIndex: 'model',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料类型',
+        dataIndex: 'type',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -208,18 +180,17 @@ export default {
           </a-popover>
         }
       }, {
-        title: '异常内容',
-        dataIndex: 'remark',
-        ellipsis: true,
+        title: '最低库存量',
+        dataIndex: 'minValue',
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
+          if (text !== null && text !== 0) {
+            return text + row.measurementUnit
           } else {
-            return '- -'
+            return '未设置'
           }
         }
       }, {
-        title: '反馈时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -260,7 +231,7 @@ export default {
     },
     handleModuleAddSuccess() {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增预警库存成功')
       this.search()
     },
     edit(record) {
@@ -272,7 +243,7 @@ export default {
     },
     handleModuleEditSuccess() {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改预警库存成功')
       this.search()
     },
     batchDelete() {
@@ -287,7 +258,7 @@ export default {
         centered: true,
         onOk() {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/early-alert-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +331,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/early-alert-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

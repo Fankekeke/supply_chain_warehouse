@@ -1,17 +1,17 @@
 <template>
   <a-drawer
-    title="修改异常反馈"
+    title="新增订单物流"
     :maskClosable="false"
     width=850
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="moduleEditVisiable"
+    :visible="moduleAddVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='异常反馈名称'>
+          <a-form-item label='订单物流名称'>
             <a-input v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -82,7 +82,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='异常反馈图片' v-bind="formItemLayout">
+          <a-form-item label='订单物流图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -132,9 +132,9 @@ const formItemLayout = {
   wrapperCol: {span: 24}
 }
 export default {
-  name: 'moduleEdit',
+  name: 'moduleAdd',
   props: {
-    moduleEditVisiable: {
+    moduleAddVisiable: {
       default: false
     }
   },
@@ -144,7 +144,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.moduleEditVisiable
+        return this.moduleAddVisiable
       },
       set: function () {
       }
@@ -152,7 +152,6 @@ export default {
   },
   data() {
     return {
-      rowId: null,
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
@@ -175,31 +174,6 @@ export default {
     picHandleChange({fileList}) {
       this.fileList = fileList
     },
-    imagesInit(images) {
-      if (images !== null && images !== '') {
-        let imageList = []
-        images.split(',').forEach((image, index) => {
-          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
-        })
-        this.fileList = imageList
-      }
-    },
-    setFormValues({...module}) {
-      this.rowId = module.id
-      let fields = ['name', 'address', 'content', 'longitude', 'latitude', 'content', 'creditCode', 'chargePerson', 'phone', 'supplyType', 'businessLicense', 'bankName', 'bankAccount']
-      let obj = {}
-      Object.keys(module).forEach((key) => {
-        if (key === 'images') {
-          this.fileList = []
-          this.imagesInit(module['images'])
-        }
-        if (fields.indexOf(key) !== -1) {
-          this.form.getFieldDecorator(key)
-          obj[key] = module[key]
-        }
-      })
-      this.form.setFieldsValue(obj)
-    },
     reset() {
       this.loading = false
       this.form.resetFields()
@@ -212,18 +186,13 @@ export default {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {
-        if (image.response !== undefined) {
-          images.push(image.response)
-        } else {
-          images.push(image.name)
-        }
+        images.push(image.response)
       })
       this.form.validateFields((err, values) => {
-        values.id = this.rowId
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/business/abnormal-info', {
+          this.$post('/business/logistics-info', {
             ...values
           }).then((r) => {
             this.reset()

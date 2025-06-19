@@ -101,6 +101,7 @@ public class AgencyInfoController {
     @ApiOperation(value = "新增代办任务", notes = "新增代办任务")
     @PostMapping
     public R save(@RequestBody AgencyInfo addFrom) {
+        addFrom.setCode("AG-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(agencyInfoService.save(addFrom));
     }

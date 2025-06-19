@@ -86,6 +86,11 @@ public class SupplierEvaluate implements Serializable {
     private String content;
 
     /**
+     * 评价公式
+     */
+    private String formula;
+
+    /**
      * 删除标识
      */
     private String delFlag;

@@ -55,7 +55,6 @@ public class SupplierAuditRecordServiceImpl extends ServiceImpl<SupplierAuditRec
         if ("1".equals(supplierAuditRecord.getStatus())) {
             // 设置供应商账户
             userService.registerSupplier(supplierInfo);
-        } else {
         }
         // TODO 发送消息通知
 

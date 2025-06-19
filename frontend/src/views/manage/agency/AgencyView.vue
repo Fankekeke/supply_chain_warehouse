@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="异常反馈详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="代办任务详情" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -8,36 +8,16 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">采购订单信息</span></a-col>
-        <a-col :span="8"><b>订单编号：</b>
+          style="font-size: 15px;font-weight: 650;color: #000c17">代办信息</span></a-col>
+        <a-col :span="8"><b>代办编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
         <a-col :span="8"><b>采购金额：</b>
-          {{ moduleData.totalPrice }} 元
+          <span v-if="moduleData.status == 0">未完成</span>
+          <span v-if="moduleData.status == 1">已完成</span>
         </a-col>
-        <a-col :span="8"><b>详细地址：</b>
-          {{ moduleData.address }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>物料名称：</b>
-          {{ moduleData.materialsName }}
-        </a-col>
-        <a-col :span="8"><b>物料编号：</b>
-          {{ moduleData.materialsCode }}
-        </a-col>
-        <a-col :span="8"><b>类型：</b>
-          {{ moduleData.type }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>型号：</b>
-          {{ moduleData.model }}
-        </a-col>
-        <a-col :span="8"><b>采购数量：</b>
-          {{ moduleData.purchaseNum }} {{ moduleData.measurementUnit }}
+        <a-col :span="8"><b>创建时间：</b>
+          {{ moduleData.createDate }}
         </a-col>
       </a-row>
       <br/>
@@ -59,33 +39,15 @@
         <a-col :span="8"><b>联系方式：</b>
           {{ moduleData.phone }}
         </a-col>
-        <a-col :span="8"><b>反馈时间：</b>
-          {{ moduleData.createDate }}
+        <a-col :span="8"><b>完成时间：</b>
+          {{ moduleData.finishDate }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">异常反馈内容</span></a-col>
-        <a-col :span="24">{{ moduleData.remark }}</a-col>
-      </a-row>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">物料图片</span></a-col>
-        <a-col :span="24">
-          <a-upload
-            name="avatar"
-            action="http://127.0.0.1:9527/file/fileUpload/"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handlePreview"
-            @change="picHandleChange"
-          >
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage"/>
-          </a-modal>
-        </a-col>
+          style="font-size: 15px;font-weight: 650;color: #000c17">代办任务内容</span></a-col>
+        <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
       <br/>
     </div>

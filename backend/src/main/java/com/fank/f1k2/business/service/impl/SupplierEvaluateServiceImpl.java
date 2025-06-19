@@ -69,7 +69,9 @@ public class SupplierEvaluateServiceImpl extends ServiceImpl<SupplierEvaluateMap
         }
         Map<String, BigDecimal> weightMap = performanceWeightInfoList.stream().collect(Collectors.toMap(PerformanceWeightInfo::getCode, PerformanceWeightInfo::getWeightRate));
 
-        String expression = "(质量评分*质量权重) + (成品评分+成品权重) + (交付评分*交付权重) + (服务评分*服务权重) + (创新与合作评分*创新与合作权重) + (财务评分*财务权重)";
+        // String expression = "(质量评分*质量权重) + (成品评分+成品权重) + (交付评分*交付权重) + (服务评分*服务权重) + (创新与合作评分*创新与合作权重) + (财务评分*财务权重)";
+        String expression = evaluateFormulaInfo.getFormulaContent();
+        supplierEvaluate.setFormula(expression);
         // 编译表达式
         Expression compiledExp = AviatorEvaluator.compile(expression);
         Map<String, Object> env = new HashMap<String, Object>(16);

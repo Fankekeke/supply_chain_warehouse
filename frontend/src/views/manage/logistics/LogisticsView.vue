@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="异常反馈详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="订单物流详情" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -66,7 +66,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">异常反馈内容</span></a-col>
+          style="font-size: 15px;font-weight: 650;color: #000c17">订单物流内容</span></a-col>
         <a-col :span="24">{{ moduleData.remark }}</a-col>
       </a-row>
       <a-row style="padding-left: 24px;padding-right: 24px;">

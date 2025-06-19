@@ -26,6 +26,15 @@ public class EvaluateFormulaInfo implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 公式名称
+     */
+    private String code;
+
+    /**
+     * 公式名称
+     */
+    private String name;
 
     /**
      * 公式内容

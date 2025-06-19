@@ -29,11 +29,14 @@
         mi.model,
         mi.images AS materialsImages,
         mi.type,
-        mi.measurement_unit
+        mi.measurement_unit,
+
+        ppi.purchase_num
         FROM
         order_info oi
         LEFT JOIN supplier_info si ON (si.id = oi.supplier_id)
         LEFT JOIN materials_info mi ON (mi.CODE = oi.materials_code)
+        LEFT JOIN purchase_plan_info ppi ON (ppi.id = oi.plan_id)
         WHERE
         1 = 1
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
