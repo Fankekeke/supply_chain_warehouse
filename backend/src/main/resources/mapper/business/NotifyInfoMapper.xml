@@ -24,6 +24,7 @@
         left join supplier_info si on (si.id = ai.user_id )
         where
         1 = 1
+        AND ni.del_flag = 0
         AND ai.agency_type = '1'
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
             AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
@@ -56,6 +57,7 @@
         left join staff_info si on (si.id = ai.user_id )
         where
         1 = 1
+        AND ni.del_flag = 0
         AND ai.agency_type = '2'
         <if test="queryForm.staffName != null and queryForm.staffName != ''">
             AND si.name like CONCAT("%",#{queryForm.staffName},"%")

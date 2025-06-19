@@ -39,6 +39,7 @@
         LEFT JOIN purchase_plan_info ppi ON (ppi.id = pqi.plan_id)
         WHERE
         1 = 1
+        AND pqi.del_flag = 0
         <if test="queryForm.planCode != null and queryForm.planCode != ''">
             AND ppi.CODE like CONCAT("%",#{queryForm.planCode},"%")
         </if>
@@ -92,6 +93,7 @@
         LEFT JOIN purchase_plan_info ppi ON (ppi.id = pqi.plan_id)
         WHERE
         1 = 1
+        AND pqi.del_flag = 0
         AND pqi.plan_id = #{planId}
         ORDER BY
         pqi.create_date DESC

@@ -30,6 +30,7 @@
         LEFT JOIN supplier_info si ON (si.id = se.supplier_id)
         WHERE
         1 = 1
+        AND se.del_flag = 0
         <if test="queryForm.year != null and queryForm.year != ''">
             AND se.`year` = #{queryForm.year}
         </if>

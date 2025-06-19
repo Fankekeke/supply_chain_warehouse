@@ -24,6 +24,7 @@
         LEFT JOIN supplier_info si ON (si.id = sar.supplier_id)
         WHERE
         1 = 1
+        AND sar.del_flag = 0
         <if test="queryForm.code != null and queryForm.code != ''">
             AND sar.CODE like CONCAT("%",#{queryForm.code},"%")
         </if>

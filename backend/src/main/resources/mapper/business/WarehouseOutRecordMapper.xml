@@ -17,6 +17,7 @@
         warehouse_out_record wor
         where
         1 = 1
+        AND wor.del_flag = 0
         <if test="queryForm.code != null and queryForm.code != ''">
             AND wor.code like CONCAT("%",#{queryForm.code},"%")
         </if>

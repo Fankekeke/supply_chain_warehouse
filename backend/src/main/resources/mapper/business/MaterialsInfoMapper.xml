@@ -19,6 +19,7 @@
         materials_info mi
         where
         1 = 1
+        AND mi.del_flag = 0
         <if test="queryForm.name != null and queryForm.name != ''">
             AND mi.name like CONCAT("%",#{queryForm.name},"%")
         </if>

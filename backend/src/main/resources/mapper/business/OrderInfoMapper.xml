@@ -39,6 +39,7 @@
         LEFT JOIN purchase_plan_info ppi ON (ppi.id = oi.plan_id)
         WHERE
         1 = 1
+        AND oi.del_flag = 0
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
             AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
         </if>

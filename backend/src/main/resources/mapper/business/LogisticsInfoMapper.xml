@@ -35,6 +35,7 @@
         LEFT JOIN materials_info mi ON (mi.CODE = oi.materials_code)
         WHERE
         1 = 1
+        AND li.del_flag = 0
         AND li.current_logistics = 1
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
             AND si.name like CONCAT("%",#{queryForm.supplierName},"%")

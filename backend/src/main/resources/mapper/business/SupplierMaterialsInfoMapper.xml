@@ -32,6 +32,7 @@
         LEFT JOIN materials_info mi ON (mi.`code` = smi.`code`)
         WHERE
         1 = 1
+        AND smi.del_flag = 0
         <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
             AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
         </if>
