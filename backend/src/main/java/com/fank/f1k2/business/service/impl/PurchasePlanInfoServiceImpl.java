@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
@@ -26,5 +27,16 @@ public class PurchasePlanInfoServiceImpl extends ServiceImpl<PurchasePlanInfoMap
     @Override
     public IPage<LinkedHashMap<String, Object>> queryPage(Page<PurchasePlanInfo> page, PurchasePlanInfo queryFrom) {
         return baseMapper.queryPage(page, queryFrom);
+    }
+
+    /**
+     * 根据采购编码获取采购计划
+     *
+     * @param purchaseCode 采购编码
+     * @return 采购计划
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryPlanByPurchaseCode(String purchaseCode) {
+        return baseMapper.queryPlanByPurchaseCode(purchaseCode);
     }
 }

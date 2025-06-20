@@ -7,28 +7,40 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工名称"
+                label="供应商名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.staffName"/>
+                <a-input v-model="queryParams.supplierName"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="代办编号"
+                label="采购编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.purchaseCode"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="完成状态"
+                label="物料名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.materialsName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="状态"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.status" allowClear>
-                  <a-select-option value="0">未完成</a-select-option>
-                  <a-select-option value="1">已完成</a-select-option>
+                  <a-select-option value="0">未付款</a-select-option>
+                  <a-select-option value="1">已付款</a-select-option>
+                  <a-select-option value="2">已发货</a-select-option>
+                  <a-select-option value="3">检验中</a-select-option>
+                  <a-select-option value="4">已退货</a-select-option>
+                  <a-select-option value="5">已入库</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -42,7 +54,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -84,9 +96,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AgencyAdd.vue'
-import moduleEdit from './AgencyEdit.vue'
-import moduleView from './AgencyView.vue'
+import moduleAdd from './PlanAdd.vue'
+import moduleEdit from './PlanEdit.vue'
+import moduleView from './PlanView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -132,12 +144,12 @@ export default {
     }),
     columns () {
       return [{
-        title: '代办编号',
-        dataIndex: 'code',
+        title: '订单编号',
+        dataIndex: 'orderCode',
         ellipsis: true
       }, {
-        title: '代办内容',
-        dataIndex: 'content',
+        title: '异常供应商',
+        dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -147,22 +159,8 @@ export default {
           }
         }
       }, {
-        title: '完成状态',
-        dataIndex: 'status',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          switch (text) {
-            case '0':
-              return <a-tag color="red">未完成</a-tag>
-            case '1':
-              return <a-tag color="green">已完成</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '员工名称',
-        dataIndex: 'staffName',
+        title: '负责人',
+        dataIndex: 'chargePerson',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -183,22 +181,59 @@ export default {
           }
         }
       }, {
-        title: '员工图片',
-        dataIndex: 'staffImages',
+        title: '供应商图片',
+        dataIndex: 'supplierImages',
         customRender: (text, record, index) => {
-          if (!record.staffImages) return <a-avatar shape="square" icon="user"/>
+          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0]}/>
+                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0]}/>
+                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
-        title: '完成时间',
-        dataIndex: 'finishDate',
+        title: '采购物料',
+        dataIndex: 'materialsName',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料型号',
+        dataIndex: 'model',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料图片',
+        dataIndex: 'materialsImages',
+        customRender: (text, record, index) => {
+          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user"
+                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+            </template>
+            <a-avatar shape="square" icon="user"
+                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+          </a-popover>
+        }
+      }, {
+        title: '异常内容',
+        dataIndex: 'remark',
+        ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -248,7 +283,7 @@ export default {
     },
     handleModuleAddSuccess () {
       this.moduleAdd.visiable = false
-      this.$message.success('新增代办任务成功')
+      this.$message.success('新增采购计划成功')
       this.search()
     },
     edit (record) {
@@ -260,7 +295,7 @@ export default {
     },
     handleModuleEditSuccess () {
       this.moduleEdit.visiable = false
-      this.$message.success('修改代办任务成功')
+      this.$message.success('修改采购计划成功')
       this.search()
     },
     batchDelete () {
@@ -275,7 +310,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/agency-info/' + ids).then(() => {
+          that.$delete('/business/purchase-plan-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -348,7 +383,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/agency-info/page/supplier', {
+      this.$get('/business/purchase-plan-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

@@ -56,4 +56,48 @@
         ORDER BY
         ppi.create_date DESC
     </select>
+
+    <!-- 根据采购编码获取采购计划 -->
+    <select id="queryPlanByPurchaseCode" resultType="java.util.LinkedHashMap">
+        SELECT
+        ppi.id,
+        ppi.purchase_code,
+        ppi.CODE,
+        ppi.order_id,
+        ppi.purchase_num,
+        ppi.STATUS,
+        ppi.create_date,
+        ppi.del_flag,
+        pni.pni.content,
+        pni.create_by,
+
+        oi.CODE AS orderCode,
+        oi.materials_code,
+        oi.total_price,
+        oi.STATUS as orderStatus,
+
+        si.CODE AS supplierCode,
+        si.NAME AS supplierName,
+        si.charge_person,
+        si.phone,
+        si.images AS supplierImages,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit
+        FROM
+        purchase_plan_info ppi
+        LEFT JOIN purchase_need_info pni ON (pni.`code` = ppi.purchase_code)
+        LEFT JOIN order_info oi ON (oi.id = li.order_id)
+        LEFT JOIN supplier_info si ON (si.id = oi.supplier_id)
+        LEFT JOIN materials_info mi ON (mi.CODE = ppi.CODE)
+        WHERE
+        1 = 1
+        AND ppi.del_flag = 0
+        AND ppi.purchase_code = #{purchaseCode}
+        ORDER BY
+        ppi.create_date DESC
+    </select>
 </mapper>

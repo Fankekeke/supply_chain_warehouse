@@ -15,20 +15,12 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="代办编号"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="完成状态"
+                label="状态"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.status" allowClear>
-                  <a-select-option value="0">未完成</a-select-option>
-                  <a-select-option value="1">已完成</a-select-option>
+                  <a-select-option value="0">未读</a-select-option>
+                  <a-select-option value="1">已读</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -42,7 +34,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -84,9 +76,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './AgencyAdd.vue'
-import moduleEdit from './AgencyEdit.vue'
-import moduleView from './AgencyView.vue'
+import moduleAdd from './NotifyAdd.vue'
+import moduleEdit from './NotifyEdit.vue'
+import moduleView from './NotifyView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -132,48 +124,12 @@ export default {
     }),
     columns () {
       return [{
-        title: '代办编号',
-        dataIndex: 'code',
-        ellipsis: true
-      }, {
-        title: '代办内容',
+        title: '消息内容',
         dataIndex: 'content',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '完成状态',
-        dataIndex: 'status',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          switch (text) {
-            case '0':
-              return <a-tag color="red">未完成</a-tag>
-            case '1':
-              return <a-tag color="green">已完成</a-tag>
-            default:
-              return '- -'
-          }
-        }
+        ellipsis: true
       }, {
         title: '员工名称',
         dataIndex: 'staffName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -197,7 +153,21 @@ export default {
           </a-popover>
         }
       }, {
-        title: '完成时间',
+        title: '已读状态',
+        dataIndex: 'status',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag color="red">未读</a-tag>
+            case '1':
+              return <a-tag color="green">已读</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '确认时间',
         dataIndex: 'finishDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -207,7 +177,7 @@ export default {
           }
         }
       }, {
-        title: '创建时间',
+        title: '发送时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -248,7 +218,7 @@ export default {
     },
     handleModuleAddSuccess () {
       this.moduleAdd.visiable = false
-      this.$message.success('新增代办任务成功')
+      this.$message.success('新增消息通知成功')
       this.search()
     },
     edit (record) {
@@ -260,7 +230,7 @@ export default {
     },
     handleModuleEditSuccess () {
       this.moduleEdit.visiable = false
-      this.$message.success('修改代办任务成功')
+      this.$message.success('修改消息通知成功')
       this.search()
     },
     batchDelete () {
@@ -275,7 +245,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/agency-info/' + ids).then(() => {
+          that.$delete('/business/notify-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -348,7 +318,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/agency-info/page/supplier', {
+      this.$get('/business/notify-info/page/staff', {
         ...params
       }).then((r) => {
         let data = r.data.data

@@ -1,8 +1,8 @@
 <template>
   <a-drawer
-    title="新增代办任务"
+    title="新增评价权重"
     :maskClosable="false"
-    width=450
+    width=850
     placement="right"
     :closable="false"
     @close="onClose"
@@ -11,21 +11,19 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="24">
-          <a-form-item label='选择员工'>
-            <a-select v-decorator="[
-              'userId',
-              { rules: [{ required: true, message: '请选择代办员工!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{ item.name }}
-              </a-select-option>
-            </a-select>
+          <a-form-item label='权重项'>
+            <a-input v-decorator="[
+            'name',
+            { rules: [{ required: true, message: '请输入权重项!' }] }
+            ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='代办内容' v-bind="formItemLayout">
-            <a-textarea :rows="8" v-decorator="[
-            'content',
-            { rules: [{ required: true, message: '请输入代办内容!' }] }
+          <a-form-item label='权重比率'>
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'weightRate',
+            { rules: [{ required: true, message: '请输入权重比率!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -83,19 +81,10 @@ export default {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      staffList: []
+      previewImage: ''
     }
   },
-  mounted () {
-    this.queryStaff()
-  },
   methods: {
-    queryStaff () {
-      this.$get('/business/staff-info/list').then((r) => {
-        this.staffList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -125,10 +114,9 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
-        values.agencyType = '1'
         if (!err) {
           this.loading = true
-          this.$post('/business/agency-info', {
+          this.$post('/business/performance-weight-info', {
             ...values
           }).then((r) => {
             this.reset()

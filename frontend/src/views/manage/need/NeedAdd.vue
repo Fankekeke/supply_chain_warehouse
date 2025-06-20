@@ -1,8 +1,8 @@
 <template>
   <a-drawer
-    title="新增代办任务"
+    title="新增采购需求"
     :maskClosable="false"
-    width=450
+    width=850
     placement="right"
     :closable="false"
     @close="onClose"
@@ -10,23 +10,42 @@
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
-        <a-col :span="24">
-          <a-form-item label='选择员工'>
-            <a-select v-decorator="[
-              'userId',
-              { rules: [{ required: true, message: '请选择代办员工!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{ item.name }}
-              </a-select-option>
-            </a-select>
+        <a-col :span="12">
+          <a-form-item label='需求发起人'>
+            <a-input v-decorator="[
+            'createBy',
+            { rules: [{ required: true, message: '请输入需求发起人!' }] }
+            ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='代办内容' v-bind="formItemLayout">
-            <a-textarea :rows="8" v-decorator="[
+          <a-form-item label='采购内容' v-bind="formItemLayout">
+            <a-textarea :rows="6" v-decorator="[
             'content',
-            { rules: [{ required: true, message: '请输入代办内容!' }] }
+            { rules: [{ required: true, message: '请输入采购内容!' }] }
             ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="24">
+          <a-form-item label='采购文件上传' v-bind="formItemLayout">
+            <a-upload
+              name="avatar"
+              action="http://127.0.0.1:9527/file/fileUpload/"
+              list-type="picture-card"
+              :file-list="fileList"
+              @preview="handlePreview"
+              @change="picHandleChange"
+            >
+              <div v-if="fileList.length < 8">
+                <a-icon type="plus"/>
+                <div class="ant-upload-text">
+                  Upload
+                </div>
+              </div>
+            </a-upload>
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage"/>
+            </a-modal>
           </a-form-item>
         </a-col>
       </a-row>
@@ -83,19 +102,10 @@ export default {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      staffList: []
+      previewImage: ''
     }
   },
-  mounted () {
-    this.queryStaff()
-  },
   methods: {
-    queryStaff () {
-      this.$get('/business/staff-info/list').then((r) => {
-        this.staffList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -125,10 +135,9 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
-        values.agencyType = '1'
         if (!err) {
           this.loading = true
-          this.$post('/business/agency-info', {
+          this.$post('/business/purchase-need-info', {
             ...values
           }).then((r) => {
             this.reset()

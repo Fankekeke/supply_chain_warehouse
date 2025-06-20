@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
@@ -21,4 +22,12 @@ public interface PurchasePlanInfoMapper extends BaseMapper<PurchasePlanInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> queryPage(Page<PurchasePlanInfo> page, @Param("queryForm") PurchasePlanInfo queryFrom);
+
+    /**
+     * 根据采购编码获取采购计划
+     *
+     * @param purchaseCode 采购编码
+     * @return 采购计划
+     */
+    List<LinkedHashMap<String, Object>> queryPlanByPurchaseCode(@Param("purchaseCode") String purchaseCode);
 }

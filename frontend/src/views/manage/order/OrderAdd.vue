@@ -1,17 +1,17 @@
 <template>
   <a-drawer
-    title="修改物料"
+    title="新增采购订单"
     :maskClosable="false"
     width=850
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="moduleEditVisiable"
+    :visible="moduleAddVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='物料名称'>
+          <a-form-item label='采购订单名称'>
             <a-input v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -19,26 +19,58 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='型号规格'>
+          <a-form-item label='可供类型'>
             <a-input v-decorator="[
-            'model',
-            { rules: [{ required: true, message: '请输入型号规格!' }] }
+            'supplyType',
+            { rules: [{ required: true, message: '请输入可供类型!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='物料类型'>
+          <a-form-item label='信用代码'>
             <a-input v-decorator="[
-            'type',
-            { rules: [{ required: true, message: '请输入物料类型!' }] }
+            'creditCode',
+            { rules: [{ required: true, message: '请输入信用代码!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='计量单位'>
+          <a-form-item label='营业执照号'>
             <a-input v-decorator="[
-            'measurementUnit',
-            { rules: [{ required: true, message: '请输入计量单位!' }] }
+            'businessLicense',
+            { rules: [{ required: true, message: '请输入营业执照号!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='开户银行'>
+            <a-input v-decorator="[
+            'bankName',
+            { rules: [{ required: true, message: '请输入开户银行!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='银行账号'>
+            <a-input v-decorator="[
+            'bankAccount',
+            { rules: [{ required: true, message: '请输入银行账号!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='负责人'>
+            <a-input v-decorator="[
+            'chargePerson',
+            { rules: [{ required: true, message: '请输入负责人!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='联系电话'>
+            <a-input v-decorator="[
+            'phone',
+            { rules: [{ required: true, message: '请输入联系电话!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -50,7 +82,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='物料图片' v-bind="formItemLayout">
+          <a-form-item label='采购订单图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -100,9 +132,9 @@ const formItemLayout = {
   wrapperCol: {span: 24}
 }
 export default {
-  name: 'moduleEdit',
+  name: 'moduleAdd',
   props: {
-    moduleEditVisiable: {
+    moduleAddVisiable: {
       default: false
     }
   },
@@ -112,7 +144,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.moduleEditVisiable
+        return this.moduleAddVisiable
       },
       set: function () {
       }
@@ -120,7 +152,6 @@ export default {
   },
   data () {
     return {
-      rowId: null,
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
@@ -143,31 +174,6 @@ export default {
     picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    imagesInit (images) {
-      if (images !== null && images !== '') {
-        let imageList = []
-        images.split(',').forEach((image, index) => {
-          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
-        })
-        this.fileList = imageList
-      }
-    },
-    setFormValues ({...module}) {
-      this.rowId = module.id
-      let fields = ['name', 'content', 'model', 'measurementUnit', 'type']
-      let obj = {}
-      Object.keys(module).forEach((key) => {
-        if (key === 'images') {
-          this.fileList = []
-          this.imagesInit(module['images'])
-        }
-        if (fields.indexOf(key) !== -1) {
-          this.form.getFieldDecorator(key)
-          obj[key] = module[key]
-        }
-      })
-      this.form.setFieldsValue(obj)
-    },
     reset () {
       this.loading = false
       this.form.resetFields()
@@ -180,18 +186,13 @@ export default {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {
-        if (image.response !== undefined) {
-          images.push(image.response)
-        } else {
-          images.push(image.name)
-        }
+        images.push(image.response)
       })
       this.form.validateFields((err, values) => {
-        values.id = this.rowId
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/business/materials-info', {
+          this.$post('/business/order-info', {
             ...values
           }).then((r) => {
             this.reset()

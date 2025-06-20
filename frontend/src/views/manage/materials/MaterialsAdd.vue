@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="新增异常反馈"
+    title="新增物料"
     :maskClosable="false"
     width=850
     placement="right"
@@ -11,7 +11,7 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='异常反馈名称'>
+          <a-form-item label='物料名称'>
             <a-input v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -19,58 +19,26 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='可供类型'>
+          <a-form-item label='型号规格'>
             <a-input v-decorator="[
-            'supplyType',
-            { rules: [{ required: true, message: '请输入可供类型!' }] }
+            'model',
+            { rules: [{ required: true, message: '请输入型号规格!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='信用代码'>
+          <a-form-item label='物料类型'>
             <a-input v-decorator="[
-            'creditCode',
-            { rules: [{ required: true, message: '请输入信用代码!' }] }
+            'type',
+            { rules: [{ required: true, message: '请输入物料类型!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='营业执照号'>
+          <a-form-item label='计量单位'>
             <a-input v-decorator="[
-            'businessLicense',
-            { rules: [{ required: true, message: '请输入营业执照号!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='开户银行'>
-            <a-input v-decorator="[
-            'bankName',
-            { rules: [{ required: true, message: '请输入开户银行!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='银行账号'>
-            <a-input v-decorator="[
-            'bankAccount',
-            { rules: [{ required: true, message: '请输入银行账号!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='负责人'>
-            <a-input v-decorator="[
-            'chargePerson',
-            { rules: [{ required: true, message: '请输入负责人!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='联系电话'>
-            <a-input v-decorator="[
-            'phone',
-            { rules: [{ required: true, message: '请输入联系电话!' }] }
+            'measurementUnit',
+            { rules: [{ required: true, message: '请输入计量单位!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -82,7 +50,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='异常反馈图片' v-bind="formItemLayout">
+          <a-form-item label='物料图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -192,7 +160,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$post('/business/abnormal-info', {
+          this.$post('/business/materials-info', {
             ...values
           }).then((r) => {
             this.reset()

@@ -11,19 +11,19 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="24">
-          <a-form-item label='供应商'>
+          <a-form-item label='选择员工'>
             <a-select v-decorator="[
               'userId',
-              { rules: [{ required: true, message: '请选择代办供应商!' }] }
+              { rules: [{ required: true, message: '请选择代办员工!' }] }
               ]">
-              <a-select-option :value="item.id" v-for="(item, index) in supplierList" :key="index">{{ item.name }}
+              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{ item.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="24">
           <a-form-item label='代办内容' v-bind="formItemLayout">
-            <a-textarea :rows="6" v-decorator="[
+            <a-textarea :rows="8" v-decorator="[
             'content',
             { rules: [{ required: true, message: '请输入代办内容!' }] }
             ]"/>
@@ -85,16 +85,16 @@ export default {
       fileList: [],
       previewVisible: false,
       previewImage: '',
-      supplierList: []
+      staffList: []
     }
   },
   mounted () {
-    this.querySupplier()
+    this.queryStaff()
   },
   methods: {
-    querySupplier () {
-      this.$get('/business/supplier-info/list').then((r) => {
-        this.supplierList = r.data
+    queryStaff () {
+      this.$get('/business/staff-info/list').then((r) => {
+        this.staffList = r.data.data
       })
     },
     handleCancel () {

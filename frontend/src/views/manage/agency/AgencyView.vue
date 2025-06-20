@@ -12,7 +12,7 @@
         <a-col :span="8"><b>代办编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
-        <a-col :span="8"><b>采购金额：</b>
+        <a-col :span="8"><b>代办状态：</b>
           <span v-if="moduleData.status == 0">未完成</span>
           <span v-if="moduleData.status == 1">已完成</span>
         </a-col>

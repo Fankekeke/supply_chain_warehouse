@@ -1,31 +1,29 @@
 <template>
   <a-drawer
-    title="新增代办任务"
+    title="修改评价权重"
     :maskClosable="false"
-    width=450
+    width=850
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="moduleAddVisiable"
+    :visible="moduleEditVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="24">
-          <a-form-item label='选择员工'>
-            <a-select v-decorator="[
-              'userId',
-              { rules: [{ required: true, message: '请选择代办员工!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{ item.name }}
-              </a-select-option>
-            </a-select>
+          <a-form-item label='权重项'>
+            <a-input disabled v-decorator="[
+            'name',
+            { rules: [{ required: true, message: '请输入权重项!' }] }
+            ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='代办内容' v-bind="formItemLayout">
-            <a-textarea :rows="8" v-decorator="[
-            'content',
-            { rules: [{ required: true, message: '请输入代办内容!' }] }
+          <a-form-item label='权重比率'>
+            <a-input-number style="width: 100%"
+                            v-decorator="[
+            'weightRate',
+            { rules: [{ required: true, message: '请输入权重比率!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -58,9 +56,9 @@ const formItemLayout = {
   wrapperCol: {span: 24}
 }
 export default {
-  name: 'moduleAdd',
+  name: 'moduleEdit',
   props: {
-    moduleAddVisiable: {
+    moduleEditVisiable: {
       default: false
     }
   },
@@ -70,7 +68,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.moduleAddVisiable
+        return this.moduleEditVisiable
       },
       set: function () {
       }
@@ -78,24 +76,16 @@ export default {
   },
   data () {
     return {
+      rowId: null,
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      staffList: []
+      previewImage: ''
     }
   },
-  mounted () {
-    this.queryStaff()
-  },
   methods: {
-    queryStaff () {
-      this.$get('/business/staff-info/list').then((r) => {
-        this.staffList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -109,6 +99,31 @@ export default {
     picHandleChange ({fileList}) {
       this.fileList = fileList
     },
+    imagesInit (images) {
+      if (images !== null && images !== '') {
+        let imageList = []
+        images.split(',').forEach((image, index) => {
+          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
+        })
+        this.fileList = imageList
+      }
+    },
+    setFormValues ({...module}) {
+      this.rowId = module.id
+      let fields = ['name', 'weightRate']
+      let obj = {}
+      Object.keys(module).forEach((key) => {
+        if (key === 'images') {
+          this.fileList = []
+          this.imagesInit(module['images'])
+        }
+        if (fields.indexOf(key) !== -1) {
+          this.form.getFieldDecorator(key)
+          obj[key] = module[key]
+        }
+      })
+      this.form.setFieldsValue(obj)
+    },
     reset () {
       this.loading = false
       this.form.resetFields()
@@ -121,14 +136,18 @@ export default {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {
-        images.push(image.response)
+        if (image.response !== undefined) {
+          images.push(image.response)
+        } else {
+          images.push(image.name)
+        }
       })
       this.form.validateFields((err, values) => {
+        values.id = this.rowId
         values.images = images.length > 0 ? images.join(',') : null
-        values.agencyType = '1'
         if (!err) {
           this.loading = true
-          this.$post('/business/agency-info', {
+          this.$put('/business/performance-weight-info', {
             ...values
           }).then((r) => {
             this.reset()

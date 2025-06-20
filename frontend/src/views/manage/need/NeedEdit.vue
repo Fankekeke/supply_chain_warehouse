@@ -1,31 +1,28 @@
 <template>
   <a-drawer
-    title="新增代办任务"
+    title="修改采购需求"
     :maskClosable="false"
-    width=450
+    width=850
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="moduleAddVisiable"
+    :visible="moduleEditVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="24">
-          <a-form-item label='选择员工'>
-            <a-select v-decorator="[
-              'userId',
-              { rules: [{ required: true, message: '请选择代办员工!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{ item.name }}
-              </a-select-option>
-            </a-select>
+          <a-form-item label='需求发起人'>
+            <a-input v-decorator="[
+            'createBy',
+            { rules: [{ required: true, message: '请输入需求发起人!' }] }
+            ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='代办内容' v-bind="formItemLayout">
-            <a-textarea :rows="8" v-decorator="[
+          <a-form-item label='采购内容' v-bind="formItemLayout">
+            <a-textarea :rows="6" v-decorator="[
             'content',
-            { rules: [{ required: true, message: '请输入代办内容!' }] }
+            { rules: [{ required: true, message: '请输入采购内容!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -58,9 +55,9 @@ const formItemLayout = {
   wrapperCol: {span: 24}
 }
 export default {
-  name: 'moduleAdd',
+  name: 'moduleEdit',
   props: {
-    moduleAddVisiable: {
+    moduleEditVisiable: {
       default: false
     }
   },
@@ -70,7 +67,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.moduleAddVisiable
+        return this.moduleEditVisiable
       },
       set: function () {
       }
@@ -78,24 +75,16 @@ export default {
   },
   data () {
     return {
+      rowId: null,
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      staffList: []
+      previewImage: ''
     }
   },
-  mounted () {
-    this.queryStaff()
-  },
   methods: {
-    queryStaff () {
-      this.$get('/business/staff-info/list').then((r) => {
-        this.staffList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -109,6 +98,31 @@ export default {
     picHandleChange ({fileList}) {
       this.fileList = fileList
     },
+    imagesInit (images) {
+      if (images !== null && images !== '') {
+        let imageList = []
+        images.split(',').forEach((image, index) => {
+          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
+        })
+        this.fileList = imageList
+      }
+    },
+    setFormValues ({...module}) {
+      this.rowId = module.id
+      let fields = ['createBy', 'content']
+      let obj = {}
+      Object.keys(module).forEach((key) => {
+        if (key === 'images') {
+          this.fileList = []
+          this.imagesInit(module['images'])
+        }
+        if (fields.indexOf(key) !== -1) {
+          this.form.getFieldDecorator(key)
+          obj[key] = module[key]
+        }
+      })
+      this.form.setFieldsValue(obj)
+    },
     reset () {
       this.loading = false
       this.form.resetFields()
@@ -121,14 +135,18 @@ export default {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {
-        images.push(image.response)
+        if (image.response !== undefined) {
+          images.push(image.response)
+        } else {
+          images.push(image.name)
+        }
       })
       this.form.validateFields((err, values) => {
+        values.id = this.rowId
         values.images = images.length > 0 ? images.join(',') : null
-        values.agencyType = '1'
         if (!err) {
           this.loading = true
-          this.$post('/business/agency-info', {
+          this.$put('/business/purchase-need-info', {
             ...values
           }).then((r) => {
             this.reset()

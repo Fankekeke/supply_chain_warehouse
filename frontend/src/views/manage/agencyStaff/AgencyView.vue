@@ -12,7 +12,7 @@
         <a-col :span="8"><b>代办编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
-        <a-col :span="8"><b>采购金额：</b>
+        <a-col :span="8"><b>代办状态：</b>
           <span v-if="moduleData.status == 0">未完成</span>
           <span v-if="moduleData.status == 1">已完成</span>
         </a-col>
@@ -23,22 +23,19 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
-        <a-col :span="8"><b>供应商编号：</b>
-          {{ moduleData.supplierCode }}
+          style="font-size: 15px;font-weight: 650;color: #000c17">员工信息</span></a-col>
+        <a-col :span="8"><b>员工编号：</b>
+          {{ moduleData.staffCode }}
         </a-col>
-        <a-col :span="8"><b>供应商名称：</b>
-          {{ moduleData.supplierName }}
+        <a-col :span="8"><b>员工名称：</b>
+          {{ moduleData.staffName }}
         </a-col>
-        <a-col :span="8"><b>负责人：</b>
-          {{ moduleData.chargePerson }}
+        <a-col :span="8"><b>联系方式：</b>
+          {{ moduleData.phone }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>联系方式：</b>
-          {{ moduleData.phone }}
-        </a-col>
         <a-col :span="8"><b>完成时间：</b>
           {{ moduleData.finishDate }}
         </a-col>

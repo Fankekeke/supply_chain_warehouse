@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.PurchasePlanInfo;
@@ -41,6 +42,18 @@ public class PurchasePlanInfoController {
     @GetMapping("/page")
     public R page(Page<PurchasePlanInfo> page, PurchasePlanInfo queryFrom) {
         return R.ok(purchasePlanInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 根据采购编码查询采购计划
+     *
+     * @param purchaseCode 采购编码
+     * @return 采购计划列表
+     */
+    @ApiOperation(value = "根据采购编码查询采购计划", notes = "根据采购编码查询采购计划")
+    @GetMapping("/queryPlanByPurchaseCode")
+    public R queryPlanByPurchaseCode(String purchaseCode) {
+        return R.ok(purchasePlanInfoService.queryPlanByPurchaseCode(purchaseCode));
     }
 
     /**

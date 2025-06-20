@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="订单物流详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="评价权重详情" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -8,20 +8,15 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">采购物流信息</span></a-col>
+          style="font-size: 15px;font-weight: 650;color: #000c17">采购订单信息</span></a-col>
         <a-col :span="8"><b>订单编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
         <a-col :span="8"><b>采购金额：</b>
           {{ moduleData.totalPrice }} 元
         </a-col>
-        <a-col :span="8"><b>订单状态：</b>
-          <span v-if="moduleData.status == 0">未付款</span>
-          <span v-if="moduleData.status == 1">已付款</span>
-          <span v-if="moduleData.status == 2">已发货</span>
-          <span v-if="moduleData.status == 3">检验中</span>
-          <span v-if="moduleData.status == 4">已退货</span>
-          <span v-if="moduleData.status == 5">已入库</span>
+        <a-col :span="8"><b>详细地址：</b>
+          {{ moduleData.address }}
         </a-col>
       </a-row>
       <br/>
@@ -64,30 +59,45 @@
         <a-col :span="8"><b>联系方式：</b>
           {{ moduleData.phone }}
         </a-col>
-        <a-col :span="8"><b>创建时间：</b>
+        <a-col :span="8"><b>反馈时间：</b>
           {{ moduleData.createDate }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">订单物流</span></a-col>
+          style="font-size: 15px;font-weight: 650;color: #000c17">评价权重内容</span></a-col>
+        <a-col :span="24">{{ moduleData.remark }}</a-col>
+      </a-row>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span
+          style="font-size: 15px;font-weight: 650;color: #000c17">物料图片</span></a-col>
         <a-col :span="24">
-          <a-table :columns="logisticsColumns" :data-source="logisticsList" :pagination="false">
-          </a-table>
+          <a-upload
+            name="avatar"
+            action="http://127.0.0.1:9527/file/fileUpload/"
+            list-type="picture-card"
+            :file-list="fileList"
+            @preview="handlePreview"
+            @change="picHandleChange"
+          >
+          </a-upload>
+          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage"/>
+          </a-modal>
         </a-col>
       </a-row>
+      <br/>
     </div>
   </a-modal>
 </template>
 
 <script>
 import moment from 'moment'
-import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -114,40 +124,27 @@ export default {
       },
       set: function () {
       }
-    },
-    logisticsColumns () {
-      return [{
-        title: '物流信息',
-        dataIndex: 'remark'
-      }, {
-        title: '操作时间',
-        dataIndex: 'createDate'
-      }]
     }
   },
-  data() {
+  data () {
     return {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      logisticsList: []
+      previewImage: ''
     }
   },
   watch: {
     moduleShow: function (value) {
       if (value) {
-        this.queryLogisticsByOrderId(this.moduleData.orderId)
+        if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
+          this.imagesInit(this.moduleData.materialsImages)
+        }
       }
     }
   },
   methods: {
-    queryLogisticsByOrderId(orderId) {
-      this.$get('/business/logistics-info/queryLogisticsByOrderId', {orderId: orderId}).then(res => {
-        this.logisticsList = res.data.data
-      })
-    },
-    imagesInit(images) {
+    imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []
         images.split(',').forEach((image, index) => {
@@ -156,20 +153,20 @@ export default {
         this.fileList = imageList
       }
     },
-    handleCancel() {
+    handleCancel () {
       this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
       }
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange({fileList}) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    onClose() {
+    onClose () {
       this.$emit('close')
     }
   }

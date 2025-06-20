@@ -7,18 +7,34 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="供应商名称"
+                label="物料名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.supplierName"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="物料编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.code"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="型号规格"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.model"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="物料类型"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.type"/>
               </a-form-item>
             </a-col>
           </div>
@@ -31,7 +47,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -121,12 +137,12 @@ export default {
     }),
     columns () {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '物料编号',
+        dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '异常供应商',
-        dataIndex: 'supplierName',
+        title: '物料名称',
+        dataIndex: 'name',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -136,8 +152,8 @@ export default {
           }
         }
       }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
+        title: '备注/描述',
+        dataIndex: 'content',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -147,43 +163,7 @@ export default {
           }
         }
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '物料型号',
+        title: '型号规格  ',
         dataIndex: 'model',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -195,21 +175,32 @@ export default {
         }
       }, {
         title: '物料图片',
-        dataIndex: 'materialsImages',
+        dataIndex: 'images',
         customRender: (text, record, index) => {
-          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
+          if (!record.images) return <a-avatar shape="square" icon="user"/>
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
           </a-popover>
         }
       }, {
-        title: '异常内容',
-        dataIndex: 'remark',
+        title: '物料类型',
+        dataIndex: 'type',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '计量单位',
+        dataIndex: 'measurementUnit',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -219,7 +210,7 @@ export default {
           }
         }
       }, {
-        title: '反馈时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -260,7 +251,7 @@ export default {
     },
     handleModuleAddSuccess () {
       this.moduleAdd.visiable = false
-      this.$message.success('新增异常反馈成功')
+      this.$message.success('新增物料成功')
       this.search()
     },
     edit (record) {
@@ -272,7 +263,7 @@ export default {
     },
     handleModuleEditSuccess () {
       this.moduleEdit.visiable = false
-      this.$message.success('修改异常反馈成功')
+      this.$message.success('修改物料成功')
       this.search()
     },
     batchDelete () {
@@ -287,7 +278,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/abnormal-info/' + ids).then(() => {
+          that.$delete('/business/materials-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -360,7 +351,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/materials-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data
