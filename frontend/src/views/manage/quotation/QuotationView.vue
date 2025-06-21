@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="供应商详情" @cancel="onClose" :width="1000">
+  <a-modal v-model="show" title="异常反馈详情" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -8,12 +8,12 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
-        <a-col :span="8"><b>供应商名称：</b>
-          {{ moduleData.name }}
+          style="font-size: 15px;font-weight: 650;color: #000c17">采购订单信息</span></a-col>
+        <a-col :span="8"><b>订单编号：</b>
+          {{ moduleData.orderCode }}
         </a-col>
-        <a-col :span="8"><b>供应商编号：</b>
-          {{ moduleData.code }}
+        <a-col :span="8"><b>采购金额：</b>
+          {{ moduleData.totalPrice }} 元
         </a-col>
         <a-col :span="8"><b>详细地址：</b>
           {{ moduleData.address }}
@@ -21,50 +21,57 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>审核状态：</b>
-          <span v-if="moduleData.status == 1" style="color: green">已通过</span>
-          <span v-if="moduleData.status == 0" style="color: red">未审核</span>
+        <a-col :span="8"><b>物料名称：</b>
+          {{ moduleData.materialsName }}
+        </a-col>
+        <a-col :span="8"><b>物料编号：</b>
+          {{ moduleData.materialsCode }}
+        </a-col>
+        <a-col :span="8"><b>类型：</b>
+          {{ moduleData.type }}
+        </a-col>
+      </a-row>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col :span="8"><b>型号：</b>
+          {{ moduleData.model }}
+        </a-col>
+        <a-col :span="8"><b>采购数量：</b>
+          {{ moduleData.purchaseNum }} {{ moduleData.measurementUnit }}
+        </a-col>
+      </a-row>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span
+          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
+        <a-col :span="8"><b>供应商编号：</b>
+          {{ moduleData.supplierCode }}
+        </a-col>
+        <a-col :span="8"><b>供应商名称：</b>
+          {{ moduleData.supplierName }}
         </a-col>
         <a-col :span="8"><b>负责人：</b>
           {{ moduleData.chargePerson }}
         </a-col>
-        <a-col :span="8"><b>联系电话：</b>
+      </a-row>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col :span="8"><b>联系方式：</b>
           {{ moduleData.phone }}
         </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>信用代码：</b>
-          {{ moduleData.creditCode }}
-        </a-col>
-        <a-col :span="8"><b>可供类型：</b>
-          {{ moduleData.supplyType }}
-        </a-col>
-        <a-col :span="8"><b>营业执照号：</b>
-          {{ moduleData.businessLicense }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>开户银行：</b>
-          {{ moduleData.bankName }}
-        </a-col>
-        <a-col :span="8"><b>银行账号：</b>
-          {{ moduleData.bankAccount }}
-        </a-col>
-        <a-col :span="8"><b>创建时间：</b>
+        <a-col :span="8"><b>反馈时间：</b>
           {{ moduleData.createDate }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">备注内容</span></a-col>
-        <a-col :span="24">{{ moduleData.content }}</a-col>
+          style="font-size: 15px;font-weight: 650;color: #000c17">异常反馈内容</span></a-col>
+        <a-col :span="24">{{ moduleData.remark }}</a-col>
       </a-row>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商图片</span></a-col>
+          style="font-size: 15px;font-weight: 650;color: #000c17">物料图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"
@@ -81,24 +88,12 @@
         </a-col>
       </a-row>
       <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 5px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商位置</span></a-col>
-      </a-row>
-      <div>
-        <a-card :bordered="false" style="height: 400px">
-          <div id="areas"
-               style="width: 100%;height: 350px;box-shadow: 3px 3px 3px rgba(0, 0, 0, .2);background:#ec9e3c;color:#fff"></div>
-        </a-card>
-      </div>
-      <br/>
     </div>
   </a-modal>
 </template>
 
 <script>
 import moment from 'moment'
-import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 
@@ -142,28 +137,13 @@ export default {
   watch: {
     moduleShow: function (value) {
       if (value) {
-        if (this.moduleData.images !== null && this.moduleData.images !== '') {
-          this.imagesInit(this.moduleData.images)
+        if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
+          this.imagesInit(this.moduleData.materialsImages)
         }
-        setTimeout(() => {
-          baiduMap.initMap('areas')
-          setTimeout(() => {
-            this.local(this.moduleData)
-          }, 500)
-        }, 200)
       }
     }
   },
   methods: {
-    local (module) {
-      baiduMap.clearOverlays()
-      baiduMap.rMap().enableScrollWheelZoom(true)
-      let point = new BMap.Point(module.longitude, module.latitude)
-      baiduMap.pointAdd(point)
-      baiduMap.findPoint(point, 16)
-      // let driving = new BMap.DrivingRoute(baiduMap.rMap(), {renderOptions:{map: baiduMap.rMap(), autoViewport: true}});
-      // driving.search(new BMap.Point(this.nowPoint.lng,this.nowPoint.lat), new BMap.Point(scenic.point.split(",")[0],scenic.point.split(",")[1]));
-    },
     imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []
