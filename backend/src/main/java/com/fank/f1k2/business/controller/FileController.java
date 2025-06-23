@@ -25,7 +25,7 @@ public class FileController {
     @ApiOperation(value = "文件上传", notes = "文件上传")
     public String upload(@RequestParam("avatar") MultipartFile file) {
         // 1定义要上传文件 的存放路径
-        String localPath = "G:/Project/20250111药房在线管理系统/db";
+        String localPath = "G:/Project/20250524供应链协同平台/db";
         // 2获得文件名字
         String fileName = file.getOriginalFilename();
         // 2上传失败提示

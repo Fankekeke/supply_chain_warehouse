@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="修改预警库存"
+    title="修改员工"
     :maskClosable="false"
     width=850
     placement="right"
@@ -11,23 +11,82 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='选择物料'>
+          <a-form-item label='员工名称'>
+            <a-input v-decorator="[
+            'name',
+            { rules: [{ required: true, message: '请输入名称!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='性别' v-bind="formItemLayout">
             <a-select v-decorator="[
-              'materialsCode',
-              { rules: [{ required: true, message: '请选择物料!' }] }
+              'staffSex',
+              { rules: [{ required: true, message: '请输入性别!' }] }
               ]">
-              <a-select-option :value="item.code" v-for="(item, index) in materialsList" :key="index">{{ item.name }}
-              </a-select-option>
+              <a-select-option value="1">男</a-select-option>
+              <a-select-option value="2">女</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='预警值' v-bind="formItemLayout">
-            <a-input-number style="width: 100%"
-                            v-decorator="[
-            'minValue',
-            { rules: [{ required: true, message: '请输入预警值!' }] }
+          <a-form-item label='出生日期'>
+            <a-input v-decorator="[
+            'birthDate',
             ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='邮箱地址'>
+            <a-input v-decorator="[
+            'email',
+            { rules: [{ required: true, message: '请输邮箱地址!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='联系方式'>
+            <a-input v-decorator="[
+            'phone',
+            { rules: [{ required: true, message: '请输入联系方式!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <!--        <a-col :span="12">-->
+        <!--          <a-form-item label='所属部门'>-->
+        <!--            <a-input v-decorator="[-->
+        <!--            'deptId',-->
+        <!--            { rules: [{ required: true, message: '请输入所属部门!' }] }-->
+        <!--            ]"/>-->
+        <!--          </a-form-item>-->
+        <!--        </a-col>-->
+        <a-col :span="24">
+          <a-form-item label='备注内容' v-bind="formItemLayout">
+            <a-textarea :rows="6" v-decorator="[
+            'content'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="24">
+          <a-form-item label='员工图片' v-bind="formItemLayout">
+            <a-upload
+              name="avatar"
+              action="http://127.0.0.1:9527/file/fileUpload/"
+              list-type="picture-card"
+              :file-list="fileList"
+              @preview="handlePreview"
+              @change="picHandleChange"
+            >
+              <div v-if="fileList.length < 8">
+                <a-icon type="plus"/>
+                <div class="ant-upload-text">
+                  Upload
+                </div>
+              </div>
+            </a-upload>
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage"/>
+            </a-modal>
           </a-form-item>
         </a-col>
       </a-row>
@@ -85,19 +144,10 @@ export default {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      materialsList: []
+      previewImage: ''
     }
   },
-  mounted () {
-    this.queryMaterialsList()
-  },
   methods: {
-    queryMaterialsList () {
-      this.$get('/business/materials-info/list').then((r) => {
-        this.materialsList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -122,7 +172,7 @@ export default {
     },
     setFormValues ({...module}) {
       this.rowId = module.id
-      let fields = ['materialsCode', 'minValue']
+      let fields = ['name', 'staffSex', 'birthDate', 'content', 'email', 'phone']
       let obj = {}
       Object.keys(module).forEach((key) => {
         if (key === 'images') {
@@ -159,7 +209,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/business/early-alert-info', {
+          this.$put('/business/staff-info', {
             ...values
           }).then((r) => {
             this.reset()

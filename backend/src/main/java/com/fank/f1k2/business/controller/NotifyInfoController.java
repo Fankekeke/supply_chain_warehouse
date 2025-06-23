@@ -104,7 +104,7 @@ public class NotifyInfoController {
      */
     @ApiOperation(value = "新增消息通知", notes = "创建一个新的消息通知记录")
     @PostMapping
-    public R save(@RequestBody NotifyInfo addFrom) {
+    public R save(NotifyInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(notifyInfoService.save(addFrom));
     }
@@ -117,7 +117,7 @@ public class NotifyInfoController {
      */
     @ApiOperation(value = "修改消息通知", notes = "更新已有的消息通知信息")
     @PutMapping
-    public R edit(@RequestBody NotifyInfo editFrom) {
+    public R edit(NotifyInfo editFrom) {
         return R.ok(notifyInfoService.updateById(editFrom));
     }
 

@@ -92,7 +92,7 @@ public class PurchaseNeedInfoController {
      */
     @ApiOperation(value = "新增采购需求", notes = "创建一个新的采购需求记录")
     @PostMapping
-    public R save(@RequestBody PurchaseNeedInfo addFrom) throws F1k2Exception {
+    public R save(PurchaseNeedInfo addFrom) throws F1k2Exception {
         return R.ok(purchaseNeedInfoService.addPurchaseNeed(addFrom));
     }
 
@@ -104,7 +104,7 @@ public class PurchaseNeedInfoController {
      */
     @ApiOperation(value = "修改采购需求", notes = "更新已有的采购需求信息")
     @PutMapping
-    public R edit(@RequestBody PurchaseNeedInfo editFrom) {
+    public R edit(PurchaseNeedInfo editFrom) {
         return R.ok(purchaseNeedInfoService.updateById(editFrom));
     }
 

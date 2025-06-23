@@ -100,7 +100,7 @@ public class PurchaseQuotationInfoController {
      */
     @ApiOperation(value = "新增采购计划报价", notes = "创建一个新的采购计划报价记录，并执行采购计划下发操作")
     @PostMapping
-    public R save(@RequestBody PurchaseQuotationInfo addFrom) throws F1k2Exception {
+    public R save(PurchaseQuotationInfo addFrom) throws F1k2Exception {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(purchaseQuotationInfoService.purchasePlanIssue(addFrom));
     }
@@ -113,7 +113,7 @@ public class PurchaseQuotationInfoController {
      */
     @ApiOperation(value = "修改采购计划报价", notes = "更新已有的采购计划报价信息")
     @PutMapping
-    public R edit(@RequestBody PurchaseQuotationInfo editFrom) {
+    public R edit(PurchaseQuotationInfo editFrom) {
         return R.ok(purchaseQuotationInfoService.updateById(editFrom));
     }
 

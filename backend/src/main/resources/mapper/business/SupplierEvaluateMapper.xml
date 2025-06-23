@@ -24,7 +24,7 @@
         si.NAME AS supplierName,
         si.charge_person,
         si.phone,
-        si.images AS supplierImages,
+        si.images AS supplierImages
         FROM
         supplier_evaluate se
         LEFT JOIN supplier_info si ON (si.id = se.supplier_id)

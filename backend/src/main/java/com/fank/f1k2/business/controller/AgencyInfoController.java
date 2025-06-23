@@ -100,7 +100,7 @@ public class AgencyInfoController {
      */
     @ApiOperation(value = "新增代办任务", notes = "新增代办任务")
     @PostMapping
-    public R save(@RequestBody AgencyInfo addFrom) {
+    public R save(AgencyInfo addFrom) {
         addFrom.setCode("AG-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(agencyInfoService.save(addFrom));
@@ -114,7 +114,7 @@ public class AgencyInfoController {
      */
     @ApiOperation(value = "修改代办任务", notes = "修改代办任务")
     @PutMapping
-    public R edit(@RequestBody AgencyInfo editFrom) {
+    public R edit(AgencyInfo editFrom) {
         return R.ok(agencyInfoService.updateById(editFrom));
     }
 

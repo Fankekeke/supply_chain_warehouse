@@ -87,7 +87,7 @@ public class LogisticsInfoController {
      */
     @ApiOperation(value = "新增采购订单物流", notes = "创建一个新的采购订单物流记录，并设置为当前最新物流")
     @PostMapping
-    public R save(@RequestBody LogisticsInfo addFrom) {
+    public R save(LogisticsInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         addFrom.setCurrentLogistics(1);
         return R.ok(logisticsInfoService.save(addFrom));
@@ -101,7 +101,7 @@ public class LogisticsInfoController {
      */
     @ApiOperation(value = "修改采购订单物流", notes = "更新已有的物流记录并重置当前物流标记")
     @PutMapping
-    public R edit(@RequestBody LogisticsInfo editFrom) {
+    public R edit(LogisticsInfo editFrom) {
         logisticsInfoService.update(Wrappers.<LogisticsInfo>lambdaUpdate()
                 .set(LogisticsInfo::getCurrentLogistics, 0)
                 .eq(LogisticsInfo::getOrderId, editFrom.getOrderId()));

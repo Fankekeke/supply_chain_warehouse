@@ -87,7 +87,7 @@ public class OrderInfoController {
      */
     @ApiOperation(value = "新增采购订单", notes = "创建一个新的采购订单记录")
     @PostMapping
-    public R save(@RequestBody OrderInfo addFrom) {
+    public R save(OrderInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(orderInfoService.save(addFrom));
     }
@@ -100,7 +100,7 @@ public class OrderInfoController {
      */
     @ApiOperation(value = "修改采购订单", notes = "更新已有的采购订单信息")
     @PutMapping
-    public R edit(@RequestBody OrderInfo editFrom) {
+    public R edit(OrderInfo editFrom) {
         return R.ok(orderInfoService.updateById(editFrom));
     }
 

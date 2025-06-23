@@ -91,7 +91,7 @@ public class SupplierMaterialsInfoController {
      */
     @ApiOperation(value = "新增供应商物料", notes = "创建一个新的供应商物料记录，并自动绑定供应商信息")
     @PostMapping
-    public R save(@RequestBody SupplierMaterialsInfo addFrom) {
+    public R save(SupplierMaterialsInfo addFrom) {
         SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery()
                 .eq(SupplierInfo::getSysUserId, addFrom.getSupplierId()));
         if (supplierInfo != null) {
@@ -109,7 +109,7 @@ public class SupplierMaterialsInfoController {
      */
     @ApiOperation(value = "修改供应商物料", notes = "更新已有的供应商物料信息")
     @PutMapping
-    public R edit(@RequestBody SupplierMaterialsInfo editFrom) {
+    public R edit(SupplierMaterialsInfo editFrom) {
         return R.ok(supplierMaterialsInfoService.updateById(editFrom));
     }
 

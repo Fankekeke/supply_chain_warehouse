@@ -111,7 +111,7 @@ public class WarehouseInfoController {
      */
     @ApiOperation(value = "新增库房库存", notes = "创建一个新的库房库存记录")
     @PostMapping
-    public R save(@RequestBody WarehouseInfo addFrom) {
+    public R save(WarehouseInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(warehouseInfoService.save(addFrom));
     }
@@ -124,7 +124,7 @@ public class WarehouseInfoController {
      */
     @ApiOperation(value = "修改库房库存", notes = "更新已有的库房库存信息")
     @PutMapping
-    public R edit(@RequestBody WarehouseInfo editFrom) {
+    public R edit(WarehouseInfo editFrom) {
         return R.ok(warehouseInfoService.updateById(editFrom));
     }
 

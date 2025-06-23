@@ -76,7 +76,7 @@ public class EarlyAlertInfoController {
      */
     @ApiOperation(value = "新增预警库存", notes = "创建一个新的预警库存设置")
     @PostMapping
-    public R save(@RequestBody EarlyAlertInfo addFrom) throws F1k2Exception {
+    public R save(EarlyAlertInfo addFrom) throws F1k2Exception {
         int count = earlyAlertInfoService.count(Wrappers.<EarlyAlertInfo>lambdaQuery().eq(EarlyAlertInfo::getMaterialsCode, addFrom.getMaterialsCode()));
         if (count > 0) {
             throw new F1k2Exception("此物料已添加库存设置");
@@ -93,7 +93,7 @@ public class EarlyAlertInfoController {
      */
     @ApiOperation(value = "修改预警库存", notes = "根据传入的预警库存信息更新已有的设置")
     @PutMapping
-    public R edit(@RequestBody EarlyAlertInfo editFrom) {
+    public R edit(EarlyAlertInfo editFrom) {
         return R.ok(earlyAlertInfoService.updateById(editFrom));
     }
 

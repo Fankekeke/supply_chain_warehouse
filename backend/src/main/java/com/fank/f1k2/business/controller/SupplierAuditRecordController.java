@@ -86,7 +86,7 @@ public class SupplierAuditRecordController {
      */
     @ApiOperation(value = "新增审核记录", notes = "创建一个新的供应商审核记录")
     @PostMapping
-    public R save(@RequestBody SupplierAuditRecord addFrom) {
+    public R save(SupplierAuditRecord addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(supplierAuditRecordService.save(addFrom));
     }
@@ -99,7 +99,7 @@ public class SupplierAuditRecordController {
      */
     @ApiOperation(value = "修改审核记录", notes = "更新已有的供应商审核记录信息")
     @PutMapping
-    public R edit(@RequestBody SupplierAuditRecord editFrom) {
+    public R edit(SupplierAuditRecord editFrom) {
         return R.ok(supplierAuditRecordService.updateById(editFrom));
     }
 

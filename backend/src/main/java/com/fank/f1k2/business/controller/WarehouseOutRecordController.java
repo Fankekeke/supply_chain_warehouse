@@ -76,7 +76,7 @@ public class WarehouseOutRecordController {
      */
     @ApiOperation(value = "新增出库记录", notes = "创建一个新的库存出库记录")
     @PostMapping
-    public R save(@RequestBody WarehouseOutRecord addFrom) {
+    public R save(WarehouseOutRecord addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(warehouseOutRecordService.save(addFrom));
     }
@@ -89,7 +89,7 @@ public class WarehouseOutRecordController {
      */
     @ApiOperation(value = "修改出库记录", notes = "更新已有的库存出库记录信息")
     @PutMapping
-    public R edit(@RequestBody WarehouseOutRecord editFrom) {
+    public R edit(WarehouseOutRecord editFrom) {
         return R.ok(warehouseOutRecordService.updateById(editFrom));
     }
 

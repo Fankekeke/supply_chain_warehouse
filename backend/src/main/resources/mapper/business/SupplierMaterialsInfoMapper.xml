@@ -25,10 +25,10 @@
         mi.model,
         mi.images AS materialsImages,
         mi.type,
-        mi.measurement_unit,
+        mi.measurement_unit
         FROM
         supplier_materials_info smi
-        LEFT JOIN supplier_info si ON (si.id = smi.supplier_info)
+        LEFT JOIN supplier_info si ON (si.id = smi.supplier_id)
         LEFT JOIN materials_info mi ON (mi.`code` = smi.`code`)
         WHERE
         1 = 1
@@ -71,7 +71,7 @@
         mi.measurement_unit,
         FROM
         supplier_materials_info smi
-        LEFT JOIN supplier_info si ON (si.id = smi.supplier_info)
+        LEFT JOIN supplier_info si ON (si.id = smi.supplier_id)
         LEFT JOIN materials_info mi ON (mi.`code` = smi.`code`)
         WHERE
         1 = 1

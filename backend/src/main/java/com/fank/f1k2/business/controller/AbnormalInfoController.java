@@ -87,7 +87,7 @@ public class AbnormalInfoController {
      */
     @ApiOperation(value = "新增异常反馈", notes = "新增异常反馈")
     @PostMapping
-    public R save(@RequestBody AbnormalInfo addFrom) {
+    public R save(AbnormalInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(abnormalInfoService.save(addFrom));
     }
@@ -100,7 +100,7 @@ public class AbnormalInfoController {
      */
     @ApiOperation(value = "修改异常反馈", notes = "修改异常反馈")
     @PutMapping
-    public R edit(@RequestBody AbnormalInfo editFrom) {
+    public R edit(AbnormalInfo editFrom) {
         return R.ok(abnormalInfoService.updateById(editFrom));
     }
 

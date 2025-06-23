@@ -84,7 +84,7 @@ public class ${table.controllerName} {
     * @return 结果
     */
     @PostMapping
-    public R save(@RequestBody ${entity} addFrom) {
+    public R save(${entity} addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(bulletinInfoService.save(addFrom));
     }
@@ -96,7 +96,7 @@ public class ${table.controllerName} {
     * @return 结果
     */
     @PutMapping
-    public R edit(@RequestBody ${entity} editFrom) {
+    public R edit(${entity} editFrom) {
         return R.ok(bulletinInfoService.updateById(editFrom));
     }
 

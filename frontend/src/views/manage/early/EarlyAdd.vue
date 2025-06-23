@@ -94,7 +94,7 @@ export default {
   methods: {
     queryMaterialsList() {
       this.$get('/business/materials-info/list').then((r) => {
-        this.materialsList = r.data
+        this.materialsList = r.data.data
       })
     },
     handleCancel() {

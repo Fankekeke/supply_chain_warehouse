@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="修改预警库存"
+    title="修改供应物料"
     :maskClosable="false"
     width=850
     placement="right"
@@ -11,9 +11,9 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-col :span="12">
-          <a-form-item label='选择物料'>
+          <a-form-item label='供应物料'>
             <a-select v-decorator="[
-              'materialsCode',
+              'code',
               { rules: [{ required: true, message: '请选择物料!' }] }
               ]">
               <a-select-option :value="item.code" v-for="(item, index) in materialsList" :key="index">{{ item.name }}
@@ -22,12 +22,38 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='预警值' v-bind="formItemLayout">
-            <a-input-number style="width: 100%"
-                            v-decorator="[
-            'minValue',
-            { rules: [{ required: true, message: '请输入预警值!' }] }
+          <a-form-item label='批次记录'>
+            <a-input v-decorator="[
+            'batchRecord',
+            { rules: [{ required: true, message: '请输入批次记录!' }] }
             ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='封装'>
+            <a-input v-decorator="[
+            'packageSet',
+            { rules: [{ required: true, message: '请输入封装!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='品牌'>
+            <a-input v-decorator="[
+            'brand',
+            { rules: [{ required: true, message: '请输入品牌!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='可供状态'>
+            <a-select v-decorator="[
+              'status',
+              { rules: [{ required: true, message: '请输入可供状态!' }] }
+              ]">
+              <a-select-option value="0">不可供</a-select-option>
+              <a-select-option value="1">可供</a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
       </a-row>
@@ -122,7 +148,7 @@ export default {
     },
     setFormValues ({...module}) {
       this.rowId = module.id
-      let fields = ['materialsCode', 'minValue']
+      let fields = ['name', 'address', 'content', 'longitude', 'latitude', 'content', 'creditCode', 'chargePerson', 'phone', 'supplyType', 'businessLicense', 'bankName', 'bankAccount']
       let obj = {}
       Object.keys(module).forEach((key) => {
         if (key === 'images') {
@@ -159,7 +185,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/business/early-alert-info', {
+          this.$put('/business/supplier-materials-info', {
             ...values
           }).then((r) => {
             this.reset()

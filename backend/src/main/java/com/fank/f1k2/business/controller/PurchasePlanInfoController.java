@@ -87,7 +87,7 @@ public class PurchasePlanInfoController {
      */
     @ApiOperation(value = "新增采购计划", notes = "创建一个新的采购计划记录")
     @PostMapping
-    public R save(@RequestBody PurchasePlanInfo addFrom) {
+    public R save(PurchasePlanInfo addFrom) {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(purchasePlanInfoService.save(addFrom));
     }
@@ -100,7 +100,7 @@ public class PurchasePlanInfoController {
      */
     @ApiOperation(value = "修改采购计划", notes = "更新已有的采购计划信息")
     @PutMapping
-    public R edit(@RequestBody PurchasePlanInfo editFrom) {
+    public R edit(PurchasePlanInfo editFrom) {
         return R.ok(purchasePlanInfoService.updateById(editFrom));
     }
 

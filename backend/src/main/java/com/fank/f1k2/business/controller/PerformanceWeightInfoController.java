@@ -77,7 +77,7 @@ public class PerformanceWeightInfoController {
      */
     @ApiOperation(value = "新增绩效权重", notes = "创建一个新的绩效评价权重记录")
     @PostMapping
-    public R save(@RequestBody PerformanceWeightInfo addFrom) {
+    public R save(PerformanceWeightInfo addFrom) {
         return R.ok(performanceWeightInfoService.save(addFrom));
     }
 
@@ -89,7 +89,7 @@ public class PerformanceWeightInfoController {
      */
     @ApiOperation(value = "修改绩效权重", notes = "更新已有的绩效权重配置并校验权重项合理性")
     @PutMapping
-    public R edit(@RequestBody PerformanceWeightInfo editFrom) throws F1k2Exception {
+    public R edit(PerformanceWeightInfo editFrom) throws F1k2Exception {
         List<PerformanceWeightInfo> children = editFrom.getChildren();
         if (CollectionUtil.isEmpty(children)) {
             throw new F1k2Exception("请选择子项");

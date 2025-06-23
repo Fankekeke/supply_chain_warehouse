@@ -81,7 +81,7 @@ public class MaterialsInfoController {
     @ApiOperation(value = "新增物料", notes = "创建一个新的物料并同步创建对应的预警设置")
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
-    public R save(@RequestBody MaterialsInfo addFrom) {
+    public R save(MaterialsInfo addFrom) {
         addFrom.setCode("MAT-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
 
@@ -126,7 +126,7 @@ public class MaterialsInfoController {
      */
     @ApiOperation(value = "修改物料", notes = "更新已有的物料信息")
     @PutMapping
-    public R edit(@RequestBody MaterialsInfo editFrom) {
+    public R edit(MaterialsInfo editFrom) {
         return R.ok(materialsInfoService.updateById(editFrom));
     }
 

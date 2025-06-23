@@ -103,7 +103,7 @@ public class StaffInfoController {
      */
     @ApiOperation(value = "新增员工", notes = "创建一个新的员工并注册关联的系统用户")
     @PostMapping
-    public R save(@RequestBody StaffInfo addFrom) throws Exception {
+    public R save(StaffInfo addFrom) throws Exception {
         addFrom.setCode("SAF-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         userService.registerStaff(addFrom);
@@ -118,7 +118,7 @@ public class StaffInfoController {
      */
     @ApiOperation(value = "修改员工信息", notes = "更新已有的员工信息")
     @PutMapping
-    public R edit(@RequestBody StaffInfo editFrom) {
+    public R edit(StaffInfo editFrom) {
         return R.ok(staffInfoService.updateById(editFrom));
     }
 

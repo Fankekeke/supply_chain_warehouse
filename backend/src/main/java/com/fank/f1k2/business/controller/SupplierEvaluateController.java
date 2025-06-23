@@ -90,7 +90,7 @@ public class SupplierEvaluateController {
      */
     @ApiOperation(value = "新增绩效评价", notes = "创建一个新的供应商绩效评价记录，并校验是否已存在年度评价")
     @PostMapping
-    public R save(@RequestBody SupplierEvaluate addFrom) throws F1k2Exception {
+    public R save(SupplierEvaluate addFrom) throws F1k2Exception {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         int year = DateUtil.year(new Date());
         int count = supplierEvaluateService.count(Wrappers.<SupplierEvaluate>lambdaQuery()
@@ -113,7 +113,7 @@ public class SupplierEvaluateController {
      */
     @ApiOperation(value = "修改绩效评价", notes = "更新已有的供应商绩效评价信息并重新计算总分")
     @PutMapping
-    public R edit(@RequestBody SupplierEvaluate editFrom) throws F1k2Exception {
+    public R edit(SupplierEvaluate editFrom) throws F1k2Exception {
         BigDecimal totalScore = supplierEvaluateService.calculateTotalScore(editFrom);
         editFrom.setScore(totalScore);
         return R.ok(supplierEvaluateService.updateById(editFrom));

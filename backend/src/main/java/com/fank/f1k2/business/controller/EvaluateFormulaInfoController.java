@@ -75,7 +75,7 @@ public class EvaluateFormulaInfoController {
      */
     @ApiOperation(value = "新增计算公式", notes = "创建一个新的计算公式，并设置默认状态")
     @PostMapping
-    public R save(@RequestBody EvaluateFormulaInfo addFrom) {
+    public R save(EvaluateFormulaInfo addFrom) {
         addFrom.setCode("FOR-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         if ("1".equals(addFrom.getUseFlag())) {
@@ -92,7 +92,7 @@ public class EvaluateFormulaInfoController {
      */
     @ApiOperation(value = "修改计算公式", notes = "更新已有的计算公式信息")
     @PutMapping
-    public R edit(@RequestBody EvaluateFormulaInfo editFrom) {
+    public R edit(EvaluateFormulaInfo editFrom) {
         if ("1".equals(editFrom.getUseFlag())) {
             evaluateFormulaInfoService.update(Wrappers.<EvaluateFormulaInfo>lambdaUpdate().set(EvaluateFormulaInfo::getUseFlag, "0"));
         }
