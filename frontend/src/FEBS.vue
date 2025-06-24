@@ -27,6 +27,59 @@ export default {
 }
 </script>
 <style lang="less">
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', SimHei, sans-serif;
+  color: #333333;
+  background-color: #FAFAFA;
+}
+
+.view-title {
+  display: inline-block;
+  width: 100%;
+  padding: 8px 16px;
+  background: #f8f9fa;
+  border-left: 4px solid #1890ff;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+b {
+  color: #333;
+  min-width: 80px;
+  display: inline-block;
+}
+
+.status-approved {
+  color: #52C41A;
+}
+
+.status-pending {
+  color: #FF4D4F;
+}
+
+.map-container {
+  width: 100%;
+  height: 350px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #ec9e3c;
+  color: #fff;
+}
+
+.a-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ant-upload-list-picture-card .ant-upload-list-item {
+  border-radius: 6px;
+}
+
+.ant-modal-footer .ant-btn-danger {
+  background-color: #FF4D4F;
+  border-color: #FF4D4F;
+}
   :global {
     .dragable-ghost {
       border: 1px dashed #aaaaaa;

@@ -8,7 +8,7 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">代办信息</span></a-col>
+          class="view-title">代办信息</span></a-col>
         <a-col :span="8"><b>代办编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
@@ -23,7 +23,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
+          class="view-title">供应商信息</span></a-col>
         <a-col :span="8"><b>供应商编号：</b>
           {{ moduleData.supplierCode }}
         </a-col>
@@ -46,7 +46,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">代办任务内容</span></a-col>
+          class="view-title">代办任务内容</span></a-col>
         <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
       <br/>

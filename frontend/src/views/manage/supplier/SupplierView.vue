@@ -8,7 +8,7 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
+          class="view-title">供应商信息</span></a-col>
         <a-col :span="8"><b>供应商名称：</b>
           {{ moduleData.name }}
         </a-col>
@@ -59,12 +59,13 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">备注内容</span></a-col>
+          class="view-title">备注内容</span></a-col>
         <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
+      <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商图片</span></a-col>
+          class="view-title">供应商图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"
@@ -83,7 +84,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 5px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商位置</span></a-col>
+          class="view-title">供应商位置</span></a-col>
       </a-row>
       <div>
         <a-card :bordered="false" style="height: 400px">

@@ -39,85 +39,85 @@
           <apexchart ref="count" type=bar height=300 :options="chartOptions" :series="series" />
         </a-card>
       </a-col>
-      <a-col :span="12" class="project-wrapper">
-        <a-card title="进行中的项目" class="project-card">
-          <a href="https://github.com/wuyouzhuguli?tab=repositories" target="_blank" slot="extra">所有项目</a>
-          <table>
-            <tr>
-              <td>
-                <div class="project-avatar-wrapper">
-                  <a-avatar class="project-avatar">{{projects[0].avatar}}</a-avatar>
-                </div>
-                <div class="project-detail">
-                  <div class="project-name">
-                    {{projects[0].name}}
-                  </div>
-                  <div class="project-desc">
-                    <p>{{projects[0].des}}</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="project-avatar-wrapper">
-                  <a-avatar class="project-avatar">{{projects[1].avatar}}</a-avatar>
-                </div>
-                <div class="project-detail">
-                  <div class="project-name">
-                    {{projects[1].name}}
-                  </div>
-                  <div class="project-desc">
-                    <p>{{projects[1].des}}</p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="project-avatar-wrapper">
-                  <a-avatar class="project-avatar">{{projects[2].avatar}}</a-avatar>
-                </div>
-                <div class="project-detail">
-                  <div class="project-name">
-                    {{projects[2].name}}
-                  </div>
-                  <div class="project-desc">
-                    <p>{{projects[2].des}}</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="project-avatar-wrapper">
-                  <a-avatar class="project-avatar">{{projects[3].avatar}}</a-avatar>
-                </div>
-                <div class="project-detail">
-                  <div class="project-name">
-                    {{projects[3].name}}
-                  </div>
-                  <div class="project-desc">
-                    <p>{{projects[3].des}}</p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="project-avatar-wrapper">
-                  <a-avatar class="project-avatar">{{projects[4].avatar}}</a-avatar>
-                </div>
-                <div class="project-detail">
-                  <div class="project-name">
-                    {{projects[4].name}}
-                  </div>
-                  <div class="project-desc">
-                    <p>{{projects[4].des}}</p>
-                  </div>
-                </div>
-              </td>
-              <td></td>
-            </tr>
-          </table>
-        </a-card>
-      </a-col>
+<!--      <a-col :span="12" class="project-wrapper">-->
+<!--        <a-card title="进行中的项目" class="project-card">-->
+<!--          <a href="https://github.com/wuyouzhuguli?tab=repositories" target="_blank" slot="extra">所有项目</a>-->
+<!--          <table>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="project-avatar-wrapper">-->
+<!--                  <a-avatar class="project-avatar">{{projects[0].avatar}}</a-avatar>-->
+<!--                </div>-->
+<!--                <div class="project-detail">-->
+<!--                  <div class="project-name">-->
+<!--                    {{projects[0].name}}-->
+<!--                  </div>-->
+<!--                  <div class="project-desc">-->
+<!--                    <p>{{projects[0].des}}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <div class="project-avatar-wrapper">-->
+<!--                  <a-avatar class="project-avatar">{{projects[1].avatar}}</a-avatar>-->
+<!--                </div>-->
+<!--                <div class="project-detail">-->
+<!--                  <div class="project-name">-->
+<!--                    {{projects[1].name}}-->
+<!--                  </div>-->
+<!--                  <div class="project-desc">-->
+<!--                    <p>{{projects[1].des}}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="project-avatar-wrapper">-->
+<!--                  <a-avatar class="project-avatar">{{projects[2].avatar}}</a-avatar>-->
+<!--                </div>-->
+<!--                <div class="project-detail">-->
+<!--                  <div class="project-name">-->
+<!--                    {{projects[2].name}}-->
+<!--                  </div>-->
+<!--                  <div class="project-desc">-->
+<!--                    <p>{{projects[2].des}}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <div class="project-avatar-wrapper">-->
+<!--                  <a-avatar class="project-avatar">{{projects[3].avatar}}</a-avatar>-->
+<!--                </div>-->
+<!--                <div class="project-detail">-->
+<!--                  <div class="project-name">-->
+<!--                    {{projects[3].name}}-->
+<!--                  </div>-->
+<!--                  <div class="project-desc">-->
+<!--                    <p>{{projects[3].des}}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="project-avatar-wrapper">-->
+<!--                  <a-avatar class="project-avatar">{{projects[4].avatar}}</a-avatar>-->
+<!--                </div>-->
+<!--                <div class="project-detail">-->
+<!--                  <div class="project-name">-->
+<!--                    {{projects[4].name}}-->
+<!--                  </div>-->
+<!--                  <div class="project-desc">-->
+<!--                    <p>{{projects[4].des}}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </td>-->
+<!--              <td></td>-->
+<!--            </tr>-->
+<!--          </table>-->
+<!--        </a-card>-->
+<!--      </a-col>-->
     </a-row>
   </div>
 </template>

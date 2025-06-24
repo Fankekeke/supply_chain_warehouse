@@ -7,26 +7,39 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="供应商名称"
+                label="物品名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.supplierName"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="型号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.type"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="物料名称"
+                label="操作类型"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.materialsName"/>
+                <a-select v-model="queryParams.isIn" allowClear>
+                  <a-select-option value="1">入库</a-select-option>
+                  <a-select-option value="2">出库</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="物品类型"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParams.typeId" style="width: 100%" allowClear>
+                  <a-select-option v-for="(item, index) in consumableType" :value="item.id" :key="index">{{ item.name }}</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -39,8 +52,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -52,58 +65,32 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
+        <template slot="amountShow" slot-scope="text, record">
+          <a-icon v-if="record.isIn == 1" type="caret-up" style="color: red;font-size: 15px"/>
+          <a-icon v-if="record.isIn == 2" type="caret-down" style="color: green;font-size: 15px"/>
+          {{ record.amount }}
+        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.accountStatus == 0" type="caret-up" @click="edit(record, 1)" title="修 改"/>
+          <a-icon v-if="record.accountStatus == 1" type="caret-down" @click="edit(record, 0)" title="修 改"/>
         </template>
       </a-table>
     </div>
-    <module-add
-      @close="handleModuleAddClose"
-      @success="handleModuleAddSuccess"
-      :moduleAddVisiable="moduleAdd.visiable">
-    </module-add>
-    <module-edit
-      ref="moduleEdit"
-      @close="handleModuleEditClose"
-      @success="handleModuleEditSuccess"
-      :moduleEditVisiable="moduleEdit.visiable">
-    </module-edit>
-    <module-view
-      @close="handleModuleViewClose"
-      :moduleShow="moduleView.visiable"
-      :moduleData="moduleView.data">
-    </module-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './LogisticsAdd.vue'
-import moduleEdit from './LogisticsEdit.vue'
-import moduleView from './LogisticsView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
-
 moment.locale('zh-cn')
 
 export default {
-  name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
-  data() {
+  name: 'Details',
+  components: {RangeDate},
+  data () {
     return {
       advanced: false,
-      moduleAdd: {
-        visiable: false
-      },
-      moduleEdit: {
-        visiable: false
-      },
-      moduleView: {
-        visiable: false,
-        data: null
-      },
       queryParams: {},
       filteredInfo: null,
       sortedInfo: null,
@@ -119,22 +106,20 @@ export default {
         showSizeChanger: true,
         showTotal: (total, range) => `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`
       },
-      userList: []
+      consumableType: []
     }
   },
   computed: {
     ...mapState({
       currentUser: state => state.account.user
     }),
-    columns() {
+    columns () {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
-        ellipsis: true
+        title: '物品名称',
+        dataIndex: 'name'
       }, {
-        title: '供应商名称',
-        dataIndex: 'supplierName',
-        ellipsis: true,
+        title: '型号',
+        dataIndex: 'type',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -143,9 +128,8 @@ export default {
           }
         }
       }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
-        ellipsis: true,
+        title: '单位',
+        dataIndex: 'unit',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -154,9 +138,41 @@ export default {
           }
         }
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
+        title: '物品类型',
+        dataIndex: 'consumableName',
+        customRender: (text, row, index) => {
+          return <a-tag>{text}</a-tag>
+        }
+      }, {
+        title: '数量',
+        dataIndex: 'amount',
+        scopedSlots: {customRender: 'amountShow'}
+      }, {
+        title: '物品状态',
+        dataIndex: 'isIn',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag color="blue">入库</a-tag>
+            case 2:
+              return <a-tag color="pink">出库</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '单价',
+        dataIndex: 'price',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + ' 元'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '备注',
+        dataIndex: 'content',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -165,43 +181,7 @@ export default {
           }
         }
       }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '当前物流',
-        dataIndex: 'remark',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '创建时间',
+        title: '操作时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -210,54 +190,35 @@ export default {
             return '- -'
           }
         }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
-  mounted() {
+  mounted () {
     this.fetch()
+    this.getConsumableType()
   },
   methods: {
-    handleModuleViewOpen(row) {
-      this.moduleView.data = row
-      this.moduleView.visiable = true
+    getConsumableType () {
+      this.$get('/cos/consumable-type/list').then((r) => {
+        this.consumableType = r.data.data
+      })
     },
-    handleModuleViewClose() {
-      this.moduleView.visiable = false
+    edit (row, status) {
+      this.$post('/cos/student-info/accountStatusEdit', { userId: row.userId, status }).then((r) => {
+        this.$message.success('修改成功')
+        this.fetch()
+      })
     },
-    onSelectChange(selectedRowKeys) {
+    onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    add() {
-      this.moduleAdd.visiable = true
+    handleDeptChange (value) {
+      this.queryParams.deptId = value || ''
     },
-    handleModuleAddClose() {
-      this.moduleAdd.visiable = false
-    },
-    handleModuleAddSuccess() {
-      this.moduleAdd.visiable = false
-      this.$message.success('新增订单物流成功')
-      this.search()
-    },
-    edit(record) {
-      this.$refs.moduleEdit.setFormValues(record)
-      this.moduleEdit.visiable = true
-    },
-    handleModuleEditClose() {
-      this.moduleEdit.visiable = false
-    },
-    handleModuleEditSuccess() {
-      this.moduleEdit.visiable = false
-      this.$message.success('修改订单物流成功')
-      this.search()
-    },
-    batchDelete() {
+    batchDelete () {
       if (!this.selectedRowKeys.length) {
         this.$message.warning('请选择需要删除的记录')
         return
@@ -267,20 +228,20 @@ export default {
         title: '确定删除所选中的记录?',
         content: '当您点击确定按钮后，这些记录将会被彻底删除',
         centered: true,
-        onOk() {
+        onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/logistics-info/' + ids).then(() => {
+          that.$delete('/cos/student-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
           })
         },
-        onCancel() {
+        onCancel () {
           that.selectedRowKeys = []
         }
       })
     },
-    search() {
+    search () {
       let {sortedInfo, filteredInfo} = this
       let sortField, sortOrder
       // 获取当前列的排序和列的过滤规则
@@ -295,7 +256,7 @@ export default {
         ...filteredInfo
       })
     },
-    reset() {
+    reset () {
       // 取消选中
       this.selectedRowKeys = []
       // 重置分页
@@ -312,7 +273,7 @@ export default {
       this.queryParams = {}
       this.fetch()
     },
-    handleTableChange(pagination, filters, sorter) {
+    handleTableChange (pagination, filters, sorter) {
       // 将这三个参数赋值给Vue data，用于后续使用
       this.paginationInfo = pagination
       this.filteredInfo = filters
@@ -325,7 +286,7 @@ export default {
         ...filters
       })
     },
-    fetch(params = {}) {
+    fetch (params = {}) {
       // 显示loading
       this.loading = true
       if (this.paginationInfo) {
@@ -339,10 +300,13 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.status === undefined) {
-        delete params.status
+      if (params.isIn === undefined) {
+        delete params.isIn
       }
-      this.$get('/business/logistics-info/page', {
+      if (params.typeId === undefined) {
+        delete params.typeId
+      }
+      this.$get('/cos/stock-info/detail/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

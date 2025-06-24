@@ -8,7 +8,7 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">评价信息</span></a-col>
+          class="view-title">评价信息</span></a-col>
         <a-col :span="8"><b>评价年份：</b>
           {{ moduleData.year }} 年
         </a-col>
@@ -46,19 +46,19 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">评价公式</span></a-col>
+          class="view-title">评价公式</span></a-col>
         <a-col :span="24">{{ moduleData.formula }}</a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">详细图表</span></a-col>
+          class="view-title">详细图表</span></a-col>
         <a-col :span="24">{{ moduleData.formula }}</a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商评价内容</span></a-col>
+          class="view-title">供应商评价内容</span></a-col>
         <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
       <br/>
@@ -66,7 +66,7 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="supplierInfo !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
+          class="view-title">供应商信息</span></a-col>
         <a-col :span="8"><b>供应商名称：</b>
           {{ supplierInfo.name }}
         </a-col>
@@ -113,12 +113,12 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">备注内容</span></a-col>
+          class="view-title">备注内容</span></a-col>
         <a-col :span="24">{{ supplierInfo.content }}</a-col>
       </a-row>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商图片</span></a-col>
+          class="view-title">供应商图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"
@@ -145,7 +145,7 @@ import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -174,7 +174,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       loading: false,
       fileList: [],
@@ -191,7 +191,7 @@ export default {
     }
   },
   methods: {
-    querySupplierDetail(supplierId) {
+    querySupplierDetail (supplierId) {
       this.$get(`/business/supplier-info/${supplierId}`).then((r) => {
         this.supplierInfo = r.data.data
         if (this.supplierInfo.images !== null && this.supplierInfo.images !== '') {
@@ -199,7 +199,7 @@ export default {
         }
       })
     },
-    imagesInit(images) {
+    imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []
         images.split(',').forEach((image, index) => {
@@ -208,20 +208,20 @@ export default {
         this.fileList = imageList
       }
     },
-    handleCancel() {
+    handleCancel () {
       this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
       }
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange({fileList}) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    onClose() {
+    onClose () {
       this.$emit('close')
     }
   }

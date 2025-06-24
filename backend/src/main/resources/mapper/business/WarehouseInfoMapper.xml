@@ -19,7 +19,7 @@
         mi.model,
         mi.images AS materialsImages,
         mi.type,
-        mi.measurement_unit,
+        mi.measurement_unit
         FROM
         warehouse_info wi
         LEFT JOIN materials_info mi ON (mi.`code` = wi.`code`)

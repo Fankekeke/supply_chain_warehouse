@@ -8,12 +8,12 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">物料信息</span></a-col>
+          class="view-title">物料信息</span></a-col>
         <a-col :span="8"><b>物料名称：</b>
-          {{ moduleData.materialsName }}
+          {{ moduleData.name }}
         </a-col>
         <a-col :span="8"><b>物料编号：</b>
-          {{ moduleData.materialsCode }}
+          {{ moduleData.code }}
         </a-col>
         <a-col :span="8"><b>类型：</b>
           {{ moduleData.type }}
@@ -21,9 +21,11 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>型号：</b>
+        <a-col :span="24"><b>型号：</b>
           {{ moduleData.model }}
         </a-col>
+        <br/>
+        <br/>
         <a-col :span="8"><b>计量单位：</b>
           {{ moduleData.measurementUnit }}
         </a-col>
@@ -34,12 +36,13 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">备注内容</span></a-col>
+          class="view-title">备注内容</span></a-col>
         <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
+      <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">物料图片</span></a-col>
+          class="view-title">物料图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"

@@ -179,6 +179,9 @@ export default {
           this.fileList = []
           this.imagesInit(module['images'])
         }
+        if (key === 'staffSex') {
+          module[key] = module[key].toString()
+        }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
           obj[key] = module[key]

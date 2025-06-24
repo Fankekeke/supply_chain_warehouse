@@ -7,26 +7,26 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="供应商名称"
+                label="入库单号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.supplierName"/>
+                <a-input v-model="queryParams.num"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="保管人"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.custodian"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="物料名称"
+                label="入库人"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.materialsName"/>
+                <a-input v-model="queryParams.putUser"/>
               </a-form-item>
             </a-col>
           </div>
@@ -39,7 +39,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">入库</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -52,55 +52,62 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
+        <template slot="titleShow" slot-scope="text, record">
+          <template>
+            <a-badge status="processing"/>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.title }}
+              </template>
+              {{ record.title.slice(0, 8) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.content }}
+              </template>
+              {{ record.content.slice(0, 30) }} ...
+            </a-tooltip>
+          </template>
+        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-icon type="folder-open" @click="view(record)" title="查 看" style="margin-right: 15px"></a-icon>
+          <a-icon type="download" @click="downLoad(record)" title="下 载"></a-icon>
         </template>
       </a-table>
+      <record-view
+        @close="handlerecordViewClose"
+        :recordShow="recordView.visiable"
+        :recordData="recordView.data">
+      </record-view>
     </div>
-    <module-add
-      @close="handleModuleAddClose"
-      @success="handleModuleAddSuccess"
-      :moduleAddVisiable="moduleAdd.visiable">
-    </module-add>
-    <module-edit
-      ref="moduleEdit"
-      @close="handleModuleEditClose"
-      @success="handleModuleEditSuccess"
-      :moduleEditVisiable="moduleEdit.visiable">
-    </module-edit>
-    <module-view
-      @close="handleModuleViewClose"
-      :moduleShow="moduleView.visiable"
-      :moduleData="moduleView.data">
-    </module-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import moduleAdd from './LogisticsAdd.vue'
-import moduleEdit from './LogisticsEdit.vue'
-import moduleView from './LogisticsView.vue'
+import RecordView from './RecordView'
 import {mapState} from 'vuex'
+import { newSpread, floatForm, floatReset, saveExcel } from '@/utils/spreadJS'
 import moment from 'moment'
-
 moment.locale('zh-cn')
 
 export default {
-  name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
-  data() {
+  name: 'request',
+  components: {RecordView, RangeDate},
+  data () {
     return {
       advanced: false,
-      moduleAdd: {
+      requestAdd: {
         visiable: false
       },
-      moduleEdit: {
+      requestEdit: {
         visiable: false
       },
-      moduleView: {
+      recordView: {
         visiable: false,
         data: null
       },
@@ -126,15 +133,23 @@ export default {
     ...mapState({
       currentUser: state => state.account.user
     }),
-    columns() {
+    columns () {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
-        ellipsis: true
+        title: '入库单号',
+        dataIndex: 'num'
       }, {
-        title: '供应商名称',
-        dataIndex: 'supplierName',
-        ellipsis: true,
+        title: '总价',
+        dataIndex: 'price',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return '￥' + text.toFixed(2)
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '保管人',
+        dataIndex: 'custodian',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -143,9 +158,8 @@ export default {
           }
         }
       }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
-        ellipsis: true,
+        title: '入库人',
+        dataIndex: 'putUser',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -154,9 +168,8 @@ export default {
           }
         }
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
+        title: '备注',
+        dataIndex: 'content',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -165,43 +178,7 @@ export default {
           }
         }
       }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '当前物流',
-        dataIndex: 'remark',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '创建时间',
+        title: '入库时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -217,47 +194,52 @@ export default {
       }]
     }
   },
-  mounted() {
+  mounted () {
     this.fetch()
   },
   methods: {
-    handleModuleViewOpen(row) {
-      this.moduleView.data = row
-      this.moduleView.visiable = true
+    downLoad (row) {
+      this.$message.loading('正在生成', 0)
+      this.$get('/cos/goods-belong/getGoodsByNum', { num: row.num }).then((r) => {
+        let newData = []
+        r.data.data.forEach((item, index) => {
+          newData.push([(index + 1).toFixed(0), item.name, item.unit !== null ? item.unit : '- -', item.amount, row.price])
+        })
+        let spread = newSpread('inboundOrder')
+        spread = floatForm(spread, 'inboundOrder', newData)
+        saveExcel(spread, '入库单.xlsx')
+        floatReset(spread, 'inboundOrder', newData.length)
+        this.$message.destroy()
+      })
     },
-    handleModuleViewClose() {
-      this.moduleView.visiable = false
+    view (row) {
+      this.recordView.data = row
+      this.recordView.visiable = true
     },
-    onSelectChange(selectedRowKeys) {
+    handlerecordViewClose () {
+      this.recordView.visiable = false
+    },
+    onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    add() {
-      this.moduleAdd.visiable = true
+    add () {
+      this.requestAdd.visiable = true
     },
-    handleModuleAddClose() {
-      this.moduleAdd.visiable = false
+    handleRequestAddClose () {
+      this.requestAdd.visiable = false
     },
-    handleModuleAddSuccess() {
-      this.moduleAdd.visiable = false
-      this.$message.success('新增订单物流成功')
+    handleRequestAddSuccess () {
+      this.requestAdd.visiable = false
+      this.$message.success('入库成功')
       this.search()
     },
-    edit(record) {
-      this.$refs.moduleEdit.setFormValues(record)
-      this.moduleEdit.visiable = true
+    handleDeptChange (value) {
+      this.queryParams.deptId = value || ''
     },
-    handleModuleEditClose() {
-      this.moduleEdit.visiable = false
-    },
-    handleModuleEditSuccess() {
-      this.moduleEdit.visiable = false
-      this.$message.success('修改订单物流成功')
-      this.search()
-    },
-    batchDelete() {
+    batchDelete () {
       if (!this.selectedRowKeys.length) {
         this.$message.warning('请选择需要删除的记录')
         return
@@ -267,20 +249,20 @@ export default {
         title: '确定删除所选中的记录?',
         content: '当您点击确定按钮后，这些记录将会被彻底删除',
         centered: true,
-        onOk() {
+        onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/logistics-info/' + ids).then(() => {
+          that.$delete('/cos/stock-put/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
           })
         },
-        onCancel() {
+        onCancel () {
           that.selectedRowKeys = []
         }
       })
     },
-    search() {
+    search () {
       let {sortedInfo, filteredInfo} = this
       let sortField, sortOrder
       // 获取当前列的排序和列的过滤规则
@@ -295,7 +277,7 @@ export default {
         ...filteredInfo
       })
     },
-    reset() {
+    reset () {
       // 取消选中
       this.selectedRowKeys = []
       // 重置分页
@@ -312,7 +294,7 @@ export default {
       this.queryParams = {}
       this.fetch()
     },
-    handleTableChange(pagination, filters, sorter) {
+    handleTableChange (pagination, filters, sorter) {
       // 将这三个参数赋值给Vue data，用于后续使用
       this.paginationInfo = pagination
       this.filteredInfo = filters
@@ -325,7 +307,7 @@ export default {
         ...filters
       })
     },
-    fetch(params = {}) {
+    fetch (params = {}) {
       // 显示loading
       this.loading = true
       if (this.paginationInfo) {
@@ -339,10 +321,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.status === undefined) {
-        delete params.status
-      }
-      this.$get('/business/logistics-info/page', {
+      this.$get('/cos/stock-put/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

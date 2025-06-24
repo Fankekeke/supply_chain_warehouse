@@ -44,7 +44,6 @@
       </a-table>
     </div>
     <module-add
-      v-if="moduleAdd.visiable"
       @close="handleModuleAddClose"
       @success="handleModuleAddSuccess"
       :moduleAddVisiable="moduleAdd.visiable">

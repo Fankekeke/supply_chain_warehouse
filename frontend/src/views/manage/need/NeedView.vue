@@ -8,7 +8,7 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">采购需求信息</span></a-col>
+          class="view-title">采购需求信息</span></a-col>
         <a-col :span="8"><b>订单编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
@@ -22,7 +22,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">采购需求内容</span></a-col>
+          class="view-title">采购需求内容</span></a-col>
         <a-col :span="24">
           <a-table :columns="columns" :data-source="planList" :pagination="false">
           </a-table>

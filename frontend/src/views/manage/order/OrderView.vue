@@ -8,7 +8,7 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">采购订单信息</span></a-col>
+          class="view-title">采购订单信息</span></a-col>
         <a-col :span="8"><b>订单编号：</b>
           {{ moduleData.orderCode }}
         </a-col>
@@ -48,7 +48,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">供应商信息</span></a-col>
+          class="view-title">供应商信息</span></a-col>
         <a-col :span="8"><b>供应商编号：</b>
           {{ moduleData.supplierCode }}
         </a-col>
@@ -71,12 +71,12 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">采购订单内容</span></a-col>
+          class="view-title">采购订单内容</span></a-col>
         <a-col :span="24">{{ moduleData.remark }}</a-col>
       </a-row>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          style="font-size: 15px;font-weight: 650;color: #000c17">物料图片</span></a-col>
+          class="view-title">物料图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"

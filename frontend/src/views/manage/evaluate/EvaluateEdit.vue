@@ -119,7 +119,7 @@
 <script>
 import {mapState} from 'vuex'
 
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -151,7 +151,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       rowId: null,
       formItemLayout,
@@ -163,29 +163,29 @@ export default {
       supplierList: []
     }
   },
-  mounted() {
+  mounted () {
     this.querySupplier()
   },
   methods: {
-    querySupplier() {
+    querySupplier () {
       this.$get('/business/supplier-info/list').then((r) => {
-        this.supplierList = r.data
+        this.supplierList = r.data.data
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
       }
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange({fileList}) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
-    imagesInit(images) {
+    imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []
         images.split(',').forEach((image, index) => {
@@ -194,7 +194,7 @@ export default {
         this.fileList = imageList
       }
     },
-    setFormValues({...module}) {
+    setFormValues ({...module}) {
       this.rowId = module.id
       let fields = ['supplierId', 'year', 'qualityScore', 'costSocre', 'deliveryScore', 'serviceScore', 'innovationScore', 'financialScore', 'score', 'content']
       let obj = {}
@@ -210,15 +210,15 @@ export default {
       })
       this.form.setFieldsValue(obj)
     },
-    reset() {
+    reset () {
       this.loading = false
       this.form.resetFields()
     },
-    onClose() {
+    onClose () {
       this.reset()
       this.$emit('close')
     },
-    handleSubmit() {
+    handleSubmit () {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {

@@ -21,11 +21,11 @@
         si.images as supplierImages
         from
         notify_info ni
-        left join supplier_info si on (si.id = ai.user_id )
+        left join supplier_info si on (si.id = ni.user_id )
         where
         1 = 1
         AND ni.del_flag = 0
-        AND ai.agency_type = '1'
+        AND ni.agency_type = '1'
         <if test="queryForm.supplierName != null and queryForm.supplierName != ''">
             AND si.name like CONCAT("%",#{queryForm.supplierName},"%")
         </if>
@@ -54,11 +54,11 @@
         si.images as staffImages
         from
         notify_info ni
-        left join staff_info si on (si.id = ai.user_id )
+        left join staff_info si on (si.id = ni.user_id )
         where
         1 = 1
         AND ni.del_flag = 0
-        AND ai.agency_type = '2'
+        AND ni.agency_type = '2'
         <if test="queryForm.staffName != null and queryForm.staffName != ''">
             AND si.name like CONCAT("%",#{queryForm.staffName},"%")
         </if>

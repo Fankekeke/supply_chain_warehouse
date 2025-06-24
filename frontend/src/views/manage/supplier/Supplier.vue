@@ -71,7 +71,6 @@
       </a-table>
     </div>
     <module-add
-      v-if="moduleAdd.visiable"
       @close="handleModuleAddClose"
       @success="handleModuleAddSuccess"
       :moduleAddVisiable="moduleAdd.visiable">
@@ -240,6 +239,7 @@ export default {
       }, {
         title: '创建时间',
         dataIndex: 'createDate',
+        ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
