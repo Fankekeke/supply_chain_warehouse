@@ -42,6 +42,18 @@ public class WarehouseInfoServiceImpl extends ServiceImpl<WarehouseInfoMapper, W
     }
 
     /**
+     * 分页获取出入库详情
+     *
+     * @param page      分页对象
+     * @param queryFrom 库房库存
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom) {
+        return baseMapper.queryStockDetailPage(page, queryFrom);
+    }
+
+    /**
      * 查询入库库存记录
      *
      * @param code 入库编码

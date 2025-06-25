@@ -24,7 +24,7 @@
     <div>
       <div class="operator">
 <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -112,63 +112,12 @@ export default {
     }),
     columns () {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
-        ellipsis: true
-      }, {
-        title: '异常供应商',
-        dataIndex: 'supplierName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
-        }
-      }, {
-        title: '采购物料',
+        title: '物料名称',
         dataIndex: 'materialsName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+            return text
           } else {
             return '- -'
           }
@@ -176,6 +125,17 @@ export default {
       }, {
         title: '物料型号',
         dataIndex: 'model',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料类型',
+        dataIndex: 'type',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -199,8 +159,8 @@ export default {
           </a-popover>
         }
       }, {
-        title: '异常内容',
-        dataIndex: 'remark',
+        title: '单价',
+        dataIndex: 'unitPrice',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -210,19 +170,15 @@ export default {
           }
         }
       }, {
-        title: '反馈时间',
-        dataIndex: 'createDate',
+        title: '库存数量',
+        dataIndex: 'quantity',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + ' ' + row.measurementUnit
           } else {
             return '- -'
           }
         }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },

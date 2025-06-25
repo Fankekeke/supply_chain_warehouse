@@ -67,6 +67,11 @@
         wi.create_date DESC
     </select>
 
+    <!-- 分页获取出入库详情 -->
+    <select id="queryStockDetailPage" resultType="java.util.LinkedHashMap">
+
+    </select>
+
     <!-- 查询入库库存记录 -->
     <select id="queryPutRecordDetail" resultType="java.util.LinkedHashMap">
         SELECT

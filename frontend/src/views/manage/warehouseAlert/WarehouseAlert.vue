@@ -7,26 +7,10 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="出库单号"
+                label="物料名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="出库名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="出库人"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.出库人"/>
+                <a-input v-model="queryParams.materialsName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -39,8 +23,8 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">入库</a-button>-->
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -52,62 +36,59 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
-          <template>
-            <a-badge status="processing"/>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.title }}
-              </template>
-              {{ record.title.slice(0, 8) }} ...
-            </a-tooltip>
-          </template>
-        </template>
-        <template slot="contentShow" slot-scope="text, record">
-          <template>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.content }}
-              </template>
-              {{ record.content.slice(0, 30) }} ...
-            </a-tooltip>
-          </template>
+        <template slot="fixNum" slot-scope="text, record">
+          <span v-if="record.minValue != null && record.minValue != -1 && record.quantity <= record.minValue" style="color: red">需补货</span>
+          <span v-else style="color: green">无需补货</span>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="folder-open" @click="view(record)" title="查 看" style="margin-right: 15px"></a-icon>
-          <a-icon type="download" @click="downLoad(record)" title="下 载"></a-icon>
+          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
+                  style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
-      <record-view
-        @close="handlerecordViewClose"
-        :recordShow="recordView.visiable"
-        :recordData="recordView.data">
-      </record-view>
     </div>
+    <module-add
+      @close="handleModuleAddClose"
+      @success="handleModuleAddSuccess"
+      :moduleAddVisiable="moduleAdd.visiable">
+    </module-add>
+    <module-edit
+      ref="moduleEdit"
+      @close="handleModuleEditClose"
+      @success="handleModuleEditSuccess"
+      :moduleEditVisiable="moduleEdit.visiable">
+    </module-edit>
+    <module-view
+      @close="handleModuleViewClose"
+      :moduleShow="moduleView.visiable"
+      :moduleData="moduleView.data">
+    </module-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import RecordView from './RecordView'
-import { newSpread, floatForm, floatReset, saveExcel } from '@/utils/spreadJS'
+import moduleAdd from './WarehouseAlertAdd.vue'
+import moduleEdit from './WarehouseAlertEdit.vue'
+import moduleView from './WarehouseAlertView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
+
 moment.locale('zh-cn')
 
 export default {
-  name: 'Stockout',
-  components: {RecordView, RangeDate},
+  name: 'module',
+  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
   data () {
     return {
       advanced: false,
-      requestAdd: {
+      moduleAdd: {
         visiable: false
       },
-      requestEdit: {
+      moduleEdit: {
         visiable: false
       },
-      recordView: {
+      moduleView: {
         visiable: false,
         data: null
       },
@@ -135,27 +116,8 @@ export default {
     }),
     columns () {
       return [{
-        title: '出库单号',
-        ellipsis: true,
-        dataIndex: 'code'
-      }, {
-        title: '出库名称',
-        ellipsis: true,
-        dataIndex: 'name'
-      }, {
-        title: '总价',
-        dataIndex: 'totalPrice',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return '￥' + text.toFixed(2)
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '出库人',
-        dataIndex: 'outUser',
+        title: '物料名称',
+        dataIndex: 'materialsName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -165,8 +127,8 @@ export default {
           }
         }
       }, {
-        title: '备注',
-        dataIndex: 'remark',
+        title: '物料型号',
+        dataIndex: 'model',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -176,8 +138,8 @@ export default {
           }
         }
       }, {
-        title: '出库时间',
-        dataIndex: 'createDate',
+        title: '物料类型',
+        dataIndex: 'type',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -186,6 +148,44 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '物料图片',
+        dataIndex: 'materialsImages',
+        customRender: (text, record, index) => {
+          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user"
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+            </template>
+            <a-avatar shape="square" icon="user"
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+          </a-popover>
+        }
+      }, {
+        title: '报警阈值',
+        dataIndex: 'minValue',
+        customRender: (text, row, index) => {
+          if (text !== null && text != -1) {
+            return text + ' ' + row.measurementUnit
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '库存数量',
+        dataIndex: 'quantity',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + ' ' + row.measurementUnit
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '空缺数量',
+        dataIndex: 'fixNum',
+        scopedSlots: {customRender: 'fixNum'}
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -197,26 +197,12 @@ export default {
     this.fetch()
   },
   methods: {
-    downLoad (row) {
-      this.$message.loading('正在生成', 0)
-      this.$get('/cos/goods-belong/getGoodsByNum', { num: row.num }).then((r) => {
-        let newData = []
-        r.data.data.forEach((item, index) => {
-          newData.push([(index + 1).toFixed(0), item.name, item.unit !== null ? item.unit : '- -', item.amount, row.price])
-        })
-        let spread = newSpread('outboundOrder')
-        spread = floatForm(spread, 'outboundOrder', newData)
-        saveExcel(spread, '出库单.xlsx')
-        floatReset(spread, 'outboundOrder', newData.length)
-        this.$message.destroy()
-      })
+    handleModuleViewOpen (row) {
+      this.moduleView.data = row
+      this.moduleView.visiable = true
     },
-    view (row) {
-      this.recordView.data = row
-      this.recordView.visiable = true
-    },
-    handlerecordViewClose () {
-      this.recordView.visiable = false
+    handleModuleViewClose () {
+      this.moduleView.visiable = false
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -225,18 +211,27 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.requestAdd.visiable = true
+      this.moduleAdd.visiable = true
     },
-    handleRequestAddClose () {
-      this.requestAdd.visiable = false
+    handleModuleAddClose () {
+      this.moduleAdd.visiable = false
     },
-    handleRequestAddSuccess () {
-      this.requestAdd.visiable = false
-      this.$message.success('入库成功')
+    handleModuleAddSuccess () {
+      this.moduleAdd.visiable = false
+      this.$message.success('新增库存成功')
       this.search()
     },
-    handleDeptChange (value) {
-      this.queryParams.deptId = value || ''
+    edit (record) {
+      this.$refs.moduleEdit.setFormValues(record)
+      this.moduleEdit.visiable = true
+    },
+    handleModuleEditClose () {
+      this.moduleEdit.visiable = false
+    },
+    handleModuleEditSuccess () {
+      this.moduleEdit.visiable = false
+      this.$message.success('修改库存成功')
+      this.search()
     },
     batchDelete () {
       if (!this.selectedRowKeys.length) {
@@ -250,7 +245,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/business/warehouse-out-record/' + ids).then(() => {
+          that.$delete('/business/warehouse-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -320,7 +315,10 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/business/warehouse-out-record/page', {
+      if (params.status === undefined) {
+        delete params.status
+      }
+      this.$get('/business/warehouse-info/queryAlertStockPage', {
         ...params
       }).then((r) => {
         let data = r.data.data

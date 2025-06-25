@@ -57,6 +57,19 @@ public class WarehouseInfoController {
     }
 
     /**
+     * 分页获取出入库详情
+     *
+     * @param page      分页对象
+     * @param queryFrom 库房库存
+     * @return 结果
+     */
+    @ApiOperation(value = "分页查询出入库详情", notes = "根据分页和筛选条件获取出入库详情信息")
+    @GetMapping("/queryStockDetailPage")
+    public R queryStockDetailPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom) {
+        return R.ok(warehouseInfoService.queryStockDetailPage(page, queryFrom));
+    }
+
+    /**
      * 查询入库库存记录
      *
      * @param code 入库编码

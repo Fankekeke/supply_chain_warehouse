@@ -10,15 +10,15 @@
                 label="入库单号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.num"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="保管人"
+                label="入库名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.custodian"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -136,10 +136,10 @@ export default {
     columns () {
       return [{
         title: '入库单号',
-        dataIndex: 'num'
+        dataIndex: 'code'
       }, {
         title: '总价',
-        dataIndex: 'price',
+        dataIndex: 'totalPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
             return '￥' + text.toFixed(2)
@@ -148,8 +148,8 @@ export default {
           }
         }
       }, {
-        title: '保管人',
-        dataIndex: 'custodian',
+        title: '入库名称',
+        dataIndex: 'name',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -169,7 +169,7 @@ export default {
         }
       }, {
         title: '备注',
-        dataIndex: 'content',
+        dataIndex: 'remark',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

@@ -33,6 +33,15 @@ public interface IWarehouseInfoService extends IService<WarehouseInfo> {
     List<LinkedHashMap<String, Object>> queryAlertStockPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom);
 
     /**
+     * 分页获取出入库详情
+     *
+     * @param page      分页对象
+     * @param queryFrom 库房库存
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom);
+
+    /**
      * 查询入库库存记录
      *
      * @param code 入库编码
