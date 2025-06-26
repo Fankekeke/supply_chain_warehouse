@@ -29,4 +29,19 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return 结果
      */
     boolean setOrderStatus(Integer id, String status);
+
+    /**
+     * 主页数据
+     *
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> homeData();
+
+    /**
+     * 供应商统计数据
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> homeDataBySupplier(Integer userId);
 }

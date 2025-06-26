@@ -49,6 +49,9 @@
         <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
             AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
         </if>
+        <if test="queryForm.supplierUserId != null and queryForm.supplierUserId != ''">
+            AND si.sys_user_id = #{queryForm.supplierUserId}
+        </if>
         GROUP BY
         li.order_id
         ORDER BY

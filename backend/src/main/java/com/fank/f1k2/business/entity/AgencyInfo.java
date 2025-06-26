@@ -80,4 +80,16 @@ public class AgencyInfo implements Serializable {
      */
     @TableField(exist = false)
     private String staffName;
+
+    /**
+     * 供应商账户ID
+     */
+    @TableField(exist = false)
+    private Integer supplierUserId;
+
+    /**
+     * 员工账户ID
+     */
+    @TableField(exist = false)
+    private Integer staffUserId;
 }

@@ -70,6 +70,17 @@ public class WarehouseInfoController {
     }
 
     /**
+     * 获取预警库存列表
+     *
+     * @return 列表
+     */
+    @ApiOperation(value = "获取预警库存列表", notes = "列出所有预警库存记录")
+    @GetMapping("/queryAlertStockList")
+    public R queryAlertStockList() {
+        return R.ok();
+    }
+
+    /**
      * 查询入库库存记录
      *
      * @param code 入库编码

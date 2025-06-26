@@ -57,6 +57,29 @@ public class OrderInfoController {
     }
 
     /**
+     * 统计数据
+     *
+     * @return 结果
+     */
+    @ApiOperation(value = "统计数据", notes = "统计数据")
+    @GetMapping("/home/data")
+    public R selectHomeData() {
+        return R.ok(orderInfoService.homeData());
+    }
+
+    /**
+     * 供应商统计数据
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @ApiOperation(value = "供应商统计数据", notes = "统计供应商数据")
+    @GetMapping("/home/data/supplier")
+    public R selectHomeDataBySupplier(Integer userId) {
+        return R.ok(orderInfoService.homeDataBySupplier(userId));
+    }
+
+    /**
      * 查询采购订单详情
      *
      * @param id 主键ID

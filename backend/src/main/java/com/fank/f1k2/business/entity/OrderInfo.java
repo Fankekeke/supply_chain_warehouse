@@ -51,6 +51,11 @@ public class OrderInfo implements Serializable {
     private BigDecimal totalPrice;
 
     /**
+     * 采购数量
+     */
+    private Integer purchaseNum;
+
+    /**
      * 所属供应商
      */
     private Integer supplierId;

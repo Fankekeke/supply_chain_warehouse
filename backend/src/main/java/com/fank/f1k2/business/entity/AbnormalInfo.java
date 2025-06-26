@@ -60,4 +60,10 @@ public class AbnormalInfo implements Serializable {
      */
     @TableField(exist = false)
     private String orderCode;
+
+    /**
+     * 供应商账户ID
+     */
+    @TableField(exist = false)
+    private Integer supplierUserId;
 }

@@ -44,6 +44,9 @@
         <if test="queryForm.orderCode != null and queryForm.orderCode != ''">
             AND oi.code like CONCAT("%",#{queryForm.orderCode},"%")
         </if>
+        <if test="queryForm.supplierUserId != null and queryForm.supplierUserId != ''">
+            AND si.sys_user_id = #{queryForm.supplierUserId}
+        </if>
         order by
         ai.create_date desc
     </select>

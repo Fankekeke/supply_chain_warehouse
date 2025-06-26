@@ -36,6 +36,9 @@
         <if test="queryForm.status != null and queryForm.status != ''">
             AND ai.status = #{queryForm.status}
         </if>
+        <if test="queryForm.supplierUserId != null and queryForm.supplierUserId != ''">
+            AND si.sys_user_id = #{queryForm.supplierUserId}
+        </if>
         order by
         ai.create_date desc
     </select>
@@ -72,6 +75,9 @@
         </if>
         <if test="queryForm.status != null and queryForm.status != ''">
             AND ai.status = #{queryForm.status}
+        </if>
+        <if test="queryForm.staffUserId != null and queryForm.staffUserId != ''">
+            AND si.sys_user_id = #{queryForm.staffUserId}
         </if>
         order by
         ai.create_date desc

@@ -42,6 +42,9 @@
         <if test="queryForm.status != null and queryForm.status != ''">
             AND smi.STATUS = #{queryForm.status}
         </if>
+        <if test="queryForm.supplierUserId != null and queryForm.supplierUserId != ''">
+            AND si.sys_user_id = #{queryForm.supplierUserId}
+        </if>
         ORDER BY smi.create_date DESC
     </select>
 

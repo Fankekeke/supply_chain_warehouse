@@ -52,6 +52,9 @@
         <if test="queryForm.status != null and queryForm.status != ''">
             AND pqi.STATUS = #{queryForm.status}
         </if>
+        <if test="queryForm.supplierUserId != null and queryForm.supplierUserId != ''">
+            AND si.sys_user_id = #{queryForm.supplierUserId}
+        </if>
         ORDER BY
         pqi.create_date DESC
     </select>

@@ -81,5 +81,9 @@ public class SupplierMaterialsInfo implements Serializable {
     @TableField(exist = false)
     private String supplierName;
 
-
+    /**
+     * 供应商账户ID
+     */
+    @TableField(exist = false)
+    private Integer supplierUserId;
 }

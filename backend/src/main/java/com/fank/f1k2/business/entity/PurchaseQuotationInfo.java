@@ -104,4 +104,10 @@ public class PurchaseQuotationInfo implements Serializable {
      */
     @TableField(exist = false)
     List<PurchaseQuotationInfo> purchaseQuotationInfoList;
+
+    /**
+     * 供应商账户ID
+     */
+    @TableField(exist = false)
+    private Integer supplierUserId;
 }

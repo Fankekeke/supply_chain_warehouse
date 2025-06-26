@@ -72,5 +72,9 @@ public class LogisticsInfo implements Serializable {
     @TableField(exist = false)
     private String materialsName;
 
-
+    /**
+     * 供应商账户ID
+     */
+    @TableField(exist = false)
+    private Integer supplierUserId;
 }
