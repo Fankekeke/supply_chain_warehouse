@@ -1,9 +1,13 @@
 package com.fank.f1k2.business.controller;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.business.entity.MaterialsInfo;
 import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.service.IMaterialsInfoService;
 import com.fank.f1k2.business.service.ISupplierInfoService;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,8 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +41,8 @@ public class SupplierMaterialsInfoController {
     private final ISupplierMaterialsInfoService supplierMaterialsInfoService;
 
     private final ISupplierInfoService supplierInfoService;
+
+    private final IMaterialsInfoService materialsInfoService;
 
     /**
      * 分页获取供应商物料
@@ -58,6 +67,36 @@ public class SupplierMaterialsInfoController {
     @GetMapping("/queryMaterialsBySupplierId")
     public R queryMaterialsBySupplierId(Integer supplierId) {
         return R.ok(supplierMaterialsInfoService.queryMaterialsBySupplierId(supplierId));
+    }
+
+    /**
+     * 批量设置供应商物料
+     *
+     * @return 批量设置结果
+     */
+    @ApiOperation(value = "批量设置供应商物料", notes = "批量设置供应商物料信息")
+    @GetMapping("/setSupplierMaterialsBatch")
+    public R setSupplierMaterialsBatch() {
+        List<SupplierMaterialsInfo> list = supplierMaterialsInfoService.list();
+        List<MaterialsInfo> materialsInfoList = materialsInfoService.list();
+        List<String> materialIds = materialsInfoList.stream().map(MaterialsInfo::getCode).collect(Collectors.toList());
+
+        List<SupplierMaterialsInfo> addList = new ArrayList<>();
+        for (SupplierMaterialsInfo supplierMaterialsInfo : list) {
+            Set<String> set = RandomUtil.randomEleSet(materialIds, 8);
+            for (String mid : set) {
+                SupplierMaterialsInfo item = new SupplierMaterialsInfo();
+                item.setSupplierId(supplierMaterialsInfo.getSupplierId());
+                item.setCode(mid);
+                item.setPackageSet("统一封存");
+                item.setBrand("品牌");
+                item.setStatus("1");
+                item.setCreateDate(DateUtil.formatDateTime(new Date()));
+                addList.add(item);
+            }
+        }
+        supplierMaterialsInfoService.saveBatch(addList);
+        return R.ok();
     }
 
     /**
