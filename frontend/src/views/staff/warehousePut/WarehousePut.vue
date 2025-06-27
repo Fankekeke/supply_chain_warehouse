@@ -89,7 +89,7 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import RecordView from './RecordView'
+import RecordView from './RecordView.vue'
 import {mapState} from 'vuex'
 import { newSpread, floatForm, floatReset, saveExcel } from '@/utils/spreadJS'
 import moment from 'moment'

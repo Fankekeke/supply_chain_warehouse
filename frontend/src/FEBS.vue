@@ -79,8 +79,6 @@ b {
 }
 
 .ant-modal-footer .ant-btn-danger {
-  background-color: #FF4D4F;
-  border-color: #FF4D4F;
 }
   :global {
     .dragable-ghost {
