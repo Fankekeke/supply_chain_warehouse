@@ -7,67 +7,76 @@
         </a-card>
         <a-card :bordered="false">
           <a-form :form="form" layout="vertical">
-            <a-row :gutter="20">
-              <a-col :span="24">
-                <a-form-item label='客户姓名' v-bind="formItemLayout">
-                  <a-input disabled v-decorator="[
-                  'name',
-                  { rules: [{ required: true, message: '请输入客户姓名!' }] }
-                  ]"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-item label='联系电话' v-bind="formItemLayout">
+            <a-row :gutter="10">
+              <a-col :span="12">
+                <a-form-item label='员工名称'>
                   <a-input v-decorator="[
-                  'phone',
-                  { rules: [{ required: true, message: '请输入联系电话!' }] }
-                  ]"/>
+            'name',
+            { rules: [{ required: true, message: '请输入名称!' }] }
+            ]"/>
                 </a-form-item>
               </a-col>
-              <a-col :span="24">
-                <a-form-item label='收获地址' v-bind="formItemLayout">
+              <a-col :span="12">
+                <a-form-item label='性别' v-bind="formItemLayout">
+                  <a-select v-decorator="[
+              'staffSex',
+              { rules: [{ required: true, message: '请输入性别!' }] }
+              ]">
+                    <a-select-option value="1">男</a-select-option>
+                    <a-select-option value="2">女</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label='出生日期'>
                   <a-input v-decorator="[
-                  'address',
-                  { rules: [{ required: true, message: '请输入收获地址!' }] }
-                  ]"/>
+            'birthDate',
+            ]"/>
                 </a-form-item>
               </a-col>
-              <a-col :span="24">
-                <a-form-item label='城市' v-bind="formItemLayout">
+              <a-col :span="12">
+                <a-form-item label='邮箱地址'>
                   <a-input v-decorator="[
-                  'city',
-                  { rules: [{ required: true, message: '请输入城市!' }] }
-                  ]"/>
+            'email',
+            { rules: [{ required: true, message: '请输邮箱地址!' }] }
+            ]"/>
                 </a-form-item>
               </a-col>
-              <a-col :span="24">
-                <a-form-item label='区域' v-bind="formItemLayout">
+              <a-col :span="12">
+                <a-form-item label='联系方式'>
                   <a-input v-decorator="[
-                  'area',
-                  { rules: [{ required: true, message: '请输入区域!' }] }
-                  ]"/>
+            'phone',
+            { rules: [{ required: true, message: '请输入联系方式!' }] }
+            ]"/>
                 </a-form-item>
               </a-col>
               <a-col :span="24">
-                <a-form-item label='省份' v-bind="formItemLayout">
-                  <a-input v-decorator="[
-                  'province',
-                  { rules: [{ required: true, message: '请输入省份!' }] }
-                  ]"/>
+                <a-form-item label='备注内容' v-bind="formItemLayout">
+                  <a-textarea :rows="6" v-decorator="[
+            'content'
+            ]"/>
                 </a-form-item>
               </a-col>
               <a-col :span="24">
-                <a-form-item>
-                  <a-button
-                    size="large"
-                    type="primary"
-                    htmlType="submit"
-                    class="register-button"
-                    style="width: 35%;float: right;margin-top: 50px"
-                    :loading="loading"
-                    @click.stop.prevent="handleSubmit"
-                    :disabled="loading">立即修改
-                  </a-button>
+                <a-form-item label='员工图片' v-bind="formItemLayout">
+                  <a-upload
+                    name="avatar"
+                    action="http://127.0.0.1:9527/file/fileUpload/"
+                    list-type="picture-card"
+                    :file-list="fileList"
+                    @preview="handlePreview"
+                    @change="picHandleChange"
+                  >
+                    <div v-if="fileList.length < 8">
+                      <a-icon type="plus"/>
+                      <div class="ant-upload-text">
+                        Upload
+                      </div>
+                    </div>
+                  </a-upload>
+                  <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                    <img alt="example" style="width: 100%" :src="previewImage"/>
+                  </a-modal>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -115,13 +124,38 @@ export default {
       form: this.$form.createForm(this),
       loading: false,
       courseInfo: [],
-      dataLoading: false
+      dataLoading: false,
+      fileList: [],
+      previewVisible: false,
+      previewImage: ''
     }
   },
   mounted () {
     this.dataInit()
   },
   methods: {
+    handleCancel () {
+      this.previewVisible = false
+    },
+    async handlePreview (file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj)
+      }
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
+    },
+    picHandleChange ({fileList}) {
+      this.fileList = fileList
+    },
+    imagesInit (images) {
+      if (images !== null && images !== '') {
+        let imageList = []
+        images.split(',').forEach((image, index) => {
+          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
+        })
+        this.fileList = imageList
+      }
+    },
     isDuringDate (beginDateStr, endDateStr, curDataStr) {
       let curDate = new Date(curDataStr)
       let beginDate = new Date(beginDateStr)
@@ -142,7 +176,7 @@ export default {
     },
     dataInit () {
       this.dataLoading = true
-      this.$get(`/cos/user-info/detail/${this.currentUser.userId}`).then((r) => {
+      this.$get(`/business/staff-info/queryStaffBySysUserId`, {sysUserId: this.currentUser.userId}).then((r) => {
         this.rowId = r.data.user.id
         this.setFormValues(r.data.user)
         this.courseInfo = r.data.order
@@ -151,15 +185,19 @@ export default {
     },
     setFormValues ({...student}) {
       this.rowId = student.id
-      let fields = ['name', 'phone', 'address', 'province', 'city', 'area']
+      let fields = ['name', 'staffSex', 'birthDate', 'content', 'email', 'phone']
       let obj = {}
       Object.keys(student).forEach((key) => {
+        if (key === 'images') {
+          this.fileList = []
+          this.imagesInit(module['images'])
+        }
+        if (key === 'staffSex') {
+          module[key] = module[key].toString()
+        }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
           obj[key] = student[key]
-        }
-        if (key === 'sex' && student[key] !== null) {
-          obj[key] = student[key].toString()
         }
       })
       this.form.setFieldsValue(obj)
@@ -169,7 +207,7 @@ export default {
         values.id = this.rowId
         if (!err) {
           this.loading = true
-          this.$put('/cos/user-info', {
+          this.$put('/business/staff-info', {
             ...values
           }).then((r) => {
             this.$message.success('修改信息成功')

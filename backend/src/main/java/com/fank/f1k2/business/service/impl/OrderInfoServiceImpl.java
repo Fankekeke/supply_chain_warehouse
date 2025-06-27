@@ -1,24 +1,23 @@
 package com.fank.f1k2.business.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fank.f1k2.business.entity.BulletinInfo;
-import com.fank.f1k2.business.entity.OrderInfo;
+import com.fank.f1k2.business.entity.*;
 import com.fank.f1k2.business.dao.OrderInfoMapper;
-import com.fank.f1k2.business.entity.StaffInfo;
-import com.fank.f1k2.business.entity.SupplierInfo;
-import com.fank.f1k2.business.service.IBulletinInfoService;
-import com.fank.f1k2.business.service.IOrderInfoService;
+import com.fank.f1k2.business.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fank.f1k2.business.service.IStaffInfoService;
-import com.fank.f1k2.business.service.ISupplierInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +34,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private final ISupplierInfoService supplierInfoService;
 
     private final IStaffInfoService staffInfoService;
+
+    private final IMailService mailService;
+
+    private final TemplateEngine templateEngine;
+
+    private final INotifyInfoService notifyInfoService;
+
+    private final IAgencyInfoService agencyInfoService;
 
     /**
      * 分页获取采购订单
@@ -61,7 +68,61 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setId(id);
         orderInfo.setStatus(status);
         // TODO 采购状态更新发送消息或者代办
+        // 获取供应商信息
+        SupplierInfo supplierInfo = supplierInfoService.getById(orderInfo.getSupplierId());
 
+        if ("4".equals(orderInfo.getStatus())) {
+            NotifyInfo messageInfo = new NotifyInfo();
+            messageInfo.setAgencyType("1");
+            messageInfo.setUserId(supplierInfo.getId());
+            messageInfo.setStatus("0");
+            String content = "您好, 企业：" + supplierInfo.getName() + " 采购订单：" + orderInfo.getCode() + " 已被退货，请前往查看";
+            messageInfo.setContent(content);
+            messageInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+            notifyInfoService.save(messageInfo);
+            if (StrUtil.isNotEmpty(supplierInfo.getEmail())) {
+                Context context = new Context();
+                context.setVariable("today", DateUtil.formatDate(new Date()));
+                context.setVariable("custom", content);
+                String emailContent = templateEngine.process("registerEmail", context);
+                mailService.sendHtmlMail(supplierInfo.getEmail(), DateUtil.formatDate(new Date()) + "采购订单提示", emailContent);
+            }
+        }
+        NotifyInfo messageInfo = new NotifyInfo();
+        messageInfo.setAgencyType("2");
+        messageInfo.setStatus("0");
+        // 获取当前状态
+        String statusValue = "";
+        switch (orderInfo.getStatus()) {
+            case "1":
+                statusValue = "待审核";
+                break;
+            case "2":
+                statusValue = "待报价";
+                break;
+            case "3":
+                statusValue = "待审核";
+                break;
+            case "4":
+                statusValue = "退货";
+                break;
+            case "5":
+                statusValue = "完成";
+                break;
+            default:
+                statusValue = "待审核";
+                break;
+        }
+        String content = "您好, 企业" + supplierInfo.getName() + " 采购订单：" + orderInfo.getCode() + " 状态已更新为：" + statusValue;
+        messageInfo.setContent(content);
+        messageInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        notifyInfoService.save(messageInfo);
+
+        Context context = new Context();
+        context.setVariable("today", DateUtil.formatDate(new Date()));
+        context.setVariable("custom", content);
+        String emailContent = templateEngine.process("registerEmail", context);
+        mailService.sendHtmlMail("fan1ke2ke@gmail.com", DateUtil.formatDate(new Date()) + "采购订单提示", emailContent);
         // 更新采购订单状态
         return updateById(orderInfo);
     }

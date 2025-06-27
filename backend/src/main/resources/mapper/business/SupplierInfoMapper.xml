@@ -12,6 +12,7 @@
         si.credit_code,
         si.charge_person,
         si.phone,
+        si.email,
         si.address,
         si.longitude,
         si.latitude,

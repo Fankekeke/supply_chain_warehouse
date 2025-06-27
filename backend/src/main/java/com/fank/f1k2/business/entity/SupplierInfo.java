@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -58,6 +59,7 @@ public class SupplierInfo implements Serializable {
      * 联系方式
      */
     private String phone;
+    private String email;
 
     /**
      * 地址
@@ -118,6 +120,12 @@ public class SupplierInfo implements Serializable {
      * 状态（0.未审核 1.已通过）
      */
     private String status;
+
+    /**
+     * 审核内容
+     */
+    @TableField(exist = false)
+    private String auditContent;
 
 
 }

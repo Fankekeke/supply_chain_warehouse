@@ -48,4 +48,12 @@ public interface IPurchaseQuotationInfoService extends IService<PurchaseQuotatio
      * @return 采购计划报价列表
      */
     List<LinkedHashMap<String, Object>> queryQuotationByPlanId(Integer planId);
+
+    /**
+     * 查询历史报价
+     *
+     * @param materialCode 物料编码
+     * @return 采购计划报价列表
+     */
+    List<LinkedHashMap<String, Object>> queryHistoryQuotation(String materialCode);
 }

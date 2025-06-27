@@ -29,4 +29,12 @@ public interface ISupplierInfoService extends IService<SupplierInfo> {
      * @return 结果
      */
     List<SupplierInfo> querySupplierByMatch(String materialsCode);
+
+    /**
+     * 根据系统用户ID查询供应商
+     *
+     * @param sysUserId 系统用户ID
+     * @return 供应商列表
+     */
+    LinkedHashMap<String, Object> querySupplierBySysUserId(Integer sysUserId);
 }

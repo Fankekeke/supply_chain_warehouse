@@ -1,7 +1,10 @@
 package com.fank.f1k2.business.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.service.ISupplierInfoService;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierAuditRecord;
@@ -12,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SupplierAuditRecordController {
 
     private final ISupplierAuditRecordService supplierAuditRecordService;
+
+    private final ISupplierInfoService supplierInfoService;
 
     /**
      * 分页获取供应商审核记录
@@ -53,6 +59,32 @@ public class SupplierAuditRecordController {
     @PutMapping("/supplierAudit")
     public R supplierAudit(SupplierAuditRecord supplierAuditRecord) throws Exception {
         return R.ok(supplierAuditRecordService.supplierAudit(supplierAuditRecord));
+    }
+
+    /**
+     * 批量设置供应商审核状态
+     *
+     * @return 批量设置结果
+     */
+    @GetMapping("/setSupplierAuditBatch")
+    public R setSupplierAuditBatch() {
+        List<SupplierInfo> supplierInfoList = supplierInfoService.list();
+        if (CollectionUtil.isEmpty(supplierInfoList)) {
+            return R.ok();
+        }
+        List<SupplierAuditRecord> supplierAuditRecordList = new ArrayList<>();
+        int i = 0;
+        for (SupplierInfo supplierInfo : supplierInfoList) {
+            SupplierAuditRecord auditRecord = new SupplierAuditRecord();
+            auditRecord.setSupplierId(supplierInfo.getId());
+            auditRecord.setStatus("0");
+            auditRecord.setCode("ASUP-" + "000" + i);
+            auditRecord.setContent(supplierInfo.getName() + "审核内容");
+            auditRecord.setCreateDate(DateUtil.formatDateTime(new Date()));
+            i++;
+            supplierAuditRecordList.add(auditRecord);
+        }
+        return R.ok(supplierAuditRecordService.saveBatch(supplierAuditRecordList));
     }
 
     /**

@@ -77,7 +77,7 @@ public class WarehouseInfoController {
     @ApiOperation(value = "获取预警库存列表", notes = "列出所有预警库存记录")
     @GetMapping("/queryAlertStockList")
     public R queryAlertStockList() {
-        return R.ok();
+        return R.ok(warehouseInfoService.queryAlertStockList());
     }
 
     /**

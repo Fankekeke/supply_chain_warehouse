@@ -15,30 +15,12 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="型号"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.type"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="操作类型"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.isIn" allowClear>
+                <a-select v-model="queryParams.transactionType" allowClear>
                   <a-select-option value="1">入库</a-select-option>
                   <a-select-option value="2">出库</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="物品类型"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.typeId" style="width: 100%" allowClear>
-                  <a-select-option v-for="(item, index) in consumableType" :value="item.id" :key="index">{{ item.name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -105,8 +87,7 @@ export default {
         showQuickJumper: true,
         showSizeChanger: true,
         showTotal: (total, range) => `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`
-      },
-      consumableType: []
+      }
     }
   },
   computed: {
@@ -115,11 +96,31 @@ export default {
     }),
     columns () {
       return [{
-        title: '物品名称',
-        dataIndex: 'name'
+        title: '物料名称',
+        dataIndex: 'materialsName',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '型号',
+        title: '物料型号',
+        dataIndex: 'model',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '物料类型',
         dataIndex: 'type',
+        ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -128,81 +129,53 @@ export default {
           }
         }
       }, {
-        title: '单位',
-        dataIndex: 'unit',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
+        title: '物料图片',
+        dataIndex: 'materialsImages',
+        customRender: (text, record, index) => {
+          if (!record.materialsImages) return <a-avatar shape="square" icon="user"/>
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user"
+                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+            </template>
+            <a-avatar shape="square" icon="user"
+                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+          </a-popover>
         }
       }, {
-        title: '物品类型',
-        dataIndex: 'consumableName',
-        customRender: (text, row, index) => {
-          return <a-tag>{text}</a-tag>
-        }
-      }, {
-        title: '数量',
-        dataIndex: 'amount',
-        scopedSlots: {customRender: 'amountShow'}
-      }, {
-        title: '物品状态',
-        dataIndex: 'isIn',
+        title: '操作类型',
+        dataIndex: 'transactionType',
         customRender: (text, row, index) => {
           switch (text) {
             case 1:
-              return <a-tag color="blue">入库</a-tag>
+              return <a-tag color="green">入库</a-tag>
             case 2:
-              return <a-tag color="pink">出库</a-tag>
+              return <a-tag color="red">出库</a-tag>
             default:
               return '- -'
           }
         }
       }, {
-        title: '单价',
-        dataIndex: 'price',
+        title: '出入库数量',
+        dataIndex: 'quantity',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' 元'
+            return text + ' ' + row.measurementUnit
           } else {
             return '- -'
           }
         }
       }, {
-        title: '备注',
-        dataIndex: 'content',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '操作时间',
-        dataIndex: 'createDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
   mounted () {
     this.fetch()
-    this.getConsumableType()
   },
   methods: {
-    getConsumableType () {
-      this.$get('/cos/consumable-type/list').then((r) => {
-        this.consumableType = r.data.data
-      })
-    },
     edit (row, status) {
       this.$post('/cos/student-info/accountStatusEdit', { userId: row.userId, status }).then((r) => {
         this.$message.success('修改成功')
@@ -300,13 +273,13 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.isIn === undefined) {
-        delete params.isIn
+      if (params.transactionType === undefined) {
+        delete params.transactionType
       }
       if (params.typeId === undefined) {
         delete params.typeId
       }
-      this.$get('/cos/stock-info/detail/page', {
+      this.$get('/business/warehouse-info/queryStockDetailPage', {
         ...params
       }).then((r) => {
         let data = r.data.data

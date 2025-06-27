@@ -3,6 +3,9 @@ package com.fank.f1k2.business.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.business.entity.SupplierAuditRecord;
+import com.fank.f1k2.business.service.IOrderInfoService;
+import com.fank.f1k2.business.service.ISupplierAuditRecordService;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.SupplierInfo;
@@ -30,6 +33,8 @@ public class SupplierInfoController {
 
     private final ISupplierInfoService supplierInfoService;
 
+    private final ISupplierAuditRecordService supplierAuditRecordService;
+
     private final UserService userService;
 
     /**
@@ -54,8 +59,7 @@ public class SupplierInfoController {
     @ApiOperation(value = "按用户ID查供应商", notes = "通过系统用户ID获取对应的供应商信息")
     @GetMapping("/querySupplierBySysUserId")
     public R querySupplierBySysUserId(Integer sysUserId) {
-        return R.ok(supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery()
-                .eq(SupplierInfo::getSysUserId, sysUserId)));
+        return R.ok(supplierInfoService.querySupplierBySysUserId(sysUserId));
     }
 
     /**
@@ -98,13 +102,36 @@ public class SupplierInfoController {
      * @param addFrom 供应商信息对象
      * @return 结果
      */
-    @ApiOperation(value = "新增供应商", notes = "创建一个新的供应商信息并设置初始状态为未启用")
+    @ApiOperation(value = "新增供应商", notes = "创建一个新的供应商信息并设置初始状态为启用")
     @PostMapping
     public R save(SupplierInfo addFrom) throws Exception {
         addFrom.setCode("SUP-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         addFrom.setStatus("1");
         userService.registerSupplier(addFrom);
+        return R.ok(true);
+    }
+
+    /**
+     * 注册供应商信息
+     *
+     * @param addFrom 供应商信息对象
+     * @return 结果
+     */
+    @ApiOperation(value = "注册供应商", notes = "创建一个新的供应商信息并设置初始状态为待审核")
+    @PostMapping("/register")
+    public R register(SupplierInfo addFrom) throws Exception {
+        addFrom.setCode("SUP-" + System.currentTimeMillis());
+        addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+        addFrom.setStatus("0");
+        supplierInfoService.save(addFrom);
+        // 添加供应商审核信息
+        SupplierAuditRecord supplierAuditRecord = new SupplierAuditRecord();
+        supplierAuditRecord.setCode("ASUP-" + System.currentTimeMillis());
+        supplierAuditRecord.setSupplierId(addFrom.getId());
+        supplierAuditRecord.setContent(addFrom.getAuditContent());
+        supplierAuditRecord.setStatus("0");
+        supplierAuditRecordService.save(supplierAuditRecord);
         return R.ok(true);
     }
 

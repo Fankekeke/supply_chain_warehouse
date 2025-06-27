@@ -54,6 +54,16 @@ public class WarehouseInfoServiceImpl extends ServiceImpl<WarehouseInfoMapper, W
     }
 
     /**
+     * 获取预警库存列表
+     *
+     * @return 列表
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryAlertStockList() {
+        return baseMapper.queryAlertStockList();
+    }
+
+    /**
      * 查询入库库存记录
      *
      * @param code 入库编码

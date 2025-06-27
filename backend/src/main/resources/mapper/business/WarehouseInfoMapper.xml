@@ -69,7 +69,71 @@
 
     <!-- 分页获取出入库详情 -->
     <select id="queryStockDetailPage" resultType="java.util.LinkedHashMap">
+        SELECT
+        wi.id,
+        wi.CODE,
+        wi.NAME,
+        wi.quantity,
+        wi.transaction_type,
+        wi.create_date,
+        wi.unit_price,
+        wi.inbound_order_number,
+        wi.delivery_order_number,
 
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit
+        FROM
+        warehouse_info wi
+        LEFT JOIN materials_info mi ON (mi.`code` = wi.`code`)
+        WHERE
+        1 = 1
+        AND wi.transaction_type != 0
+        <if test="queryForm.materialsName != null and queryForm.materialsName != ''">
+            AND mi.NAME like CONCAT("%",#{queryForm.materialsName},"%")
+        </if>
+        <if test="queryForm.transactionType != null and queryForm.transactionType != ''">
+            AND wi.transaction_type = #{queryForm.transactionType}
+        </if>
+        ORDER BY
+        wi.create_date DESC
+    </select>
+
+    <!-- 获取预警库存列表 -->
+    <select id="queryAlertStockList" resultType="java.util.LinkedHashMap">
+        SELECT
+        wi.id,
+        wi.CODE,
+        wi.NAME,
+        wi.quantity,
+        wi.transaction_type,
+        wi.create_date,
+        wi.unit_price,
+        wi.inbound_order_number,
+        wi.delivery_order_number,
+
+        mi.NAME AS materialsName,
+        mi.model,
+        mi.images AS materialsImages,
+        mi.type,
+        mi.measurement_unit,
+
+        eai.min_value,
+
+        (wi.quantity - eai.min_value) AS alertNum
+        FROM
+        warehouse_info wi
+        LEFT JOIN materials_info mi ON (mi.`code` = wi.`code`)
+        LEFT JOIN early_alert_info eai ON (eai.materials_code = wi.`code`)
+        WHERE
+        1 = 1
+        AND wi.transaction_type = 0
+        AND eai.min_value IS NOT NULL
+        AND eai.min_value != -1
+        ORDER BY
+        wi.create_date DESC
     </select>
 
     <!-- 查询入库库存记录 -->

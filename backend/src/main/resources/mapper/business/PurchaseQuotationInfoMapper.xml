@@ -101,4 +101,47 @@
         ORDER BY
         pqi.create_date DESC
     </select>
+
+    <!-- 查询历史报价 -->
+    <select id="queryHistoryQuotation" resultType="java.util.LinkedHashMap">
+        SELECT
+            pqi.id,
+            pqi.plan_id,
+            pqi.supplier_id,
+            pqi.STATUS,
+            pqi.materials_code,
+            pqi.total_price,
+            pqi.create_date,
+            pqi.quotation_date,
+            pqi.unit_price,
+            pqi.end_date,
+            pqi.del_flag,
+
+            si.CODE AS supplierCode,
+            si.NAME AS supplierName,
+            si.charge_person,
+            si.phone,
+            si.images AS supplierImages,
+
+            mi.NAME AS materialsName,
+            mi.model,
+            mi.images AS materialsImages,
+            mi.type,
+            mi.measurement_unit,
+
+            ppi.purchase_code,
+            ppi.CODE AS planCode,
+            ppi.purchase_num
+        FROM
+            purchase_quotation_info pqi
+                LEFT JOIN supplier_info si ON (si.id = pqi.supplier_info)
+                LEFT JOIN materials_info mi ON (mi.CODE = pqi.materials_code)
+                LEFT JOIN purchase_plan_info ppi ON (ppi.id = pqi.plan_id)
+        WHERE
+            1 = 1
+          AND pqi.del_flag = 0
+          AND pqi.materials_code = #{materialCode}
+        ORDER BY
+            pqi.create_date DESC
+    </select>
 </mapper>

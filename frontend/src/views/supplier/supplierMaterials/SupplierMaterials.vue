@@ -363,6 +363,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
+      params.supplierUserId = this.currentUser.userId
       this.$get('/business/supplier-materials-info/page', {
         ...params
       }).then((r) => {

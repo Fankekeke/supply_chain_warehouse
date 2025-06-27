@@ -1,23 +1,29 @@
 package com.fank.f1k2.business.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.dao.PurchasePlanInfoMapper;
+import com.fank.f1k2.business.entity.NotifyInfo;
 import com.fank.f1k2.business.entity.PurchasePlanInfo;
 import com.fank.f1k2.business.entity.PurchaseQuotationInfo;
 import com.fank.f1k2.business.dao.PurchaseQuotationInfoMapper;
-import com.fank.f1k2.business.service.IPurchaseQuotationInfoService;
+import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fank.f1k2.common.exception.F1k2Exception;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author FanK fan1ke2ke@gmail.com（悲伤的橘子树）
@@ -27,6 +33,16 @@ import java.util.List;
 public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotationInfoMapper, PurchaseQuotationInfo> implements IPurchaseQuotationInfoService {
 
     private final PurchasePlanInfoMapper purchasePlanInfoMapper;
+
+    private final IMailService mailService;
+
+    private final TemplateEngine templateEngine;
+
+    private final INotifyInfoService notifyInfoService;
+
+    private final IAgencyInfoService agencyInfoService;
+
+    private final ISupplierInfoService supplierInfoService;
 
     /**
      * 分页获取采购计划报价管理
@@ -65,6 +81,28 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
             purchasePlanInfoMapper.updateById(purchasePlanInfo);
         }
         // TODO 采购计划状态更新发送消息或者代办
+        // 获取供应商信息
+        List<Integer> supplierIdList = purchaseQuotationInfoList.stream().map(PurchaseQuotationInfo::getSupplierId).distinct().collect(Collectors.toList());
+        List<SupplierInfo> supplierInfoList = new ArrayList<>(supplierInfoService.listByIds(supplierIdList));
+        Map<Integer, SupplierInfo> supplierInfoMap = supplierInfoList.stream().collect(Collectors.toMap(SupplierInfo::getId, supplierInfo -> supplierInfo));
+        for (PurchaseQuotationInfo purchaseQuotationInfo : purchaseQuotationInfoList) {
+            SupplierInfo supplierInfo = supplierInfoMap.get(addFrom.getSupplierId());
+            NotifyInfo messageInfo = new NotifyInfo();
+            messageInfo.setAgencyType("1");
+            messageInfo.setStatus("0");
+            messageInfo.setUserId(supplierInfo.getId());
+            String content = "您好, 企业：" + supplierInfo.getName() + " 采购计划：" + purchasePlanInfo.getCode() + " 已提交报价，请前往接收";
+            messageInfo.setContent(content);
+            messageInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+            notifyInfoService.save(messageInfo);
+            if (StrUtil.isNotEmpty(supplierInfo.getEmail())) {
+                Context context = new Context();
+                context.setVariable("today", DateUtil.formatDate(new Date()));
+                context.setVariable("custom", content);
+                String emailContent = templateEngine.process("registerEmail", context);
+                mailService.sendHtmlMail(supplierInfo.getEmail(), DateUtil.formatDate(new Date()) + "报价接收", emailContent);
+            }
+        }
 
         // 保存
         return this.saveBatch(purchaseQuotationInfoList);
@@ -79,8 +117,24 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
      */
     @Override
     public boolean setQuotationStatus(Integer id, String status) {
+        // 获取供应商信息
+        PurchaseQuotationInfo purchaseQuotationInfo = this.getById(id);
+        SupplierInfo supplierInfo = supplierInfoService.getById(purchaseQuotationInfo.getSupplierId());
         // TODO 校验状态发送消息通知或代办
+        // 1.已接收 2.已报价
+        NotifyInfo messageInfo = new NotifyInfo();
+        messageInfo.setAgencyType("2");
+        messageInfo.setStatus("0");
+        String content = "您好, 企业：" + supplierInfo.getName() + " 采购计划：" + purchaseQuotationInfo.getPlanCode() + " 已" + (status.equals("1") ? "接收" : "报价") + "，请前往查看";
+        messageInfo.setContent(content);
+        messageInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        notifyInfoService.save(messageInfo);
 
+        Context context = new Context();
+        context.setVariable("today", DateUtil.formatDate(new Date()));
+        context.setVariable("custom", content);
+        String emailContent = templateEngine.process("registerEmail", context);
+        mailService.sendHtmlMail("fan1ke2ke@gmail.com", DateUtil.formatDate(new Date()) + "采购报价提示", emailContent);
         return this.update(Wrappers.<PurchaseQuotationInfo>lambdaUpdate().set(PurchaseQuotationInfo::getStatus, status).eq(PurchaseQuotationInfo::getId, id));
     }
 
@@ -93,5 +147,16 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
     @Override
     public List<LinkedHashMap<String, Object>> queryQuotationByPlanId(Integer planId) {
         return baseMapper.queryQuotationByPlanId(planId);
+    }
+
+    /**
+     * 查询历史报价
+     *
+     * @param materialCode 物料编码
+     * @return 采购计划报价列表
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryHistoryQuotation(String materialCode) {
+        return baseMapper.queryHistoryQuotation(materialCode);
     }
 }

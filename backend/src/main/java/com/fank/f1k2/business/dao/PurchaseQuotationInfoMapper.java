@@ -30,4 +30,12 @@ public interface PurchaseQuotationInfoMapper extends BaseMapper<PurchaseQuotatio
      * @return 采购计划报价列表
      */
     List<LinkedHashMap<String, Object>> queryQuotationByPlanId(@Param("planId") Integer planId);
+
+    /**
+     * 查询历史报价
+     *
+     * @param materialCode 物料编码
+     * @return 采购计划报价列表
+     */
+    List<LinkedHashMap<String, Object>> queryHistoryQuotation(@Param("materialCode") String materialCode);
 }

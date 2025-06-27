@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fank.f1k2.business.dao.OrderInfoMapper;
+import com.fank.f1k2.business.entity.OrderInfo;
 import com.fank.f1k2.business.entity.SupplierInfo;
 import com.fank.f1k2.business.dao.SupplierInfoMapper;
 import com.fank.f1k2.business.entity.SupplierMaterialsInfo;
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 public class SupplierInfoServiceImpl extends ServiceImpl<SupplierInfoMapper, SupplierInfo> implements ISupplierInfoService {
 
     private final ISupplierMaterialsInfoService supplierMaterialsInfoService;
+
+    private final OrderInfoMapper orderInfoMapper;
 
     /**
      * 分页获取供应商信息
@@ -57,5 +61,28 @@ public class SupplierInfoServiceImpl extends ServiceImpl<SupplierInfoMapper, Sup
         // 取出供应商ID
         List<Integer> supplierIds = supplierMaterialsInfos.stream().map(SupplierMaterialsInfo::getSupplierId).collect(Collectors.toList());
         return new ArrayList<>(this.listByIds(supplierIds));
+    }
+
+    /**
+     * 根据系统用户ID查询供应商
+     *
+     * @param sysUserId 系统用户ID
+     * @return 供应商列表
+     */
+    @Override
+    public LinkedHashMap<String, Object> querySupplierBySysUserId(Integer sysUserId) {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("user", null);
+                put("order", Collections.emptyList());
+            }
+        };
+        SupplierInfo supplierInfo = this.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, sysUserId));
+        result.put("supplier", supplierInfo);
+        // 获取订单
+        List<OrderInfo> orderInfoList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getSupplierId, supplierInfo.getId()));
+        result.put("order", orderInfoList);
+        return result;
     }
 }

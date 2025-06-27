@@ -42,6 +42,13 @@ public interface WarehouseInfoMapper extends BaseMapper<WarehouseInfo> {
     List<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, @Param("queryForm") WarehouseInfo queryFrom);
 
     /**
+     * 获取预警库存列表
+     *
+     * @return 列表
+     */
+    List<LinkedHashMap<String, Object>> queryAlertStockList();
+
+    /**
      * 查询入库库存记录
      *
      * @param code 入库编码

@@ -45,6 +45,18 @@ public class PurchaseQuotationInfoController {
     }
 
     /**
+     * 查询历史报价
+     *
+     * @param materialCode 物料编码
+     * @return 采购计划报价列表
+     */
+    @ApiOperation(value = "查询历史报价", notes = "通过物料编码获取对应的历史报价信息")
+    @GetMapping("/queryHistoryQuotation")
+    public R queryHistoryQuotation(String materialCode) {
+        return R.ok(purchaseQuotationInfoService.queryHistoryQuotation(materialCode));
+    }
+
+    /**
      * 根据采购计划ID查询采购计划报价
      *
      * @param planId 采购计划ID

@@ -359,6 +359,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
+      params.supplierUserId = this.currentUser.userId
       this.$get('/business/abnormal-info/page', {
         ...params
       }).then((r) => {
