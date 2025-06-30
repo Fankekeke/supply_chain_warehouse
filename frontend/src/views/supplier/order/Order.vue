@@ -54,7 +54,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -69,8 +69,17 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-popconfirm
+            title="是否确认发货?"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="orderShip(record)"
+          >
+            <a-icon v-if="record.status == 1" type="interaction" theme="twoTone" title="发 货" style="margin-left: 15px"></a-icon>
+          </a-popconfirm>
+          <a-icon v-if="record.status == 2" type="warning" theme="twoTone" title="反 馈" style="margin-left: 15px" @click="orderFeedback(record)"></a-icon>
+          <!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"-->
+          <!--                  style="margin-left: 15px"></a-icon>-->
         </template>
       </a-table>
     </div>
@@ -90,6 +99,12 @@
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
+    <module-feed
+      @close="handleModuleFeedClose"
+      @success="handleModuleFeedSuccess"
+      :moduleShow="moduleFeed.visiable"
+      :moduleData="moduleFeed.data">
+    </module-feed>
   </a-card>
 </template>
 
@@ -98,6 +113,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import moduleAdd from './OrderAdd.vue'
 import moduleEdit from './OrderEdit.vue'
 import moduleView from './OrderView.vue'
+import moduleFeed from './OrderFeed.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -105,7 +121,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  components: {moduleAdd, moduleEdit, moduleView, moduleFeed, RangeDate},
   data () {
     return {
       advanced: false,
@@ -116,6 +132,10 @@ export default {
         visiable: false
       },
       moduleView: {
+        visiable: false,
+        data: null
+      },
+      moduleFeed: {
         visiable: false,
         data: null
       },
@@ -144,11 +164,11 @@ export default {
     columns () {
       return [{
         title: '订单编号',
-        dataIndex: 'orderCode',
+        dataIndex: 'code',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text
           } else {
             return '- -'
           }
@@ -156,9 +176,16 @@ export default {
       }, {
         title: '总价格',
         dataIndex: 'totalPrice',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        },
         ellipsis: true
       }, {
-        title: '异常供应商',
+        title: '供应商',
         dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -205,6 +232,28 @@ export default {
           </a-popover>
         }
       }, {
+        title: '状态',
+        dataIndex: 'status',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag>未付款</a-tag>
+            case '1':
+              return <a-tag>已付款</a-tag>
+            case '2':
+              return <a-tag>已发货</a-tag>
+            case '3':
+              return <a-tag>检验中</a-tag>
+            case '4':
+              return <a-tag>已退货</a-tag>
+            case '5':
+              return <a-tag>已入库</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
         title: '采购物料',
         dataIndex: 'materialsName',
         ellipsis: true,
@@ -246,7 +295,7 @@ export default {
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' '+ row.measurementUnit
+            return text + ' ' + row.measurementUnit
           } else {
             return '- -'
           }
@@ -272,6 +321,24 @@ export default {
     this.fetch()
   },
   methods: {
+    orderFeedback (record) {
+      this.moduleFeed.data = record
+      this.moduleFeed.visiable = true
+    },
+    handleModuleFeedClose () {
+      this.moduleFeed.visiable = false
+    },
+    handleModuleFeedSuccess () {
+      this.$message.success('反馈成功')
+      this.moduleFeed.visiable = false
+      this.search()
+    },
+    orderShip (record) {
+      this.$get('/business/order-info/ship', { orderId: record.id, content: '订单已发货' }).then((r) => {
+        this.$message.success('发货成功')
+        this.fetch()
+      })
+    },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
       this.moduleView.visiable = true

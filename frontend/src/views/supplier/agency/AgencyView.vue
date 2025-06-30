@@ -10,7 +10,7 @@
         <a-col style="margin-bottom: 15px"><span
           class="view-title">代办信息</span></a-col>
         <a-col :span="8"><b>代办编号：</b>
-          {{ moduleData.orderCode }}
+          {{ moduleData.code }}
         </a-col>
         <a-col :span="8"><b>代办状态：</b>
           <span v-if="moduleData.status == 0">未完成</span>

@@ -15,9 +15,6 @@
         <a-col :span="8"><b>采购金额：</b>
           {{ moduleData.totalPrice }} 元
         </a-col>
-        <a-col :span="8"><b>详细地址：</b>
-          {{ moduleData.address }}
-        </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
@@ -33,7 +30,7 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>型号：</b>
+        <a-col :span="16"><b>型号：</b>
           {{ moduleData.model }}
         </a-col>
         <a-col :span="8"><b>采购数量：</b>
@@ -69,6 +66,7 @@
           class="view-title">异常反馈内容</span></a-col>
         <a-col :span="24">{{ moduleData.remark }}</a-col>
       </a-row>
+      <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
           class="view-title">物料图片</span></a-col>

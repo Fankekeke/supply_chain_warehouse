@@ -2,7 +2,7 @@
   <a-drawer
     title="修改代办任务"
     :maskClosable="false"
-    width=850
+    width=450
     placement="right"
     :closable="false"
     @close="onClose"
@@ -94,7 +94,7 @@ export default {
   methods: {
     querySupplier () {
       this.$get('/business/supplier-info/list').then((r) => {
-        this.supplierList = r.data
+        this.supplierList = r.data.data
       })
     },
     handleCancel () {

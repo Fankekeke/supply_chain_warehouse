@@ -20,6 +20,7 @@
         si.CODE AS supplierCode,
         si.NAME AS supplierName,
         si.charge_person,
+        si.supply_type,
         si.phone,
         si.images AS supplierImages,
 
@@ -34,7 +35,7 @@
         ppi.purchase_num
         FROM
         purchase_quotation_info pqi
-        LEFT JOIN supplier_info si ON (si.id = pqi.supplier_info)
+        LEFT JOIN supplier_info si ON (si.id = pqi.supplier_id)
         LEFT JOIN materials_info mi ON (mi.CODE = pqi.materials_code)
         LEFT JOIN purchase_plan_info ppi ON (ppi.id = pqi.plan_id)
         WHERE
@@ -73,10 +74,12 @@
         pqi.unit_price,
         pqi.end_date,
         pqi.del_flag,
+        pqi.chat_content,
 
         si.CODE AS supplierCode,
         si.NAME AS supplierName,
         si.charge_person,
+        si.supply_type,
         si.phone,
         si.images AS supplierImages,
 
@@ -91,7 +94,7 @@
         ppi.purchase_num
         FROM
         purchase_quotation_info pqi
-        LEFT JOIN supplier_info si ON (si.id = pqi.supplier_info)
+        LEFT JOIN supplier_info si ON (si.id = pqi.supplier_id)
         LEFT JOIN materials_info mi ON (mi.CODE = pqi.materials_code)
         LEFT JOIN purchase_plan_info ppi ON (ppi.id = pqi.plan_id)
         WHERE
@@ -134,7 +137,7 @@
             ppi.purchase_num
         FROM
             purchase_quotation_info pqi
-                LEFT JOIN supplier_info si ON (si.id = pqi.supplier_info)
+                LEFT JOIN supplier_info si ON (si.id = pqi.supplier_id)
                 LEFT JOIN materials_info mi ON (mi.CODE = pqi.materials_code)
                 LEFT JOIN purchase_plan_info ppi ON (ppi.id = pqi.plan_id)
         WHERE

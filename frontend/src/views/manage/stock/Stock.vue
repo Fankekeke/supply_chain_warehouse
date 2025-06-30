@@ -136,10 +136,10 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
@@ -166,10 +166,16 @@ export default {
           }
         }
       }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
-      }]
+        title: '操作时间',
+        dataIndex: 'createDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      },]
     }
   },
   mounted () {

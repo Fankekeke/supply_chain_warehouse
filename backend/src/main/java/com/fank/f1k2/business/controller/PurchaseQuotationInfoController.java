@@ -2,6 +2,7 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -42,6 +44,22 @@ public class PurchaseQuotationInfoController {
     @GetMapping("/page")
     public R page(Page<PurchaseQuotationInfo> page, PurchaseQuotationInfo queryFrom) {
         return R.ok(purchaseQuotationInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 设置报价
+     *
+     * @param editFrom 采购计划报价管理对象
+     * @return 采购计划报价管理对象
+     */
+    @ApiOperation(value = "设置报价", notes = "更新已有的采购计划报价信息")
+    @PutMapping("/setQuotation")
+    @Transactional(rollbackFor = Exception.class)
+    public R setQuotation(PurchaseQuotationInfo editFrom) {
+        editFrom.setUnitPrice(NumberUtil.div(editFrom.getTotalPrice(), editFrom.getNum()));
+        editFrom.setQuotationDate(DateUtil.formatDateTime(new Date()));
+        purchaseQuotationInfoService.updateById(editFrom);
+        return R.ok(purchaseQuotationInfoService.setQuotationStatus(editFrom.getId(), "2"));
     }
 
     /**
@@ -79,6 +97,44 @@ public class PurchaseQuotationInfoController {
     @GetMapping("/setQuotationStatus")
     public R setQuotationStatus(Integer id, String status) {
         return R.ok(purchaseQuotationInfoService.setQuotationStatus(id, status));
+    }
+
+    /**
+     * 查询报价回复
+     *
+     * @param quotationId 报价ID
+     * @return 采购计划报价管理对象
+     */
+    @ApiOperation(value = "查询报价回复", notes = "通过报价ID获取对应的回复信息")
+    @GetMapping("/queryReplyByQuotationId")
+    public R queryReplyByQuotationId(Integer quotationId) {
+        return R.ok(purchaseQuotationInfoService.queryReplyByQuotationId(quotationId));
+    }
+
+    /**
+     * 回复供应商
+     *
+     * @param content 回复内容
+     * @param quotationId 报价ID
+     * @return 采购计划报价管理对象
+     */
+    @ApiOperation(value = "回复供应商", notes = "通过报价ID回复供应商")
+    @GetMapping("/replySupplier")
+    public R replySupplier(String content, Integer quotationId) {
+        return R.ok(purchaseQuotationInfoService.reply(content, quotationId, "2"));
+    }
+
+    /**
+     * 回复管理员
+     *
+     * @param content 回复内容
+     * @param quotationId 报价ID
+     * @return 采购计划报价管理对象
+     */
+    @ApiOperation(value = "回复管理员", notes = "通过报价ID回复管理员")
+    @GetMapping("/replyAdmin")
+    public R replyAdmin(String content, Integer quotationId) {
+        return R.ok(purchaseQuotationInfoService.reply(content, quotationId, "1"));
     }
 
     /**

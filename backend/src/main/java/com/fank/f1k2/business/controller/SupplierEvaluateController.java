@@ -92,16 +92,14 @@ public class SupplierEvaluateController {
     @PostMapping
     public R save(SupplierEvaluate addFrom) throws F1k2Exception {
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
-        int year = DateUtil.year(new Date());
         int count = supplierEvaluateService.count(Wrappers.<SupplierEvaluate>lambdaQuery()
-                .eq(SupplierEvaluate::getYear, year)
+                .eq(SupplierEvaluate::getYear, addFrom.getYear())
                 .eq(SupplierEvaluate::getSupplierId, addFrom.getSupplierId()));
         if (count > 0) {
             throw new F1k2Exception("该供应商今年已评价");
         }
         BigDecimal totalScore = supplierEvaluateService.calculateTotalScore(addFrom);
         addFrom.setScore(totalScore);
-        addFrom.setYear(String.valueOf(year));
         return R.ok(supplierEvaluateService.save(addFrom));
     }
 

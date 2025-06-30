@@ -148,7 +148,7 @@ export default {
     },
     setFormValues ({...module}) {
       this.rowId = module.id
-      let fields = ['name', 'address', 'content', 'longitude', 'latitude', 'content', 'creditCode', 'chargePerson', 'phone', 'supplyType', 'businessLicense', 'bankName', 'bankAccount']
+      let fields = ['code', 'batchRecord', 'packageSet', 'brand', 'status']
       let obj = {}
       Object.keys(module).forEach((key) => {
         if (key === 'images') {

@@ -2,7 +2,7 @@
   <a-drawer
     title="修改预警库存"
     :maskClosable="false"
-    width=850
+    width=450
     placement="right"
     :closable="false"
     @close="onClose"
@@ -10,9 +10,9 @@
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
-        <a-col :span="12">
+        <a-col :span="24">
           <a-form-item label='选择物料'>
-            <a-select v-decorator="[
+            <a-select disabled v-decorator="[
               'materialsCode',
               { rules: [{ required: true, message: '请选择物料!' }] }
               ]">
@@ -21,7 +21,7 @@
             </a-select>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="24">
           <a-form-item label='预警值' v-bind="formItemLayout">
             <a-input-number style="width: 100%"
                             v-decorator="[

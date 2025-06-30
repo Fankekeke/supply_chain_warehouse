@@ -66,8 +66,6 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -373,7 +371,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/purchase-quotation-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

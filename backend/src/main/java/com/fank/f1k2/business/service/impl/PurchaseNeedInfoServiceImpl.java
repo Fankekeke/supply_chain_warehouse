@@ -2,6 +2,7 @@ package com.fank.f1k2.business.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.MaterialsInfo;
@@ -56,7 +57,7 @@ public class PurchaseNeedInfoServiceImpl extends ServiceImpl<PurchaseNeedInfoMap
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         addFrom.setStatus("0");
         // 添加采购计划
-        List<MaterialsInfo> materialsInfoList = addFrom.getMaterialsInfoList();
+        List<MaterialsInfo> materialsInfoList = JSONUtil.toList(addFrom.getMaterialsInfoList(), MaterialsInfo.class);
         if (CollectionUtil.isEmpty(materialsInfoList)) {
             throw new F1k2Exception("请选择采购需求");
         }

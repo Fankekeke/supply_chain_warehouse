@@ -52,12 +52,6 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">详细图表</span></a-col>
-        <a-col :span="24">{{ moduleData.formula }}</a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
           class="view-title">供应商评价内容</span></a-col>
         <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
@@ -80,7 +74,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>负责人：</b>
-          {{ supplierInfo.legalPerson }}
+          {{ supplierInfo.chargePerson }}
         </a-col>
         <a-col :span="8"><b>联系电话：</b>
           {{ supplierInfo.phone }}
@@ -113,11 +107,6 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">备注内容</span></a-col>
-        <a-col :span="24">{{ supplierInfo.content }}</a-col>
-      </a-row>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
           class="view-title">供应商图片</span></a-col>
         <a-col :span="24">
           <a-upload
@@ -141,7 +130,6 @@
 
 <script>
 import moment from 'moment'
-import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 

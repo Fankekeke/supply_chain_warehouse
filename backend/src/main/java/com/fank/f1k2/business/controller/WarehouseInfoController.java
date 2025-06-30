@@ -1,7 +1,11 @@
 package com.fank.f1k2.business.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.fank.f1k2.business.entity.MaterialsInfo;
+import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.WarehouseInfo;
@@ -16,6 +20,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 库房库存 控制层
@@ -41,6 +48,24 @@ public class WarehouseInfoController {
     @GetMapping("/page")
     public R page(Page<WarehouseInfo> page, WarehouseInfo queryFrom) {
         return R.ok(warehouseInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 导入信息列表
+     */
+    @ApiOperation(value = "导入信息列表", notes = "导入信息列表")
+    @PostMapping("/import")
+    public R importExcel(@RequestParam("file") MultipartFile file) throws F1k2Exception {
+        try {
+            List<MaterialsInfo> result = warehouseInfoService.importExcel(file);
+            if (CollectionUtil.isEmpty(result)) {
+                throw new F1k2Exception("请检查物料编号是否正确");
+            }
+            return R.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        throw new F1k2Exception("导入数据为空。");
     }
 
     /**

@@ -125,7 +125,7 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
-        values.agencyType = '1'
+        values.agencyType = '2'
         if (!err) {
           this.loading = true
           this.$post('/business/agency-info', {

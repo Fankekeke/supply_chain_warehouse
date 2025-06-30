@@ -2,7 +2,7 @@
   <a-drawer
     title="修改代办任务"
     :maskClosable="false"
-    width=850
+    width=450
     placement="right"
     :closable="false"
     @close="onClose"

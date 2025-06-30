@@ -3,6 +3,8 @@ package com.fank.f1k2.business.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.business.entity.MaterialsInfo;
+import com.fank.f1k2.business.service.IMaterialsInfoService;
 import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +35,8 @@ public class EarlyAlertInfoController {
 
     private final IEarlyAlertInfoService earlyAlertInfoService;
 
+    private final IMaterialsInfoService materialsInfoService;
+
     /**
      * 分页获取预警库存设置
      *
@@ -43,6 +48,26 @@ public class EarlyAlertInfoController {
     @GetMapping("/page")
     public R page(Page<EarlyAlertInfo> page, EarlyAlertInfo queryFrom) {
         return R.ok(earlyAlertInfoService.queryPage(page, queryFrom));
+    }
+
+    /**
+     * 批量设置预警库存
+     *
+     * @return 批量设置结果
+     */
+    @ApiOperation(value = "批量设置预警库存", notes = "批量设置预警库存信息")
+    @GetMapping("/setEarlyAlertInfoBatch")
+    public R setEarlyAlertInfoBatch() {
+        List<MaterialsInfo> materialsInfoList = materialsInfoService.list();
+        List<EarlyAlertInfo> addList = new ArrayList<>();
+        for (MaterialsInfo materialsInfo : materialsInfoList) {
+            EarlyAlertInfo earlyAlertInfo = new EarlyAlertInfo();
+            earlyAlertInfo.setMaterialsCode(materialsInfo.getCode());
+            earlyAlertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+            earlyAlertInfo.setMinValue(-1);
+            addList.add(earlyAlertInfo);
+        }
+        return R.ok(earlyAlertInfoService.saveBatch(addList));
     }
 
     /**

@@ -77,16 +77,16 @@ public class SupplierMaterialsInfoController {
     @ApiOperation(value = "批量设置供应商物料", notes = "批量设置供应商物料信息")
     @GetMapping("/setSupplierMaterialsBatch")
     public R setSupplierMaterialsBatch() {
-        List<SupplierMaterialsInfo> list = supplierMaterialsInfoService.list();
+        List<SupplierInfo> list = supplierInfoService.list();
         List<MaterialsInfo> materialsInfoList = materialsInfoService.list();
         List<String> materialIds = materialsInfoList.stream().map(MaterialsInfo::getCode).collect(Collectors.toList());
 
         List<SupplierMaterialsInfo> addList = new ArrayList<>();
-        for (SupplierMaterialsInfo supplierMaterialsInfo : list) {
+        for (SupplierInfo supplierInfo : list) {
             Set<String> set = RandomUtil.randomEleSet(materialIds, 8);
             for (String mid : set) {
                 SupplierMaterialsInfo item = new SupplierMaterialsInfo();
-                item.setSupplierId(supplierMaterialsInfo.getSupplierId());
+                item.setSupplierId(supplierInfo.getId());
                 item.setCode(mid);
                 item.setPackageSet("统一封存");
                 item.setBrand("品牌");
@@ -95,8 +95,7 @@ public class SupplierMaterialsInfoController {
                 addList.add(item);
             }
         }
-        supplierMaterialsInfoService.saveBatch(addList);
-        return R.ok();
+        return R.ok( supplierMaterialsInfoService.saveBatch(addList));
     }
 
     /**

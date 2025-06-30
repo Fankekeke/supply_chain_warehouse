@@ -13,7 +13,7 @@
         ppi.STATUS,
         ppi.create_date,
         ppi.del_flag,
-        pni.pni.content,
+        pni.content,
         pni.create_by,
 
         oi.CODE AS orderCode,
@@ -68,7 +68,7 @@
         ppi.STATUS,
         ppi.create_date,
         ppi.del_flag,
-        pni.pni.content,
+        pni.content,
         pni.create_by,
 
         oi.CODE AS orderCode,
@@ -90,7 +90,7 @@
         FROM
         purchase_plan_info ppi
         LEFT JOIN purchase_need_info pni ON (pni.`code` = ppi.purchase_code)
-        LEFT JOIN order_info oi ON (oi.id = li.order_id)
+        LEFT JOIN order_info oi ON (oi.id = ppi.order_id)
         LEFT JOIN supplier_info si ON (si.id = oi.supplier_id)
         LEFT JOIN materials_info mi ON (mi.CODE = ppi.CODE)
         WHERE

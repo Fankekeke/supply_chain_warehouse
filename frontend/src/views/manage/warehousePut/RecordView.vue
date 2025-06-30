@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="入库详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="入库详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -7,7 +7,7 @@
     </template>
     <div style="font-size: 13px" v-if="recordData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基础信息</span></a-col>
+        <a-col style="margin-bottom: 15px"><span class="view-title" style="font-size: 15px;font-weight: 650;color: #000c17">基础信息</span></a-col>
         <a-col :span="8"><b>入库单号：</b>
           {{ recordData.code !== null ? recordData.code : '- -' }}
         </a-col>
@@ -29,7 +29,7 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">备注</span></a-col>
+        <a-col style="margin-bottom: 15px"><span class="view-title" style="font-size: 15px;font-weight: 650;color: #000c17">备注</span></a-col>
         <a-col :span="24">
           {{ recordData.remark }}
         </a-col>
@@ -37,7 +37,7 @@
       <br/>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">物料详情</span></a-col>
+        <a-col style="margin-bottom: 15px"><span class="view-title" style="font-size: 15px;font-weight: 650;color: #000c17">物料详情</span></a-col>
         <a-col :span="24">
           <a-table :columns="columns" :data-source="goodsList">
           </a-table>
@@ -72,10 +72,26 @@ export default {
     columns () {
       return [{
         title: '物料名称',
-        dataIndex: 'materialsName'
+        dataIndex: 'materialsName',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '型号',
-        dataIndex: 'model'
+        dataIndex: 'model',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '数量',
         dataIndex: 'quantity',
@@ -88,10 +104,26 @@ export default {
         }
       }, {
         title: '物料类型',
-        dataIndex: 'type'
+        dataIndex: 'type',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '单价',
-        dataIndex: 'unitPrice'
+        dataIndex: 'unitPrice',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        }
       }]
     }
   },
@@ -104,13 +136,13 @@ export default {
   watch: {
     recordShow: function (value) {
       if (value) {
-        this.getGoodsByNum(this.recordData.num)
+        this.getGoodsByNum(this.recordData.code)
       }
     }
   },
   methods: {
     getGoodsByNum (num) {
-      this.$get('/business/warehouse-info/queryPutRecordDetail', { num }).then((r) => {
+      this.$get('/business/warehouse-info/queryPutRecordDetail', { code: num }).then((r) => {
         this.goodsList = r.data.data
       })
     },

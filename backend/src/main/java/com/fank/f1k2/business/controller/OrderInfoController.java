@@ -2,6 +2,11 @@ package com.fank.f1k2.business.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fank.f1k2.business.entity.LogisticsInfo;
+import com.fank.f1k2.business.entity.PurchasePlanInfo;
+import com.fank.f1k2.business.service.ILogisticsInfoService;
+import com.fank.f1k2.business.service.IPurchasePlanInfoService;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.OrderInfo;
@@ -10,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -29,6 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderInfoController {
 
     private final IOrderInfoService orderInfoService;
+
+    private final IPurchasePlanInfoService purchasePlanInfoService;
+
+    private final ILogisticsInfoService logisticsInfoService;
 
     /**
      * 分页获取采购订单
@@ -103,6 +113,58 @@ public class OrderInfoController {
     }
 
     /**
+     * 采购订单付款
+     *
+     * @param orderCode 订单编号
+     * @return 结果
+     */
+    @ApiOperation(value = "采购订单付款", notes = "付款")
+    @GetMapping("/payment")
+    public R payment(String orderCode) {
+        OrderInfo orderInfo = orderInfoService.getOne(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getCode, orderCode));
+        return R.ok(orderInfoService.setOrderStatus(orderInfo.getId(), "1"));
+    }
+
+    /**
+     * 采购订单发货
+     *
+     * @param orderId 订单编号
+     * @return 结果
+     */
+    @ApiOperation(value = "采购订单发货", notes = "发货")
+    @GetMapping("/ship")
+    @Transactional(rollbackFor = Exception.class)
+    public R orderShip(Integer orderId, String content) {
+        OrderInfo orderInfo = orderInfoService.getById(orderId);
+        LogisticsInfo logisticsInfo = new LogisticsInfo();
+        logisticsInfo.setOrderId(orderId);
+        logisticsInfo.setRemark(content);
+        logisticsInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        logisticsInfo.setCurrentLogistics(1);
+        logisticsInfoService.save(logisticsInfo);
+        return R.ok(orderInfoService.setOrderStatus(orderInfo.getId(), "2"));
+    }
+
+    /**
+     * 修改采购订单物流信息
+     *
+     * @param orderId 订单编号
+     * @return 结果
+     */
+    @ApiOperation(value = "修改采购订单物流信息", notes = "修改采购订单物流信息")
+    @GetMapping("/updateOrderLogistics")
+    public R updateOrderLogistics(Integer orderId, String content) {
+        // 更新其他物流
+        logisticsInfoService.update(Wrappers.<LogisticsInfo>lambdaUpdate().set(LogisticsInfo::getCurrentLogistics, 0).eq(LogisticsInfo::getOrderId, orderId));
+        LogisticsInfo logisticsInfo = new LogisticsInfo();
+        logisticsInfo.setOrderId(orderId);
+        logisticsInfo.setRemark(content);
+        logisticsInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        logisticsInfo.setCurrentLogistics(1);
+        return R.ok(logisticsInfoService.save(logisticsInfo));
+    }
+
+    /**
      * 新增采购订单
      *
      * @param addFrom 采购订单对象
@@ -110,8 +172,15 @@ public class OrderInfoController {
      */
     @ApiOperation(value = "新增采购订单", notes = "创建一个新的采购订单记录")
     @PostMapping
+    @Transactional(rollbackFor = Exception.class)
     public R save(OrderInfo addFrom) {
+        addFrom.setCode("ORD-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
+        addFrom.setStatus("0");
+        // 获取采购计划
+        PurchasePlanInfo purchasePlanInfo = purchasePlanInfoService.getById(addFrom.getPlanId());
+        purchasePlanInfo.setStatus("3");
+        purchasePlanInfoService.updateById(purchasePlanInfo);
         return R.ok(orderInfoService.save(addFrom));
     }
 

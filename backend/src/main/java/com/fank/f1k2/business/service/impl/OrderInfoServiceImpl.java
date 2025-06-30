@@ -64,7 +64,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Override
     public boolean setOrderStatus(Integer id, String status) {
-        OrderInfo orderInfo = new OrderInfo();
+        OrderInfo orderInfo = this.getById(id);
         orderInfo.setId(id);
         orderInfo.setStatus(status);
         // TODO 采购状态更新发送消息或者代办

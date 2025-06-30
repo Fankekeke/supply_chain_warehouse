@@ -54,7 +54,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -69,8 +69,9 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.status == 0" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 15px"></a-icon>
+          <!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"-->
+          <!--                  style="margin-left: 15px"></a-icon>-->
         </template>
       </a-table>
     </div>
@@ -144,11 +145,11 @@ export default {
     columns () {
       return [{
         title: '订单编号',
-        dataIndex: 'orderCode',
+        dataIndex: 'code',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text
           } else {
             return '- -'
           }
@@ -156,9 +157,16 @@ export default {
       }, {
         title: '总价格',
         dataIndex: 'totalPrice',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        },
         ellipsis: true
       }, {
-        title: '异常供应商',
+        title: '供应商',
         dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -198,11 +206,33 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
+                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
+                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
           </a-popover>
+        }
+      }, {
+        title: '状态',
+        dataIndex: 'status',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag>未付款</a-tag>
+            case '1':
+              return <a-tag>已付款</a-tag>
+            case '2':
+              return <a-tag>已发货</a-tag>
+            case '3':
+              return <a-tag>检验中</a-tag>
+            case '4':
+              return <a-tag>已退货</a-tag>
+            case '5':
+              return <a-tag>已入库</a-tag>
+            default:
+              return '- -'
+          }
         }
       }, {
         title: '采购物料',
@@ -234,10 +264,10 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
@@ -272,6 +302,23 @@ export default {
     this.fetch()
   },
   methods: {
+    orderPay (record) {
+      let data = { outTradeNo: record.code, subject: `${record.createDate}缴费信息`, totalAmount: record.totalPrice, body: '' }
+      this.$post('/business/pay/alipay', data).then((r) => {
+        // console.log(r.data.msg)
+        // 添加之前先删除一下，如果单页面，页面不刷新，添加进去的内容会一直保留在页面中，二次调用form表单会出错
+        const divForm = document.getElementsByTagName('div')
+        if (divForm.length) {
+          document.body.removeChild(divForm[0])
+        }
+        const div = document.createElement('div')
+        div.innerHTML = r.data.msg // data就是接口返回的form 表单字符串
+        // console.log(div.innerHTML)
+        document.body.appendChild(div)
+        document.forms[0].setAttribute('target', '_self') // 新开窗口跳转
+        document.forms[0].submit()
+      })
+    },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
       this.moduleView.visiable = true

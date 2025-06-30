@@ -32,7 +32,7 @@
         <a-col :span="24">
           <a-form-item label='评价公式（请合理填写）' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
-            'content',
+            'formulaContent',
             { rules: [{ required: true, message: '请输入评价公式!' }] }
             ]"/>
           </a-form-item>

@@ -166,10 +166,10 @@ export default {
         title: '报警阈值',
         dataIndex: 'minValue',
         customRender: (text, row, index) => {
-          if (text !== null && text != -1) {
+          if (text !== null && text != 0 && text != -1) {
             return text + ' ' + row.measurementUnit
           } else {
-            return '- -'
+            return '未设置'
           }
         }
       }, {
@@ -186,10 +186,6 @@ export default {
         title: '空缺数量',
         dataIndex: 'fixNum',
         scopedSlots: {customRender: 'fixNum'}
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },

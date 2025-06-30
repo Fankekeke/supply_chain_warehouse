@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.PurchaseQuotationInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fank.f1k2.business.entity.vo.ChatVo;
 import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 
@@ -56,4 +57,22 @@ public interface IPurchaseQuotationInfoService extends IService<PurchaseQuotatio
      * @return 采购计划报价列表
      */
     List<LinkedHashMap<String, Object>> queryHistoryQuotation(String materialCode);
+
+    /**
+     * 回复
+     *
+     * @param content 回复内容
+     * @param quotationId 报价ID
+     * @param type 回复类型
+     * @return 结果
+     */
+    boolean reply(String content, Integer quotationId, String type);
+
+    /**
+     * 根据报价ID查询回复
+     *
+     * @param quotationId 报价ID
+     * @return 回复列表
+     */
+    List<ChatVo> queryReplyByQuotationId(Integer quotationId);
 }

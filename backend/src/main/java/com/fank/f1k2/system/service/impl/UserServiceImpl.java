@@ -247,7 +247,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         UserRole ur = new UserRole();
         ur.setUserId(user.getUserId());
-        ur.setRoleId(75L);
+        ur.setRoleId(76L);
         this.userRoleMapper.insert(ur);
 
         supplierInfo.setSysUserId(Math.toIntExact(user.getUserId()));

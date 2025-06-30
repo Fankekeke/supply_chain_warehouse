@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="采购需求详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="采购需求详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -9,14 +9,23 @@
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
           class="view-title">采购需求信息</span></a-col>
-        <a-col :span="8"><b>订单编号：</b>
-          {{ moduleData.orderCode }}
+        <a-col :span="8"><b>需求编号：</b>
+          {{ moduleData.code }}
         </a-col>
         <a-col :span="8"><b>采购金额：</b>
-          {{ moduleData.totalPrice }} 元
+          {{ moduleData.createBy }}
         </a-col>
-        <a-col :span="8"><b>详细地址：</b>
-          {{ moduleData.address }}
+        <a-col :span="8"><b>状态：</b>
+          <span v-if="moduleData.status == 0">进行中</span>
+          <span v-if="moduleData.status == 1">已完成</span>
+        </a-col>
+      </a-row>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span
+          class="view-title">需求内容</span></a-col>
+        <a-col :span="24">
+          {{ moduleData.content }}
         </a-col>
       </a-row>
       <br/>
@@ -70,14 +79,14 @@ export default {
       return [{
         title: '物料名称',
         dataIndex: 'materialsName',
-        ellipsis: true,
+        ellipsis: true
       }, {
         title: '需求数量',
         dataIndex: 'purchaseNum',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' '+ row.measurementUnit
+            return text + ' ' + row.measurementUnit
           } else {
             return '- -'
           }
@@ -90,10 +99,10 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0]}/>
           </a-popover>
         }
       }, {
@@ -155,14 +164,12 @@ export default {
   watch: {
     moduleShow: function (value) {
       if (value) {
-        if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
-          this.imagesInit(this.moduleData.materialsImages)
-        }
+        this.queryPlanByPurchaseCode(this.moduleData.code)
       }
     }
   },
   methods: {
-    queryPlanByPurchaseCode(purchaseCode) {
+    queryPlanByPurchaseCode (purchaseCode) {
       this.$get('/business/purchase-plan-info/queryPlanByPurchaseCode', {
         purchaseCode: purchaseCode
       }).then(res => {

@@ -3,6 +3,7 @@ package com.fank.f1k2.business.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +13,7 @@ import com.fank.f1k2.business.entity.PurchasePlanInfo;
 import com.fank.f1k2.business.entity.PurchaseQuotationInfo;
 import com.fank.f1k2.business.dao.PurchaseQuotationInfoMapper;
 import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.entity.vo.ChatVo;
 import com.fank.f1k2.business.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fank.f1k2.common.exception.F1k2Exception;
@@ -65,7 +67,7 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean purchasePlanIssue(PurchaseQuotationInfo addFrom) throws F1k2Exception {
-        List<PurchaseQuotationInfo> purchaseQuotationInfoList = addFrom.getPurchaseQuotationInfoList();
+        List<PurchaseQuotationInfo> purchaseQuotationInfoList = JSONUtil.toList(addFrom.getPurchaseQuotationInfoList(), PurchaseQuotationInfo.class);
         if (CollectionUtil.isEmpty(purchaseQuotationInfoList)) {
             throw new F1k2Exception("采购计划报价管理对象为空");
         }
@@ -86,7 +88,10 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
         List<SupplierInfo> supplierInfoList = new ArrayList<>(supplierInfoService.listByIds(supplierIdList));
         Map<Integer, SupplierInfo> supplierInfoMap = supplierInfoList.stream().collect(Collectors.toMap(SupplierInfo::getId, supplierInfo -> supplierInfo));
         for (PurchaseQuotationInfo purchaseQuotationInfo : purchaseQuotationInfoList) {
-            SupplierInfo supplierInfo = supplierInfoMap.get(addFrom.getSupplierId());
+            purchaseQuotationInfo.setEndDate(addFrom.getEndDate());
+            purchaseQuotationInfo.setPlanId(addFrom.getPlanId());
+            purchaseQuotationInfo.setMaterialsCode(addFrom.getMaterialsCode());
+            SupplierInfo supplierInfo = supplierInfoMap.get(purchaseQuotationInfo.getSupplierId());
             NotifyInfo messageInfo = new NotifyInfo();
             messageInfo.setAgencyType("1");
             messageInfo.setStatus("0");
@@ -158,5 +163,49 @@ public class PurchaseQuotationInfoServiceImpl extends ServiceImpl<PurchaseQuotat
     @Override
     public List<LinkedHashMap<String, Object>> queryHistoryQuotation(String materialCode) {
         return baseMapper.queryHistoryQuotation(materialCode);
+    }
+
+    /**
+     * 回复
+     *
+     * @param content 回复内容
+     * @param quotationId 报价ID
+     * @param type 回复类型
+     * @return 结果
+     */
+    @Override
+    public boolean reply(String content, Integer quotationId, String type) {
+        // 获取采购计划报价信息
+        PurchaseQuotationInfo purchaseQuotationInfo = this.getById(quotationId);
+        ChatVo chatVo = new ChatVo();
+        chatVo.setContent(content);
+        chatVo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        chatVo.setType(type);
+        if (StrUtil.isEmpty(purchaseQuotationInfo.getChatContent())) {
+            String chatVoList = JSONUtil.toJsonStr(Collections.singletonList(chatVo));
+            purchaseQuotationInfo.setChatContent(chatVoList);
+            return this.updateById(purchaseQuotationInfo);
+        } else {
+            List<ChatVo> chatVoList = JSONUtil.toList(purchaseQuotationInfo.getChatContent(), ChatVo.class);
+            chatVoList.add(chatVo);
+            purchaseQuotationInfo.setChatContent(JSONUtil.toJsonStr(chatVoList));
+            return this.updateById(purchaseQuotationInfo);
+        }
+    }
+
+    /**
+     * 根据报价ID查询回复
+     *
+     * @param quotationId 报价ID
+     * @return 回复列表
+     */
+    @Override
+    public List<ChatVo> queryReplyByQuotationId(Integer quotationId) {
+        // 获取采购计划报价信息
+        PurchaseQuotationInfo purchaseQuotationInfo = this.getById(quotationId);
+        if (StrUtil.isEmpty(purchaseQuotationInfo.getChatContent())) {
+            return Collections.emptyList();
+        }
+        return JSONUtil.toList(purchaseQuotationInfo.getChatContent(), ChatVo.class);
     }
 }

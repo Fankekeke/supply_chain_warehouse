@@ -69,6 +69,7 @@ public class SupplierAuditRecord implements Serializable {
      */
     @TableField(exist = false)
     private String supplierName;
+    private String auditContent;
 
 
 }

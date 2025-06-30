@@ -66,8 +66,7 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-icon type="folder-open" theme="twoTone" @click="handleModuleCheckOpen(record)" title="报 价" style="margin-left: 10px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -87,6 +86,12 @@
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
+    <module-check
+      @close="handleModuleCheckClose"
+      @success="handleModuleCheckSuccess"
+      :moduleShow="moduleCheck.visiable"
+      :moduleData="moduleCheck.data">
+    </module-check>
   </a-card>
 </template>
 
@@ -95,6 +100,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import moduleAdd from './QuotationAdd.vue'
 import moduleEdit from './QuotationEdit.vue'
 import moduleView from './QuotationView.vue'
+import moduleCheck from './QuotationCheck.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -102,7 +108,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  components: {moduleAdd, moduleEdit, moduleView, moduleCheck, RangeDate},
   data () {
     return {
       advanced: false,
@@ -113,6 +119,10 @@ export default {
         visiable: false
       },
       moduleView: {
+        visiable: false,
+        data: null
+      },
+      moduleCheck: {
         visiable: false,
         data: null
       },
@@ -252,6 +262,18 @@ export default {
     this.fetch()
   },
   methods: {
+    handleModuleCheckOpen (row) {
+      this.moduleCheck.data = row
+      this.moduleCheck.visiable = true
+    },
+    handleModuleCheckSuccess () {
+      this.moduleCheck.visiable = false
+      this.$message.success('操作成功')
+      this.fetch()
+    },
+    handleModuleCheckClose () {
+      this.moduleCheck.visiable = false
+    },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
       this.moduleView.visiable = true
@@ -374,7 +396,7 @@ export default {
         delete params.status
       }
       params.supplierUserId = this.currentUser.userId
-      this.$get('/business/abnormal-info/page', {
+      this.$get('/business/purchase-quotation-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

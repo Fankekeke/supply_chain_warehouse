@@ -82,6 +82,11 @@ public class PurchaseQuotationInfo implements Serializable {
     private String delFlag;
 
     /**
+     * 聊天内容
+     */
+    private String chatContent;
+
+    /**
      * 采购计划编号
      */
     @TableField(exist = false)
@@ -103,11 +108,14 @@ public class PurchaseQuotationInfo implements Serializable {
      * 采购计划报价管理
      */
     @TableField(exist = false)
-    List<PurchaseQuotationInfo> purchaseQuotationInfoList;
+    private String purchaseQuotationInfoList;
 
     /**
      * 供应商账户ID
      */
     @TableField(exist = false)
     private Integer supplierUserId;
+
+    @TableField(exist = false)
+    private Integer num;
 }

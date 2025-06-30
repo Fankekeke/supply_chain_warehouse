@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="订单物流详情" @cancel="onClose" :width="1000">
+  <a-modal v-model="show" title="采购订单异常反馈" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -8,9 +8,9 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">采购物流信息</span></a-col>
+          class="view-title">采购订单信息</span></a-col>
         <a-col :span="8"><b>订单编号：</b>
-          {{ moduleData.orderCode }}
+          {{ moduleData.code }}
         </a-col>
         <a-col :span="8"><b>采购金额：</b>
           {{ moduleData.totalPrice }} 元
@@ -64,39 +64,54 @@
         <a-col :span="8"><b>联系方式：</b>
           {{ moduleData.phone }}
         </a-col>
-        <a-col :span="8"><b>创建时间：</b>
+        <a-col :span="8"><b>反馈时间：</b>
           {{ moduleData.createDate }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">订单物流</span></a-col>
+          class="view-title">采购订单内容</span></a-col>
+        <a-col :span="24">{{ moduleData.remark }}</a-col>
+      </a-row>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span
+          class="view-title">物料图片</span></a-col>
         <a-col :span="24">
-          <a-table :columns="logisticsColumns" :data-source="logisticsList" :pagination="false">
-          </a-table>
+          <a-upload
+            name="avatar"
+            action="http://127.0.0.1:9527/file/fileUpload/"
+            list-type="picture-card"
+            :file-list="fileList"
+            @preview="handlePreview"
+            @change="picHandleChange"
+          >
+          </a-upload>
+          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage"/>
+          </a-modal>
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">物流更新</span></a-col>
+          class="view-title">异常反馈</span></a-col>
         <a-col :span="24">
           <div>
             <a-textarea :rows="4" v-model="content" />
             <a-button html-type="submit" type="primary" @click="handleSubmit" style="margin-top: 15px">
-              更新
+              提交
             </a-button>
           </div>
         </a-col>
       </a-row>
+      <br/>
     </div>
   </a-modal>
 </template>
 
 <script>
 import moment from 'moment'
-import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 
@@ -127,52 +142,37 @@ export default {
       },
       set: function () {
       }
-    },
-    logisticsColumns () {
-      return [{
-        title: '物流信息',
-        dataIndex: 'remark'
-      }, {
-        title: '操作时间',
-        dataIndex: 'createDate'
-      }]
     }
   },
   data () {
     return {
       loading: false,
       fileList: [],
-      content: '',
       previewVisible: false,
       previewImage: '',
-      logisticsList: []
+      content: ''
     }
   },
   watch: {
     moduleShow: function (value) {
       if (value) {
-        this.queryLogisticsByOrderId(this.moduleData.orderId)
+        if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
+          this.imagesInit(this.moduleData.materialsImages)
+        }
       }
     }
   },
   methods: {
     handleSubmit () {
       if (!this.content) {
-        this.$message.error('请输入物流信息')
+        this.$message.error('请输入反馈内容')
         return false
       }
-      this.$get('/business/order-info/updateOrderLogistics', {
-        content: this.content,
-        orderId: this.moduleData.orderId
+      this.$post('/business/abnormal-info', {
+        remark: this.content,
+        orderId: this.moduleData.id
       }).then(res => {
-        this.content = ''
-        this.$message.success('物流更新成功')
-        this.queryLogisticsByOrderId(this.moduleData.orderId)
-      })
-    },
-    queryLogisticsByOrderId (orderId) {
-      this.$get('/business/logistics-info/queryLogisticsByOrderId', {orderId: orderId}).then(res => {
-        this.logisticsList = res.data.data
+        this.$emit('success')
       })
     },
     imagesInit (images) {

@@ -1,6 +1,6 @@
 <template>
   <a-row :gutter="8" style="width: 100%">
-    <a-col :span="8">
+    <a-col :span="10">
       <div style="background:#ECECEC; padding:30px;margin-top: 30px">
         <a-card :bordered="false">
           <b style="font-size: 15px">我的信息</b>
@@ -129,12 +129,26 @@
                   </a-modal>
                 </a-form-item>
               </a-col>
+              <a-col :span="24">
+                <a-form-item>
+                  <a-button
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    class="register-button"
+                    style="width: 35%;float: right;margin-top: 50px"
+                    :loading="loading"
+                    @click.stop.prevent="handleSubmit"
+                    :disabled="loading">立即修改
+                  </a-button>
+                </a-form-item>
+              </a-col>
             </a-row>
           </a-form>
         </a-card>
       </div>
     </a-col>
-    <a-col :span="16">
+    <a-col :span="14">
       <div style="background:#ECECEC; padding:30px;margin-top: 30px">
         <a-card :bordered="false">
           <a-spin :spinning="dataLoading">
@@ -282,7 +296,7 @@ export default {
       Object.keys(student).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
-          this.imagesInit(module['images'])
+          this.imagesInit(student['images'])
         }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
@@ -303,6 +317,7 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.id = this.rowId
+        values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
           this.$put('/business/supplier-info', {

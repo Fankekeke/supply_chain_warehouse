@@ -2,7 +2,7 @@
   <a-drawer
     title="新增采购需求"
     :maskClosable="false"
-    width=850
+    width=650
     placement="right"
     :closable="false"
     @close="onClose"
@@ -10,7 +10,7 @@
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
-        <a-col :span="12">
+        <a-col :span="24">
           <a-form-item label='需求发起人'>
             <a-input v-decorator="[
             'createBy',
@@ -28,30 +28,30 @@
         </a-col>
         <a-col :span="24">
           <a-form-item label='采购文件上传' v-bind="formItemLayout">
-            <a-upload
-              name="avatar"
-              action="http://127.0.0.1:9527/file/fileUpload/"
-              list-type="picture-card"
-              :file-list="fileList"
-              @preview="handlePreview"
-              @change="picHandleChange"
+            <a-upload-dragger
+              name="file"
+              :multiple="true"
+              accept=".xls, .xlsx"
+              action="http://127.0.0.1:9527/business/warehouse-info/import"
+              @change="handleChange"
             >
-              <div v-if="fileList.length < 8">
-                <a-icon type="plus"/>
-                <div class="ant-upload-text">
-                  Upload
-                </div>
-              </div>
-            </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-              <img alt="example" style="width: 100%" :src="previewImage"/>
-            </a-modal>
+              <p class="ant-upload-drag-icon">
+                <a-icon type="inbox" />
+              </p>
+              <p class="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p class="ant-upload-hint">
+                Support for a single or bulk upload
+              </p>
+            </a-upload-dragger>
           </a-form-item>
         </a-col>
       </a-row>
     </a-form>
 
     <div class="drawer-bootom-button">
+      <a-button @click="download" type="primary" style="margin-right: .8rem">下载</a-button>
       <a-popconfirm title="确定放弃编辑？" @confirm="onClose" okText="确定" cancelText="取消">
         <a-button style="margin-right: .8rem">取消</a-button>
       </a-popconfirm>
@@ -101,11 +101,31 @@ export default {
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
+      goodsList: [],
       previewVisible: false,
       previewImage: ''
     }
   },
   methods: {
+    handleChange ({file}) {
+      if (file.response !== undefined) {
+        console.log(file.response.code)
+        console.log(file.status)
+        if (file.status === 'error') {
+          this.$message.error(file.response.message)
+          return false
+        }
+        if (file.response.code === 500 && file.status === 'done') {
+          this.$message.error(file.response.msg)
+        } else if (file.response.code === 0 && file.status === 'done') {
+          console.log(file.response.data)
+          this.goodsList = file.response.data
+        }
+      }
+    },
+    download () {
+      window.location.href = 'http://127.0.0.1:9527/imagesWeb/导入模板.xlsx'
+    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -116,10 +136,11 @@ export default {
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange ({fileList}) {
+    picHandleChange ({ fileList }) {
       this.fileList = fileList
     },
     reset () {
+      this.goodsList = []
       this.loading = false
       this.form.resetFields()
     },
@@ -128,15 +149,21 @@ export default {
       this.$emit('close')
     },
     handleSubmit () {
-      // 获取图片List
-      let images = []
-      this.fileList.forEach(image => {
-        images.push(image.response)
-      })
+      if (this.goodsList.length === 0) {
+        this.$message.error('采购物料不能为空')
+        return false
+      }
       this.form.validateFields((err, values) => {
-        values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
+          let materialsInfoList = []
+          this.goodsList.forEach(item => {
+            materialsInfoList.push({
+              code: item.code,
+              minValue: item.minValue
+            })
+          })
+          values.materialsInfoList = JSON.stringify(materialsInfoList)
           this.$post('/business/purchase-need-info', {
             ...values
           }).then((r) => {

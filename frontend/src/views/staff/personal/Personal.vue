@@ -1,6 +1,6 @@
 <template>
   <a-row :gutter="8" style="width: 100%">
-    <a-col :span="6">
+    <a-col :span="10">
       <div style="background:#ECECEC; padding:30px;margin-top: 30px">
         <a-card :bordered="false">
           <b style="font-size: 15px">我的信息</b>
@@ -10,7 +10,7 @@
             <a-row :gutter="10">
               <a-col :span="12">
                 <a-form-item label='员工名称'>
-                  <a-input v-decorator="[
+                  <a-input disabled v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
@@ -79,25 +79,39 @@
                   </a-modal>
                 </a-form-item>
               </a-col>
+              <a-col :span="24">
+                <a-form-item>
+                  <a-button
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    class="register-button"
+                    style="width: 35%;float: right;margin-top: 50px"
+                    :loading="loading"
+                    @click.stop.prevent="handleSubmit"
+                    :disabled="loading">立即修改
+                  </a-button>
+                </a-form-item>
+              </a-col>
             </a-row>
           </a-form>
         </a-card>
       </div>
     </a-col>
-    <a-col :span="18">
-      <div style="background:#ECECEC; padding:30px;margin-top: 30px">
-        <a-card :bordered="false">
-          <a-spin :spinning="dataLoading">
-            <a-calendar>
-              <ul slot="dateCellRender" slot-scope="value" class="events">
-                <li v-for="item in getListData(value)" :key="item.content">
-                  <a-badge :status="item.type" :text="item.content" />
-                </li>
-              </ul>
-            </a-calendar>
-          </a-spin>
-        </a-card>
-      </div>
+    <a-col :span="16">
+<!--      <div style="background:#ECECEC; padding:30px;margin-top: 30px">-->
+<!--        <a-card :bordered="false">-->
+<!--          <a-spin :spinning="dataLoading">-->
+<!--            <a-calendar>-->
+<!--              <ul slot="dateCellRender" slot-scope="value" class="events">-->
+<!--                <li v-for="item in getListData(value)" :key="item.content">-->
+<!--                  <a-badge :status="item.type" :text="item.content" />-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </a-calendar>-->
+<!--          </a-spin>-->
+<!--        </a-card>-->
+<!--      </div>-->
     </a-col>
   </a-row>
 </template>
@@ -177,9 +191,8 @@ export default {
     dataInit () {
       this.dataLoading = true
       this.$get(`/business/staff-info/queryStaffBySysUserId`, {sysUserId: this.currentUser.userId}).then((r) => {
-        this.rowId = r.data.user.id
-        this.setFormValues(r.data.user)
-        this.courseInfo = r.data.order
+        this.rowId = r.data.data.id
+        this.setFormValues(r.data.data)
         this.dataLoading = false
       })
     },
@@ -190,10 +203,10 @@ export default {
       Object.keys(student).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
-          this.imagesInit(module['images'])
+          this.imagesInit(student['images'])
         }
-        if (key === 'staffSex') {
-          module[key] = module[key].toString()
+        if (key === 'staffSex' && student[key] != null) {
+          student[key] = student[key].toString()
         }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
@@ -203,8 +216,18 @@ export default {
       this.form.setFieldsValue(obj)
     },
     handleSubmit () {
+      // 获取图片List
+      let images = []
+      this.fileList.forEach(image => {
+        if (image.response !== undefined) {
+          images.push(image.response)
+        } else {
+          images.push(image.name)
+        }
+      })
       this.form.validateFields((err, values) => {
         values.id = this.rowId
+        values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
           this.$put('/business/staff-info', {

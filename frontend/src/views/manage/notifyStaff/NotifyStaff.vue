@@ -7,14 +7,6 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.staffName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="状态"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -49,8 +41,8 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+<!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"-->
+<!--                  style="margin-left: 15px"></a-icon>-->
         </template>
       </a-table>
     </div>
@@ -126,31 +118,6 @@ export default {
         title: '消息内容',
         dataIndex: 'content',
         ellipsis: true
-      }, {
-        title: '员工名称',
-        dataIndex: 'staffName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '员工图片',
-        dataIndex: 'staffImages',
-        customRender: (text, record, index) => {
-          if (!record.staffImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                src={'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-              src={'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0]}/>
-          </a-popover>
-        }
       }, {
         title: '已读状态',
         dataIndex: 'status',

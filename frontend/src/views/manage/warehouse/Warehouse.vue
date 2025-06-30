@@ -164,7 +164,7 @@ export default {
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + '元'
           } else {
             return '- -'
           }

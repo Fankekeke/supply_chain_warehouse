@@ -64,6 +64,6 @@ public class PurchaseNeedInfo implements Serializable {
      * 需求物料
      */
     @TableField(exist = false)
-    private List<MaterialsInfo> materialsInfoList;
+    private String materialsInfoList;
 
 }

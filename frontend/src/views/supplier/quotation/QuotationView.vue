@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="异常反馈详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="在线沟通" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -8,83 +8,52 @@
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">采购订单信息</span></a-col>
-        <a-col :span="8"><b>订单编号：</b>
-          {{ moduleData.orderCode }}
-        </a-col>
-        <a-col :span="8"><b>采购金额：</b>
-          {{ moduleData.totalPrice }} 元
-        </a-col>
-        <a-col :span="8"><b>详细地址：</b>
-          {{ moduleData.address }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>物料名称：</b>
-          {{ moduleData.materialsName }}
-        </a-col>
-        <a-col :span="8"><b>物料编号：</b>
-          {{ moduleData.materialsCode }}
-        </a-col>
-        <a-col :span="8"><b>类型：</b>
-          {{ moduleData.type }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>型号：</b>
-          {{ moduleData.model }}
-        </a-col>
-        <a-col :span="8"><b>采购数量：</b>
-          {{ moduleData.purchaseNum }} {{ moduleData.measurementUnit }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
-          class="view-title">供应商信息</span></a-col>
-        <a-col :span="8"><b>供应商编号：</b>
-          {{ moduleData.supplierCode }}
-        </a-col>
-        <a-col :span="8"><b>供应商名称：</b>
-          {{ moduleData.supplierName }}
-        </a-col>
-        <a-col :span="8"><b>负责人：</b>
-          {{ moduleData.chargePerson }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>联系方式：</b>
-          {{ moduleData.phone }}
-        </a-col>
-        <a-col :span="8"><b>反馈时间：</b>
-          {{ moduleData.createDate }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
-          class="view-title">异常反馈内容</span></a-col>
-        <a-col :span="24">{{ moduleData.remark }}</a-col>
-      </a-row>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
-          class="view-title">物料图片</span></a-col>
+          class="view-title">在线沟通</span></a-col>
         <a-col :span="24">
-          <a-upload
-            name="avatar"
-            action="http://127.0.0.1:9527/file/fileUpload/"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handlePreview"
-            @change="picHandleChange"
+          <a-list
+            class="comment-list"
+            item-layout="horizontal"
+            :data-source="replyList"
           >
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage"/>
-          </a-modal>
+            <a-list-item slot="renderItem" slot-scope="item, index">
+              <a-comment :author="item.author">
+                <p slot="author">
+                  <span v-if="item.type == 1">
+                      {{ moduleData.supplierName ? moduleData.supplierName : '' }}
+                    </span>
+                  <span v-if="item.type == 2">
+                      管理员
+                    </span>
+                </p>
+                <p slot="avatar">
+                  <a-avatar
+                    slot="avatar"
+                    shape="square"
+                    :style="{ verticalAlign: 'middle' }"
+                  >
+                    <span v-if="item.type == 1">
+                      {{ moduleData.supplierName ? moduleData.supplierName.charAt(0) : '' }}
+                    </span>
+                    <span v-if="item.type == 2">
+                      管理员
+                    </span>
+                  </a-avatar>
+                </p>
+                <div slot="content" style="font-size: 13px">
+                  {{ item.content }}
+                </div>
+                <a-tooltip slot="datetime" :title="item.createDate">
+                  <span>{{ item.createDate }}</span>
+                </a-tooltip>
+              </a-comment>
+            </a-list-item>
+          </a-list>
+          <div>
+            <a-textarea :rows="4" v-model="content" />
+            <a-button html-type="submit" type="primary" @click="handleSubmit" style="margin-top: 15px">
+              回复
+            </a-button>
+          </div>
         </a-col>
       </a-row>
       <br/>
@@ -128,8 +97,10 @@ export default {
   },
   data () {
     return {
+      content: '',
       loading: false,
       fileList: [],
+      replyList: [],
       previewVisible: false,
       previewImage: ''
     }
@@ -137,13 +108,32 @@ export default {
   watch: {
     moduleShow: function (value) {
       if (value) {
-        if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
-          this.imagesInit(this.moduleData.materialsImages)
-        }
+        this.queryReplyByQuotationId(this.moduleData.id)
       }
     }
   },
   methods: {
+    queryReplyByQuotationId (id) {
+      this.$get('/business/purchase-quotation-info/queryReplyByQuotationId', {
+        quotationId: id
+      }).then(res => {
+        this.replyList = res.data.data
+        console.log(this.replyList)
+      })
+    },
+    handleSubmit () {
+      if (!this.content) {
+        this.$message.error('请输入回复内容')
+        return false
+      }
+      this.$get('/business/purchase-quotation-info/replyAdmin', {
+        content: this.content,
+        quotationId: this.moduleData.id
+      }).then(res => {
+        this.content = ''
+        this.queryReplyByQuotationId(this.moduleData.id)
+      })
+    },
     imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []
@@ -174,5 +164,7 @@ export default {
 </script>
 
 <style scoped>
-
+ >>> .ant-list-item {
+   padding: 0;
+ }
 </style>

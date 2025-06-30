@@ -6,40 +6,6 @@
       </a-button>
     </template>
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
-          class="view-title">采购订单信息</span></a-col>
-        <a-col :span="8"><b>订单编号：</b>
-          {{ moduleData.orderCode }}
-        </a-col>
-        <a-col :span="8"><b>采购金额：</b>
-          {{ moduleData.totalPrice }} 元
-        </a-col>
-        <a-col :span="8"><b>详细地址：</b>
-          {{ moduleData.address }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>物料名称：</b>
-          {{ moduleData.materialsName }}
-        </a-col>
-        <a-col :span="8"><b>物料编号：</b>
-          {{ moduleData.materialsCode }}
-        </a-col>
-        <a-col :span="8"><b>类型：</b>
-          {{ moduleData.type }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>型号：</b>
-          {{ moduleData.model }}
-        </a-col>
-        <a-col :span="8"><b>采购数量：</b>
-          {{ moduleData.purchaseNum }} {{ moduleData.measurementUnit }}
-        </a-col>
-      </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
@@ -59,7 +25,7 @@
         <a-col :span="8"><b>联系方式：</b>
           {{ moduleData.phone }}
         </a-col>
-        <a-col :span="8"><b>反馈时间：</b>
+        <a-col :span="8"><b>通知时间：</b>
           {{ moduleData.createDate }}
         </a-col>
       </a-row>
@@ -67,27 +33,8 @@
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
           class="view-title">消息通知内容</span></a-col>
-        <a-col :span="24">{{ moduleData.remark }}</a-col>
+        <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span
-          class="view-title">物料图片</span></a-col>
-        <a-col :span="24">
-          <a-upload
-            name="avatar"
-            action="http://127.0.0.1:9527/file/fileUpload/"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handlePreview"
-            @change="picHandleChange"
-          >
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage"/>
-          </a-modal>
-        </a-col>
-      </a-row>
-      <br/>
     </div>
   </a-modal>
 </template>

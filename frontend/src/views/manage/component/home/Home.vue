@@ -5,48 +5,48 @@
         <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 74">
           <a-row :gutter="16">
             <a-col :span="6">
-              <a-card hoverable>
+              <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
                 <a-row>
                   <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月订单量</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.monthOrderNum }}
+                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px" :style="{ transition: 'transform 0.3s ease', transform: 'translateY(-2px)' }"/></a-col>
+                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei;">
+                    <span style="color: #ff6600; text-shadow: 0 0 5px rgba(255,102,0,0.3);">{{ titleData.monthOrderNum }}</span>
                     <span style="font-size: 20px;margin-top: 3px">单</span>
                   </a-col>
                 </a-row>
               </a-card>
             </a-col>
             <a-col :span="6">
-              <a-card hoverable>
+              <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
                 <a-row>
                   <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月支出</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
+                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px" :style="{ transition: 'transform 0.3s ease', transform: 'translateY(-2px)' }"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.monthOrderPrice }}
+                    <span style="color: #ff6600; text-shadow: 0 0 5px rgba(255,102,0,0.3);">{{ titleData.monthOrderPrice }}</span>
                     <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
               </a-card>
             </a-col>
             <a-col :span="6">
-              <a-card hoverable>
+              <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
                 <a-row>
                   <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年订单量</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
+                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px" :style="{ transition: 'transform 0.3s ease', transform: 'translateY(-2px)' }"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.yearOrderNum }}
+                    <span style="color: #ff6600; text-shadow: 0 0 5px rgba(255,102,0,0.3);">{{ titleData.yearOrderNum }}</span>
                     <span style="font-size: 20px;margin-top: 3px">单</span>
                   </a-col>
                 </a-row>
               </a-card>
             </a-col>
             <a-col :span="6">
-              <a-card hoverable>
+              <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
                 <a-row>
                   <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年支出</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
+                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px" :style="{ transition: 'transform 0.3s ease', transform: 'translateY(-2px)' }"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.yearOrderPrice }}
+                    <span style="color: #ff6600; text-shadow: 0 0 5px rgba(255,102,0,0.3);">{{ titleData.yearOrderPrice }}</span>
                     <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
@@ -145,7 +145,7 @@ export default {
           enabled: false
         },
         title: {
-          text: '近十天收入统计',
+          text: '近十天支出统计',
           align: 'left'
         },
         markers: {
@@ -161,7 +161,7 @@ export default {
           height: 300
         },
         title: {
-          text: '近十天工单统计',
+          text: '近十天订单统计',
           align: 'left'
         },
         plotOptions: {
@@ -270,7 +270,7 @@ export default {
   },
   methods: {
     selectHomeData () {
-      this.$get('/cos/pharmacy-info/home/data').then((r) => {
+      this.$get('/business/order-info/home/data').then((r) => {
         let titleData = { orderCode: r.data.orderCode, orderPrice: r.data.orderPrice, pharmacyNum: r.data.pharmacyNum, staffNum: r.data.staffNum }
         this.$emit('setTitle', titleData)
         this.titleData.monthOrderNum = r.data.monthOrderNum

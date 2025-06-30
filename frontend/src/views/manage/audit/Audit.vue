@@ -211,12 +211,12 @@ export default {
           </a-popover>
         }
       }, {
-        title: '采购物料',
-        dataIndex: 'materialsName',
+        title: '可供类型',
+        dataIndex: 'supplyType',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+            return text
           } else {
             return '- -'
           }

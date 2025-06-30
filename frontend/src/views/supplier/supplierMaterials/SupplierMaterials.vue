@@ -43,7 +43,7 @@
     <div>
       <div class="operator">
         <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -56,7 +56,7 @@
                :scroll="{ x: 900 }"
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
+<!--          <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>-->
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
                   style="margin-left: 15px"></a-icon>
         </template>
@@ -131,8 +131,8 @@ export default {
     }),
     columns () {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '物料编号',
+        dataIndex: 'code',
         ellipsis: true
       }, {
         title: '批次记录',

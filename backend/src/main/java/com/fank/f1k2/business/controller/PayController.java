@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/cos/pay")
+@RequestMapping("/business/pay")
 public class PayController {
 
     @Autowired

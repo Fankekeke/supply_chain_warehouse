@@ -2,9 +2,11 @@ package com.fank.f1k2.business.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fank.f1k2.business.entity.MaterialsInfo;
 import com.fank.f1k2.business.entity.WarehouseInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,7 +32,7 @@ public interface IWarehouseInfoService extends IService<WarehouseInfo> {
      * @param queryFrom 库房库存
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> queryAlertStockPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryAlertStockPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom);
 
     /**
      * 分页获取出入库详情
@@ -39,7 +41,7 @@ public interface IWarehouseInfoService extends IService<WarehouseInfo> {
      * @param queryFrom 库房库存
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, WarehouseInfo queryFrom);
 
     /**
      * 获取预警库存列表
@@ -63,4 +65,12 @@ public interface IWarehouseInfoService extends IService<WarehouseInfo> {
      * @return 列表
      */
     List<LinkedHashMap<String, Object>> queryOutRecordDetail(String code);
+
+    /**
+     * 导入信息列表
+     *
+     * @param file 文件
+     * @return 结果
+     */
+    List<MaterialsInfo> importExcel(MultipartFile file) throws Exception;
 }

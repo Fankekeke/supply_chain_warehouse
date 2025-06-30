@@ -79,7 +79,7 @@ public class SupplierInfoServiceImpl extends ServiceImpl<SupplierInfoMapper, Sup
             }
         };
         SupplierInfo supplierInfo = this.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, sysUserId));
-        result.put("supplier", supplierInfo);
+        result.put("user", supplierInfo);
         // 获取订单
         List<OrderInfo> orderInfoList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getSupplierId, supplierInfo.getId()));
         result.put("order", orderInfoList);

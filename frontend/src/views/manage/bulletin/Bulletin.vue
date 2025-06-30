@@ -33,6 +33,7 @@
       <div class="operator">
         <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button @click="batchDelete1">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -214,6 +215,10 @@ export default {
     },
     handleDeptChange (value) {
       this.queryParams.deptId = value || ''
+    },
+    batchDelete1 () {
+      this.$get('/business/early-alert-info/setEarlyAlertInfoBatch').then((r) => {
+      })
     },
     batchDelete () {
       if (!this.selectedRowKeys.length) {

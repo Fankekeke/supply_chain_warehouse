@@ -83,7 +83,7 @@ moment.locale('zh-cn')
 export default {
   name: 'module',
   components: {moduleAdd, moduleEdit, moduleView, RangeDate},
-  data() {
+  data () {
     return {
       advanced: false,
       moduleAdd: {
@@ -118,7 +118,7 @@ export default {
     ...mapState({
       currentUser: state => state.account.user
     }),
-    columns() {
+    columns () {
       return [{
         title: '评价年份',
         dataIndex: 'year',
@@ -142,10 +142,10 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
@@ -242,47 +242,47 @@ export default {
       }]
     }
   },
-  mounted() {
+  mounted () {
     this.fetch()
   },
   methods: {
-    handleModuleViewOpen(row) {
+    handleModuleViewOpen (row) {
       this.moduleView.data = row
       this.moduleView.visiable = true
     },
-    handleModuleViewClose() {
+    handleModuleViewClose () {
       this.moduleView.visiable = false
     },
-    onSelectChange(selectedRowKeys) {
+    onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    add() {
+    add () {
       this.moduleAdd.visiable = true
     },
-    handleModuleAddClose() {
+    handleModuleAddClose () {
       this.moduleAdd.visiable = false
     },
-    handleModuleAddSuccess() {
+    handleModuleAddSuccess () {
       this.moduleAdd.visiable = false
       this.$message.success('新增供应商评价成功')
       this.search()
     },
-    edit(record) {
+    edit (record) {
       this.$refs.moduleEdit.setFormValues(record)
       this.moduleEdit.visiable = true
     },
-    handleModuleEditClose() {
+    handleModuleEditClose () {
       this.moduleEdit.visiable = false
     },
-    handleModuleEditSuccess() {
+    handleModuleEditSuccess () {
       this.moduleEdit.visiable = false
       this.$message.success('修改供应商评价成功')
       this.search()
     },
-    batchDelete() {
+    batchDelete () {
       if (!this.selectedRowKeys.length) {
         this.$message.warning('请选择需要删除的记录')
         return
@@ -292,7 +292,7 @@ export default {
         title: '确定删除所选中的记录?',
         content: '当您点击确定按钮后，这些记录将会被彻底删除',
         centered: true,
-        onOk() {
+        onOk () {
           let ids = that.selectedRowKeys.join(',')
           that.$delete('/business/supplier-evaluate/' + ids).then(() => {
             that.$message.success('删除成功')
@@ -300,12 +300,12 @@ export default {
             that.search()
           })
         },
-        onCancel() {
+        onCancel () {
           that.selectedRowKeys = []
         }
       })
     },
-    search() {
+    search () {
       let {sortedInfo, filteredInfo} = this
       let sortField, sortOrder
       // 获取当前列的排序和列的过滤规则
@@ -320,7 +320,7 @@ export default {
         ...filteredInfo
       })
     },
-    reset() {
+    reset () {
       // 取消选中
       this.selectedRowKeys = []
       // 重置分页
@@ -337,7 +337,7 @@ export default {
       this.queryParams = {}
       this.fetch()
     },
-    handleTableChange(pagination, filters, sorter) {
+    handleTableChange (pagination, filters, sorter) {
       // 将这三个参数赋值给Vue data，用于后续使用
       this.paginationInfo = pagination
       this.filteredInfo = filters
@@ -350,7 +350,7 @@ export default {
         ...filters
       })
     },
-    fetch(params = {}) {
+    fetch (params = {}) {
       // 显示loading
       this.loading = true
       if (this.paginationInfo) {

@@ -74,8 +74,7 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="folder-open" @click="view(record)" title="查 看" style="margin-right: 15px"></a-icon>
-          <a-icon type="download" @click="downLoad(record)" title="下 载"></a-icon>
+          <a-icon type="folder-open" @click="view(record)" title="查 看"></a-icon>
         </template>
       </a-table>
       <record-view

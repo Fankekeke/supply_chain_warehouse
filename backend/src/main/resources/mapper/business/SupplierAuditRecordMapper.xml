@@ -9,6 +9,7 @@
         sar.CODE,
         sar.supplier_id,
         sar.content,
+        sar.audit_content,
         sar.STATUS,
         sar.create_date,
         sar.audit_date,
@@ -18,6 +19,7 @@
         si.NAME AS supplierName,
         si.charge_person,
         si.phone,
+        si.supply_type,
         si.images AS supplierImages
         FROM
         supplier_audit_record sar

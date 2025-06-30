@@ -19,9 +19,9 @@
           {{ moduleData.code }}
         </a-col>
         <a-col :span="8"><b>审核状态：</b>
-          <span v-if="supplierInfo.status == 2" style="color: green">驳回</span>
-          <span v-if="supplierInfo.status == 1" style="color: green">通过</span>
-          <span v-if="supplierInfo.status == 0" style="color: red">未审核</span>
+          <span v-if="moduleData.status == 2" style="color: green">驳回</span>
+          <span v-if="moduleData.status == 1" style="color: green">通过</span>
+          <span v-if="moduleData.status == 0" style="color: red">未审核</span>
         </a-col>
         <a-col :span="8"><b>创建时间：</b>
           {{ moduleData.createDate }}
@@ -40,6 +40,7 @@
         <a-col :span="24">{{ moduleData.content }}</a-col>
       </a-row>
     </div>
+    <br/>
     <div style="font-size: 13px;font-family: SimHei" v-if="supplierInfo !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
@@ -57,7 +58,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>负责人：</b>
-          {{ supplierInfo.legalPerson }}
+          {{ supplierInfo.chargePerson }}
         </a-col>
         <a-col :span="8"><b>联系电话：</b>
           {{ supplierInfo.phone }}
@@ -90,9 +91,13 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
-          class="view-title">备注内容</span></a-col>
-        <a-col :span="24">{{ supplierInfo.content }}</a-col>
+          class="view-title">审核备注</span></a-col>
+        <a-col :span="24" v-if="moduleData.status == 0">
+          <a-textarea :rows="6" v-model="content"/>
+        </a-col>
+        <a-col :span="24" v-else>{{ moduleData.auditContent }}</a-col>
       </a-row>
+      <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
           class="view-title">供应商图片</span></a-col>
@@ -118,7 +123,6 @@
 
 <script>
 import moment from 'moment'
-import baiduMap from '@/utils/map/baiduMap'
 
 moment.locale('zh-cn')
 
@@ -157,6 +161,7 @@ export default {
       fileList: [],
       previewVisible: false,
       previewImage: '',
+      content: '',
       supplierInfo: null
     }
   },
@@ -199,17 +204,19 @@ export default {
       this.fileList = fileList
     },
     onClose () {
+      this.content = ''
       this.$emit('close')
     },
     onAudit (status) {
       let param = {
         id: this.moduleData.id,
-        status: status
+        status: status,
+        auditContent: this.content,
+        supplierId: this.moduleData.supplierId
       }
       this.$put('/business/supplier-audit-record/supplierAudit', {
         ...param
       }).then((r) => {
-        this.reset()
         this.$emit('success')
       })
     }

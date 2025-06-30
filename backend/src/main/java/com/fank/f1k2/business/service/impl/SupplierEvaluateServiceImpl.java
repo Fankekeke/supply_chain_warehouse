@@ -67,7 +67,7 @@ public class SupplierEvaluateServiceImpl extends ServiceImpl<SupplierEvaluateMap
         if (CollectionUtil.isEmpty(performanceWeightInfoList)) {
             throw new F1k2Exception("请先设置权重比率");
         }
-        Map<String, BigDecimal> weightMap = performanceWeightInfoList.stream().collect(Collectors.toMap(PerformanceWeightInfo::getCode, PerformanceWeightInfo::getWeightRate));
+        Map<String, BigDecimal> weightMap = performanceWeightInfoList.stream().collect(Collectors.toMap(PerformanceWeightInfo::getName, PerformanceWeightInfo::getWeightRate));
 
         // String expression = "(质量评分*质量权重) + (成品评分+成品权重) + (交付评分*交付权重) + (服务评分*服务权重) + (创新与合作评分*创新与合作权重) + (财务评分*财务权重)";
         String expression = evaluateFormulaInfo.getFormulaContent();
@@ -81,9 +81,7 @@ public class SupplierEvaluateServiceImpl extends ServiceImpl<SupplierEvaluateMap
         env.put("服务评分", supplierEvaluate.getServiceScore());
         env.put("创新与合作评分", supplierEvaluate.getInnovationScore());
         env.put("财务评分", supplierEvaluate.getFinancialScore());
-        weightMap.forEach((key, value) -> {
-            env.put(key + "权重", value);
-        });
+        env.putAll(weightMap);
         // 执行表达式
         return (BigDecimal) compiledExp.execute(env);
     }

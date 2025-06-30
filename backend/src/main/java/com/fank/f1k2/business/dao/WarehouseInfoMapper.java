@@ -30,7 +30,7 @@ public interface WarehouseInfoMapper extends BaseMapper<WarehouseInfo> {
      * @param queryFrom 库房库存
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> queryAlertStockPage(Page<WarehouseInfo> page, @Param("queryForm") WarehouseInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryAlertStockPage(Page<WarehouseInfo> page, @Param("queryForm") WarehouseInfo queryFrom);
 
     /**
      * 分页获取出入库详情
@@ -39,7 +39,7 @@ public interface WarehouseInfoMapper extends BaseMapper<WarehouseInfo> {
      * @param queryFrom 库房库存
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, @Param("queryForm") WarehouseInfo queryFrom);
+    IPage<LinkedHashMap<String, Object>> queryStockDetailPage(Page<WarehouseInfo> page, @Param("queryForm") WarehouseInfo queryFrom);
 
     /**
      * 获取预警库存列表

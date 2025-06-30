@@ -69,8 +69,6 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -87,6 +85,7 @@
     </module-edit>
     <module-view
       @close="handleModuleViewClose"
+      @success="handleModuleViewSuccess"
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
@@ -143,55 +142,41 @@ export default {
     }),
     columns () {
       return [{
-        title: '订单编号',
-        dataIndex: 'orderCode',
+        title: '采购需求单号',
+        dataIndex: 'purchaseCode',
         ellipsis: true
       }, {
-        title: '异常供应商',
-        dataIndex: 'supplierName',
+        title: '状态',
+        dataIndex: 'status',
         ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case '0':
+              return <a-tag>待下发</a-tag>
+            case '1':
+              return <a-tag>计划下发</a-tag>
+            case '2':
+              return <a-tag>采购询价</a-tag>
+            case '3':
+              return <a-tag>生成订单</a-tag>
+            case '4':
+              return <a-tag>配送中</a-tag>
+            case '5':
+              return <a-tag>已完成</a-tag>
+            default:
+              return '- -'
           }
         }
       }, {
-        title: '负责人',
-        dataIndex: 'chargePerson',
+        title: '采购数量',
+        dataIndex: 'purchaseNum',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + row.measurementUnit
           } else {
             return '- -'
           }
-        }
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '供应商图片',
-        dataIndex: 'supplierImages',
-        customRender: (text, record, index) => {
-          if (!record.supplierImages) return <a-avatar shape="square" icon="user"/>
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-            </template>
-            <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
-          </a-popover>
         }
       }, {
         title: '采购物料',
@@ -199,7 +184,7 @@ export default {
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + ' ' + row.purchaseNum + '' + row.measurementUnit
+            return text
           } else {
             return '- -'
           }
@@ -223,15 +208,15 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
-        title: '异常内容',
-        dataIndex: 'remark',
+        title: '采购供应商',
+        dataIndex: 'supplierName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -266,6 +251,10 @@ export default {
       this.moduleView.visiable = true
     },
     handleModuleViewClose () {
+      this.moduleView.visiable = false
+    },
+    handleModuleViewSuccess () {
+      this.$message.success('采购计划下发成功')
       this.moduleView.visiable = false
     },
     onSelectChange (selectedRowKeys) {

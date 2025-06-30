@@ -347,7 +347,7 @@ export default {
       if (params.status === undefined) {
         delete params.status
       }
-      this.$get('/business/agency-info/page/supplier', {
+      this.$get('/business/agency-info/page/staff', {
         ...params
       }).then((r) => {
         let data = r.data.data

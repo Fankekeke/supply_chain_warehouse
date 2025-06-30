@@ -112,4 +112,7 @@ public class OrderInfo implements Serializable {
      */
     @TableField(exist = false)
     private String materialsName;
+
+    @TableField(exist = false)
+    private Integer supplierUserId;
 }

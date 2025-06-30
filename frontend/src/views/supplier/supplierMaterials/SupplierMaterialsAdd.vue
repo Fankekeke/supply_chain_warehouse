@@ -152,6 +152,7 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
+        values.supplierId = this.currentUser.userId
         if (!err) {
           this.loading = true
           this.$post('/business/supplier-materials-info', {
