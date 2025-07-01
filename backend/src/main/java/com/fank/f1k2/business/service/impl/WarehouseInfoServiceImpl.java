@@ -1,6 +1,10 @@
 package com.fank.f1k2.business.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,19 +13,20 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fank.f1k2.business.entity.MaterialsInfo;
 import com.fank.f1k2.business.entity.WarehouseInfo;
 import com.fank.f1k2.business.dao.WarehouseInfoMapper;
+import com.fank.f1k2.business.entity.WarehouseOutRecord;
 import com.fank.f1k2.business.service.IMaterialsInfoService;
 import com.fank.f1k2.business.service.IWarehouseInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fank.f1k2.business.service.IWarehouseOutRecordService;
 import com.fank.f1k2.common.exception.F1k2Exception;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +37,8 @@ import java.util.stream.Collectors;
 public class WarehouseInfoServiceImpl extends ServiceImpl<WarehouseInfoMapper, WarehouseInfo> implements IWarehouseInfoService {
 
     private final IMaterialsInfoService materialsInfoService;
+
+    private final IWarehouseOutRecordService warehouseOutRecordService;
 
     /**
      * 分页获取库房库存
@@ -99,6 +106,55 @@ public class WarehouseInfoServiceImpl extends ServiceImpl<WarehouseInfoMapper, W
     @Override
     public List<LinkedHashMap<String, Object>> queryOutRecordDetail(String code) {
         return baseMapper.queryOutRecordDetail(code);
+    }
+
+    /**
+     * 出库
+     *
+     * @param warehouseOutRecord 出库记录
+     * @return 结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean warehouseOut(WarehouseOutRecord warehouseOutRecord) throws F1k2Exception {
+        warehouseOutRecord.setCode("OUT-" + System.currentTimeMillis());
+        warehouseOutRecord.setCreateDate(DateUtil.formatDateTime(new Date()));
+        List<WarehouseInfo> warehouseInfoList = JSONUtil.toList(warehouseOutRecord.getWarehouseInfoList(), WarehouseInfo.class);
+        if (CollectionUtil.isEmpty(warehouseInfoList)) {
+            throw new F1k2Exception("请选择出库信息");
+        }
+        // 根据物料编号获取库存记录
+        List<String> codeList = warehouseInfoList.stream().map(WarehouseInfo::getCode).collect(Collectors.toList());
+        List<WarehouseInfo> stockWarehouse = this.list(Wrappers.<WarehouseInfo>lambdaQuery().in(WarehouseInfo::getCode, codeList).eq(WarehouseInfo::getTransactionType, 0));
+        Map<String, WarehouseInfo> warehouseInfoMap = stockWarehouse.stream().collect(Collectors.toMap(WarehouseInfo::getCode, e -> e));
+
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        // 待更新的库存记录
+        List<WarehouseInfo> updateList = new ArrayList<>();
+        // 待添加的出库记录
+        List<WarehouseInfo> addList = new ArrayList<>();
+
+        for (WarehouseInfo warehouseInfo : warehouseInfoList) {
+            // 获取库存信息
+            WarehouseInfo warehouseInfoFromStock = warehouseInfoMap.get(warehouseInfo.getCode());
+            warehouseInfoFromStock.setCreateDate(DateUtil.formatDateTime(new Date()));
+            warehouseInfoFromStock.setQuantity(NumberUtil.sub(warehouseInfoFromStock.getQuantity(), warehouseInfo.getQuantity()));
+            updateList.add(warehouseInfoFromStock);
+
+            WarehouseInfo outWarehouseInfo = new WarehouseInfo();
+            outWarehouseInfo.setCode(warehouseInfoFromStock.getCode());
+            outWarehouseInfo.setName(warehouseInfoFromStock.getName());
+            outWarehouseInfo.setQuantity(warehouseInfo.getQuantity());
+            outWarehouseInfo.setTransactionType(1);
+            outWarehouseInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+            outWarehouseInfo.setDeliveryOrderNumber(warehouseOutRecord.getCode());
+            outWarehouseInfo.setUnitPrice(warehouseInfoFromStock.getUnitPrice());
+            addList.add(outWarehouseInfo);
+        }
+        this.updateBatchById(updateList);
+        this.saveBatch(addList);
+        return warehouseOutRecordService.save(warehouseOutRecord);
     }
 
     /**

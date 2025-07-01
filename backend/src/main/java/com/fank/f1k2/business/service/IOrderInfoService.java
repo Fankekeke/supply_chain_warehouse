@@ -31,6 +31,14 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     boolean setOrderStatus(Integer id, String status);
 
     /**
+     * 采购订单入库
+     *
+     * @param orderId 订单编号
+     * @return 结果
+     */
+    boolean orderPutStock(Integer orderId);
+
+    /**
      * 主页数据
      *
      * @return 结果

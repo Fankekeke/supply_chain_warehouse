@@ -146,6 +146,30 @@ public class OrderInfoController {
     }
 
     /**
+     * 采购订单检测
+     *
+     * @return 检测结果
+     */
+    @ApiOperation(value = "采购订单检测", notes = "采购订单检测")
+    @PutMapping("/orderDetection")
+    public R orderDetection(OrderInfo orderInfo) {
+        orderInfoService.updateById(orderInfo);
+        return R.ok(orderInfoService.setOrderStatus(orderInfo.getId(), orderInfo.getStatus()));
+    }
+
+    /**
+     * 采购订单入库
+     *
+     * @param orderId 订单编号
+     * @return 结果
+     */
+    @ApiOperation(value = "采购订单入库", notes = "入库")
+    @GetMapping("/orderPutStock")
+    public R orderPutStock(Integer orderId) {
+        return R.ok(orderInfoService.orderPutStock(orderId));
+    }
+
+    /**
      * 修改采购订单物流信息
      *
      * @param orderId 订单编号

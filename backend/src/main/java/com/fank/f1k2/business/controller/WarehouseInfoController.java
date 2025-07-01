@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fank.f1k2.business.entity.MaterialsInfo;
+import com.fank.f1k2.business.entity.WarehouseOutRecord;
 import com.fank.f1k2.common.exception.F1k2Exception;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -127,6 +128,18 @@ public class WarehouseInfoController {
     @GetMapping("/queryOutRecordDetail")
     public R queryOutRecordDetail(@RequestParam(value = "code") String code) {
         return R.ok(warehouseInfoService.queryOutRecordDetail(code));
+    }
+
+    /**
+     * 出库
+     *
+     * @param warehouseOutRecord 出库对象
+     * @return 列表
+     */
+    @ApiOperation(value = "出库", notes = "出库")
+    @PostMapping("/warehouseOut")
+    public R warehouseOut(WarehouseOutRecord warehouseOutRecord) throws F1k2Exception {
+        return R.ok(warehouseInfoService.warehouseOut(warehouseOutRecord));
     }
 
     /**

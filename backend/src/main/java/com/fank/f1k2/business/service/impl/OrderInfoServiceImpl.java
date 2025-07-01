@@ -2,6 +2,7 @@ package com.fank.f1k2.business.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -17,9 +18,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +34,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     private final IStaffInfoService staffInfoService;
 
+    private final IWarehouseInfoService warehouseInfoService;
+
+    private final IWarehousePutRecordService warehousePutRecordService;
+
     private final IMailService mailService;
 
     private final TemplateEngine templateEngine;
@@ -42,6 +45,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private final INotifyInfoService notifyInfoService;
 
     private final IAgencyInfoService agencyInfoService;
+
+    private final IMaterialsInfoService materialsInfoService;
 
     /**
      * 分页获取采购订单
@@ -125,6 +130,63 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         mailService.sendHtmlMail("fan1ke2ke@gmail.com", DateUtil.formatDate(new Date()) + "采购订单提示", emailContent);
         // 更新采购订单状态
         return updateById(orderInfo);
+    }
+
+    /**
+     * 采购订单入库
+     *
+     * @param orderId 订单编号
+     * @return 结果
+     */
+    @Override
+    public boolean orderPutStock(Integer orderId) {
+        // 获取订单信息
+        OrderInfo orderInfo = this.getById(orderId);
+
+        // 获取物料信息
+        MaterialsInfo materialsInfo = materialsInfoService.getById(orderInfo.getMaterialsCode());
+        String materialsName = materialsInfo == null ? "" : materialsInfo.getName();
+
+        // 获取库存信息
+        List<WarehouseInfo> warehouseInfoList = warehouseInfoService.list(Wrappers.<WarehouseInfo>lambdaQuery().eq(WarehouseInfo::getTransactionType, 0));
+        Map<String, WarehouseInfo> warehouseInfoMap = warehouseInfoList.stream().collect(Collectors.toMap(WarehouseInfo::getCode, e -> e));
+
+        // 入库记录
+        WarehousePutRecord warehousePutRecord = new WarehousePutRecord();
+        warehousePutRecord.setCode("PUT-" + System.currentTimeMillis());
+        warehousePutRecord.setName(warehousePutRecord.getCode() + "采购入库");
+        warehousePutRecord.setTotalPrice(orderInfo.getTotalPrice());
+        warehousePutRecord.setPutUser(orderInfo.getAuditUser());
+        warehousePutRecord.setRemark(orderInfo.getContent());
+        warehousePutRecord.setCreateDate(DateUtil.formatDateTime(new Date()));
+        warehousePutRecordService.save(warehousePutRecord);
+
+        WarehouseInfo currentStock = warehouseInfoMap.get(orderInfo.getMaterialsCode());
+        if (currentStock == null) {
+            currentStock = new WarehouseInfo();
+            currentStock.setCode(orderInfo.getMaterialsCode());
+            currentStock.setName(materialsName);
+            currentStock.setQuantity(BigDecimal.valueOf(orderInfo.getPurchaseNum()));
+            currentStock.setTransactionType(0);
+            currentStock.setCreateDate(DateUtil.formatDateTime(new Date()));
+            currentStock.setUnitPrice(NumberUtil.div(orderInfo.getTotalPrice(), orderInfo.getPurchaseNum()));
+            warehouseInfoService.save(currentStock);
+        } else {
+            currentStock.setQuantity(NumberUtil.add(currentStock.getQuantity(), BigDecimal.valueOf(orderInfo.getPurchaseNum())));
+            currentStock.setCreateDate(DateUtil.formatDateTime(new Date()));
+            currentStock.setUnitPrice(NumberUtil.div(orderInfo.getTotalPrice(), orderInfo.getPurchaseNum()));
+            warehouseInfoService.updateById(currentStock);
+        }
+
+        currentStock = new WarehouseInfo();
+        currentStock.setCode(orderInfo.getMaterialsCode());
+        currentStock.setName(materialsName);
+        currentStock.setQuantity(BigDecimal.valueOf(orderInfo.getPurchaseNum()));
+        currentStock.setTransactionType(1);
+        currentStock.setCreateDate(DateUtil.formatDateTime(new Date()));
+        currentStock.setInboundOrderNumber(warehousePutRecord.getCode());
+        currentStock.setUnitPrice(NumberUtil.div(orderInfo.getTotalPrice(), orderInfo.getPurchaseNum()));
+        return warehouseInfoService.save(currentStock);
     }
 
     /**
