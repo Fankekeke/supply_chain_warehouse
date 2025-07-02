@@ -99,6 +99,11 @@
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
+    <module-stock
+      @close="handleModuleViewClose"
+      :moduleShow="moduleView.visiable"
+      :moduleData="moduleView.data">
+    </module-stock>
   </a-card>
 </template>
 
@@ -107,6 +112,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import moduleAdd from './OrderAdd.vue'
 import moduleEdit from './OrderEdit.vue'
 import moduleView from './OrderView.vue'
+import moduleStock from './OrderStock.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -114,7 +120,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  components: {moduleAdd, moduleEdit, moduleView, moduleStock, RangeDate},
   data () {
     return {
       advanced: false,
@@ -312,7 +318,8 @@ export default {
   methods: {
     orderGet (record) {
       this.$get('/business/order-info/setOrderStatus', { id: record.id, status: '3' }).then((r) => {
-
+        this.$message.success('收货成功')
+        this.fetch()
       })
     },
     orderPay (record) {
