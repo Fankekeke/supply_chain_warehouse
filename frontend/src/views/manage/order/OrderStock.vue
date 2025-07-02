@@ -1,8 +1,11 @@
 <template>
   <a-modal v-model="show" title="采购订单详情" @cancel="onClose" :width="1000">
     <template slot="footer">
-      <a-button key="back" @click="onClose" type="danger">
-        关闭
+      <a-button key="back" @click="onSubmit(4)" type="danger">
+        驳回
+      </a-button>
+      <a-button key="back" @click="onSubmit(5)" type="danger">
+        入库
       </a-button>
     </template>
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
@@ -102,6 +105,32 @@
           </a-modal>
         </a-col>
       </a-row>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span
+          class="view-title">采购检测</span></a-col>
+        <a-col :span="24">
+          <a-form :form="form" layout="vertical">
+            <a-row :gutter="10">
+              <a-col :span="12">
+                <a-form-item label='监察人'>
+                  <a-input v-decorator="[
+            'auditUser',
+            { rules: [{ required: true, message: '请输入监察人!' }] }
+            ]"/>
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label='合格率'>
+                  <a-input v-decorator="[
+            'passRate',
+            { rules: [{ required: true, message: '请输入监察人!' }] }
+            ]"/>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </a-col>
+      </a-row>
       <br/>
     </div>
   </a-modal>
@@ -111,7 +140,10 @@
 import moment from 'moment'
 
 moment.locale('zh-cn')
-
+const formItemLayout = {
+  labelCol: {span: 24},
+  wrapperCol: {span: 24}
+}
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -143,6 +175,8 @@ export default {
   },
   data () {
     return {
+      formItemLayout,
+      form: this.$form.createForm(this),
       current: 0,
       loading: false,
       fileList: [],

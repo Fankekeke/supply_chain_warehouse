@@ -70,6 +70,7 @@
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
           <a-icon v-if="record.status == 0" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.status == 3" type="alipay" @click="orderPay(record)" title="提 交" style="margin-left: 15px"></a-icon>
           <a-popconfirm
             title="是否确认收货?"
             ok-text="是"
@@ -100,9 +101,10 @@
       :moduleData="moduleView.data">
     </module-view>
     <module-stock
-      @close="handleModuleViewClose"
-      :moduleShow="moduleView.visiable"
-      :moduleData="moduleView.data">
+      @close="handleModuleStockClose"
+      @success="handleModuleStockSuccess"
+      :moduleShow="moduleStock.visiable"
+      :moduleData="moduleStock.data">
     </module-stock>
   </a-card>
 </template>
@@ -131,6 +133,10 @@ export default {
         visiable: false
       },
       moduleView: {
+        visiable: false,
+        data: null
+      },
+      moduleStock: {
         visiable: false,
         data: null
       },
@@ -322,6 +328,10 @@ export default {
         this.fetch()
       })
     },
+    orderStockOpen (record) {
+      this.moduleStock.data = record
+      this.moduleStock.visiable = true
+    },
     orderPay (record) {
       let data = { outTradeNo: record.code, subject: `${record.createDate}缴费信息`, totalAmount: record.totalPrice, body: '' }
       this.$post('/business/pay/alipay', data).then((r) => {
@@ -338,6 +348,18 @@ export default {
         document.forms[0].setAttribute('target', '_self') // 新开窗口跳转
         document.forms[0].submit()
       })
+    },
+    handleModuleStockOpen (row) {
+      this.moduleStock.data = row
+      this.moduleStock.visiable = true
+    },
+    handleModuleStockSuccess () {
+      this.moduleStock.visiable = false
+      this.$message.success('操作成功')
+      this.fetch()
+    },
+    handleModuleStockClose () {
+      this.moduleStock.visiable = false
     },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
