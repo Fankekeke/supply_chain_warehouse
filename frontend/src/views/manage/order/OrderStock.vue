@@ -4,7 +4,7 @@
       <a-button key="back" @click="onSubmit(4)" type="danger">
         驳回
       </a-button>
-      <a-button key="back" @click="onSubmit(5)" type="danger">
+      <a-button key="back1" @click="onSubmit(5)" type="primary">
         入库
       </a-button>
     </template>
@@ -111,7 +111,7 @@
         <a-col :span="24">
           <a-form :form="form" layout="vertical">
             <a-row :gutter="10">
-              <a-col :span="12">
+              <a-col :span="8">
                 <a-form-item label='监察人'>
                   <a-input v-decorator="[
             'auditUser',
@@ -119,11 +119,18 @@
             ]"/>
                 </a-form-item>
               </a-col>
-              <a-col :span="12">
+              <a-col :span="8">
                 <a-form-item label='合格率'>
-                  <a-input v-decorator="[
+                  <a-input-number style="width: 100%" v-decorator="[
             'passRate',
             { rules: [{ required: true, message: '请输入监察人!' }] }
+            ]"/>
+                </a-form-item>
+              </a-col>
+              <a-col :span="24">
+                <a-form-item label='备注'>
+                  <a-textarea :rows="4" v-decorator="[
+            'content'
             ]"/>
                 </a-form-item>
               </a-col>
@@ -195,6 +202,30 @@ export default {
     }
   },
   methods: {
+    onSubmit (status) {
+      this.form.validateFields((err, values) => {
+        values.id = this.moduleData.id
+        values.status = status
+        if (!err) {
+          this.loading = true
+          this.$put('/business/order-info', {
+            ...values
+          }).then((r) => {
+            if (status != 4) {
+              this.$get('/business/order-info/orderPutStock', {
+                orderId: this.moduleData.id
+              }).then((r) => {
+                this.$emit('success')
+              })
+            } else {
+              this.$emit('success')
+            }
+          }).catch(() => {
+            this.loading = false
+          })
+        }
+      })
+    },
     imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []

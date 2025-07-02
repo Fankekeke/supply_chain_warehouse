@@ -267,6 +267,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         result.put("orderNumWithinDays", baseMapper.selectOrderNumWithinDays(supplierInfo.getId()));
         // 近十天内支出统计
         result.put("orderPriceWithinDays", baseMapper.selectOrderPriceWithinDays(supplierInfo.getId()));
+        
         return result;
     }
 }

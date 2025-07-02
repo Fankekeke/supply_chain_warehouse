@@ -70,7 +70,7 @@
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
           <a-icon v-if="record.status == 0" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 15px"></a-icon>
-          <a-icon v-if="record.status == 3" type="alipay" @click="orderPay(record)" title="提 交" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.status == 3" type="carry-out" theme="twoTone" @click="orderStockOpen(record)" title="提 交" style="margin-left: 15px"></a-icon>
           <a-popconfirm
             title="是否确认收货?"
             ok-text="是"

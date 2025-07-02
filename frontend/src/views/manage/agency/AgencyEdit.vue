@@ -12,7 +12,10 @@
       <a-row :gutter="10">
         <a-col :span="24">
           <a-form-item label='供应商'>
-            <a-select v-decorator="[
+            <a-select show-search
+                      option-filter-prop="children"
+                      :filter-option="filterOption"
+                      v-decorator="[
               'userId',
               { rules: [{ required: true, message: '请选择代办供应商!' }] }
               ]">
@@ -92,6 +95,11 @@ export default {
     this.querySupplier()
   },
   methods: {
+    filterOption (input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      )
+    },
     querySupplier () {
       this.$get('/business/supplier-info/list').then((r) => {
         this.supplierList = r.data.data
