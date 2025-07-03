@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -183,6 +184,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         PurchasePlanInfo purchasePlanInfo = purchasePlanInfoService.getById(orderInfo.getPlanId());
+        purchasePlanInfo.setStatus("5");
+        purchasePlanInfoService.updateById(purchasePlanInfo);
+
+        // 校验采购需求状态
+        this.setNeedStatus(purchasePlanInfo.getPurchaseCode());
 
         WarehouseInfo putStock = new WarehouseInfo();
         putStock.setCode(orderInfo.getMaterialsCode());
@@ -193,6 +199,23 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         putStock.setInboundOrderNumber(warehousePutRecord.getCode());
         putStock.setUnitPrice(NumberUtil.div(orderInfo.getTotalPrice(), orderInfo.getPurchaseNum()));
         return warehouseInfoService.save(putStock);
+    }
+
+    /**
+     * 设置采购需求状态
+     *
+     * @param purchaseCode 采购需求编号
+     */
+    public void setNeedStatus(String purchaseCode) {
+        // 获取采购需求
+        PurchaseNeedInfo purchaseNeedInfo = purchaseNeedInfoService.getOne(Wrappers.<PurchaseNeedInfo>lambdaQuery().eq(PurchaseNeedInfo::getCode, purchaseCode));
+        // 根据采购需求编号获取采购计划
+        List<PurchasePlanInfo> purchasePlanInfoList = purchasePlanInfoService.list(Wrappers.<PurchasePlanInfo>lambdaQuery().eq(PurchasePlanInfo::getPurchaseCode, purchaseCode));
+        // 校验采购计划是否全部完成
+        if (purchasePlanInfoList.stream().allMatch(e -> "5".equals(e.getStatus()))) {
+            purchaseNeedInfo.setStatus("1");
+            purchaseNeedInfoService.updateById(purchaseNeedInfo);
+        }
     }
 
     /**
