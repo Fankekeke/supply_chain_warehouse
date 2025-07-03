@@ -136,6 +136,12 @@ public class OrderInfoController {
     @Transactional(rollbackFor = Exception.class)
     public R orderShip(Integer orderId, String content) {
         OrderInfo orderInfo = orderInfoService.getById(orderId);
+        // 更新采购计划为配送中
+        PurchasePlanInfo purchasePlanInfo = purchasePlanInfoService.getOne(Wrappers.<PurchasePlanInfo>lambdaQuery().eq(PurchasePlanInfo::getOrderId, orderId));
+        if (purchasePlanInfo != null) {
+            purchasePlanInfo.setStatus("4");
+            purchasePlanInfoService.updateById(purchasePlanInfo);
+        }
         LogisticsInfo logisticsInfo = new LogisticsInfo();
         logisticsInfo.setOrderId(orderId);
         logisticsInfo.setRemark(content);
@@ -201,11 +207,12 @@ public class OrderInfoController {
         addFrom.setCode("ORD-" + System.currentTimeMillis());
         addFrom.setCreateDate(DateUtil.formatDateTime(new Date()));
         addFrom.setStatus("0");
+        orderInfoService.save(addFrom);
         // 获取采购计划
         PurchasePlanInfo purchasePlanInfo = purchasePlanInfoService.getById(addFrom.getPlanId());
+        purchasePlanInfo.setOrderId(addFrom.getId());
         purchasePlanInfo.setStatus("3");
-        purchasePlanInfoService.updateById(purchasePlanInfo);
-        return R.ok(orderInfoService.save(addFrom));
+        return R.ok(purchasePlanInfoService.updateById(purchasePlanInfo));
     }
 
     /**

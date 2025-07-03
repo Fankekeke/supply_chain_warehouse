@@ -61,6 +61,7 @@ export default {
   watch: {
     moduleShow: function (value) {
       if (value) {
+        this.updateReadStatus()
         if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
           this.imagesInit(this.moduleData.materialsImages)
         }
@@ -68,6 +69,9 @@ export default {
     }
   },
   methods: {
+    updateReadStatus () {
+      this.$get('/business/notify-info/finish', { id: this.moduleData.id }).then(res => {})
+    },
     imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []

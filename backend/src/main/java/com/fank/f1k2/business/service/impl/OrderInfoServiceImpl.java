@@ -48,6 +48,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     private final IMaterialsInfoService materialsInfoService;
 
+    private final IPurchasePlanInfoService purchasePlanInfoService;
+
+    private final IPurchaseNeedInfoService purchaseNeedInfoService;
+
     /**
      * 分页获取采购订单
      *
@@ -178,15 +182,17 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             warehouseInfoService.updateById(currentStock);
         }
 
-        currentStock = new WarehouseInfo();
-        currentStock.setCode(orderInfo.getMaterialsCode());
-        currentStock.setName(materialsName);
-        currentStock.setQuantity(BigDecimal.valueOf(orderInfo.getPurchaseNum()));
-        currentStock.setTransactionType(1);
-        currentStock.setCreateDate(DateUtil.formatDateTime(new Date()));
-        currentStock.setInboundOrderNumber(warehousePutRecord.getCode());
-        currentStock.setUnitPrice(NumberUtil.div(orderInfo.getTotalPrice(), orderInfo.getPurchaseNum()));
-        return warehouseInfoService.save(currentStock);
+        PurchasePlanInfo purchasePlanInfo = purchasePlanInfoService.getById(orderInfo.getPlanId());
+
+        WarehouseInfo putStock = new WarehouseInfo();
+        putStock.setCode(orderInfo.getMaterialsCode());
+        putStock.setName(materialsName);
+        putStock.setQuantity(BigDecimal.valueOf(orderInfo.getPurchaseNum()));
+        putStock.setTransactionType(1);
+        putStock.setCreateDate(DateUtil.formatDateTime(new Date()));
+        putStock.setInboundOrderNumber(warehousePutRecord.getCode());
+        putStock.setUnitPrice(NumberUtil.div(orderInfo.getTotalPrice(), orderInfo.getPurchaseNum()));
+        return warehouseInfoService.save(putStock);
     }
 
     /**

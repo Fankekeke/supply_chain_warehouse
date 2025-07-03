@@ -42,8 +42,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -57,8 +57,15 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-popconfirm
+            title="是否确认完成?"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="agencyComplete(record)"
+          >
+            <a-icon v-if="record.status == 0" type="setting" theme="twoTone" twoToneColor="#4a9ff5" title="完 成"
+                    style="margin-left: 15px"></a-icon>
+          </a-popconfirm>
         </template>
       </a-table>
     </div>
@@ -226,6 +233,12 @@ export default {
     this.fetch()
   },
   methods: {
+    agencyComplete (row) {
+      this.$get('/business/agency-info/finish', {id: row.id}).then((r) => {
+        this.$message.success('代办任务完成')
+        this.search()
+      })
+    },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
       this.moduleView.visiable = true
