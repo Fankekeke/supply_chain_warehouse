@@ -23,7 +23,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">出库</a-button>
 <!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
@@ -59,6 +59,12 @@
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
+    <stock-out
+      @close="handleStockoutClose"
+      @success="handleStockoutSuccess"
+      :stockoutData="stockout.data"
+      :stockoutVisiable="stockout.visiable">
+    </stock-out>
   </a-card>
 </template>
 
@@ -67,6 +73,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import moduleAdd from './WarehouseAdd.vue'
 import moduleEdit from './WarehouseEdit.vue'
 import moduleView from './WarehouseView.vue'
+import StockOut from './StoreOut.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -74,7 +81,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  components: {moduleAdd, moduleEdit, moduleView, StockOut, RangeDate},
   data () {
     return {
       advanced: false,
@@ -85,6 +92,10 @@ export default {
         visiable: false
       },
       moduleView: {
+        visiable: false,
+        data: null
+      },
+      stockout: {
         visiable: false,
         data: null
       },
@@ -200,7 +211,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.moduleAdd.visiable = true
+      if (!this.selectedRowKeys.length) {
+        this.$message.warning('请选择需要出库的物品')
+        return
+      }
+      let goods = this.selectedRows
+      goods.forEach(item => {
+        item.max = item.quantity
+      })
+      this.stockout.data = JSON.parse(JSON.stringify(goods))
+      this.stockout.visiable = true
+    },
+    handleStockoutClose () {
+      this.stockout.visiable = false
+    },
+    handleStockoutSuccess () {
+      this.stockout.visiable = false
+      this.selectedRows = []
+      this.selectedRowKeys = []
+      this.$message.success('出库成功')
+      this.search()
     },
     handleModuleAddClose () {
       this.moduleAdd.visiable = false

@@ -151,9 +151,13 @@ public class WarehouseInfoServiceImpl extends ServiceImpl<WarehouseInfoMapper, W
             outWarehouseInfo.setDeliveryOrderNumber(warehouseOutRecord.getCode());
             outWarehouseInfo.setUnitPrice(warehouseInfoFromStock.getUnitPrice());
             addList.add(outWarehouseInfo);
+
+            // 计算总价
+            totalPrice = NumberUtil.add(totalPrice, NumberUtil.mul(warehouseInfo.getQuantity(), warehouseInfoFromStock.getUnitPrice()));
         }
         this.updateBatchById(updateList);
         this.saveBatch(addList);
+        warehouseOutRecord.setTotalPrice(totalPrice);
         return warehouseOutRecordService.save(warehouseOutRecord);
     }
 
