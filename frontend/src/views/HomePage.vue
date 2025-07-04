@@ -38,6 +38,7 @@
         </a-col>
       </a-card>
     </a-row>
+    <supplier-home v-if="user.roleId == 76"></supplier-home>
     <home @setTitle="setTitleData"></home>
     <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 74">
       <a-col :span="12" class="visit-count-wrapper">
@@ -88,11 +89,12 @@ import HeadInfo from '@/views/common/HeadInfo'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import Home from './manage/component/home/Home'
+import supplierHome from './manage/component/supplier-home/Home'
 moment.locale('zh-cn')
 
 export default {
   name: 'HomePage',
-  components: {Home, HeadInfo},
+  components: {Home, supplierHome, HeadInfo},
   data () {
     return {
       titleData: {

@@ -19,6 +19,14 @@
             ]"/>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label='出库人' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'outUser',
+            { rules: [{ required: true, message: '请输入出库人!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
         <a-col :span="24">
           <a-form-item label='备注消息' v-bind="formItemLayout">
             <a-textarea :rows="4" v-decorator="[
@@ -75,17 +83,20 @@ export default {
     columns () {
       return [{
         title: '物料名称',
-        dataIndex: 'materialsName'
+        dataIndex: 'materialsName',
+        ellipsis: true
       }, {
         title: '型号',
-        dataIndex: 'model'
+        dataIndex: 'model',
+        ellipsis: true
       }, {
         title: '数量',
         dataIndex: 'amount',
         scopedSlots: {customRender: 'amountShow'}
       }, {
         title: '物料类型',
-        dataIndex: 'type'
+        dataIndex: 'type',
+        ellipsis: true
       }, {
         title: '单位',
         dataIndex: 'measurementUnit',

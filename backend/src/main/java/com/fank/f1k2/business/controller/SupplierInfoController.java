@@ -17,8 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 供应商信息 控制层
@@ -83,6 +86,31 @@ public class SupplierInfoController {
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(supplierInfoService.getById(id));
+    }
+
+    /**
+     * 批量修改供应商名称
+     *
+     * @return 批量修改结果
+     */
+    @ApiOperation(value = "批量修改供应商名称", notes = "批量修改供应商名称")
+    @GetMapping("/batchEditSupplierName")
+    public R batchEditSupplierName() {
+        List<SupplierInfo> supplierInfoList = supplierInfoService.list();
+        // 待更新数据
+        List<SupplierInfo> toUpdate = new ArrayList<>();
+        Map<String, List<SupplierInfo>> supplierInfoMap = supplierInfoList.stream().collect(Collectors.groupingBy(SupplierInfo::getName));
+        supplierInfoMap.forEach((key, value) -> {
+            if (value.size() > 1) {
+                int index = 1;
+                for (SupplierInfo supplierInfo : value) {
+                    supplierInfo.setName(supplierInfo.getName() + "【" + index + "】号");
+                    toUpdate.add(supplierInfo);
+                    index++;
+                }
+            }
+        });
+        return R.ok(supplierInfoService.updateBatchById(toUpdate));
     }
 
     /**

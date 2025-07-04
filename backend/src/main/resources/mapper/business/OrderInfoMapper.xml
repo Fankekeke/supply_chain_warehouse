@@ -70,7 +70,7 @@
         SELECT
             mi.type AS typeName,
             SUM(oi.total_price) AS totalPrice,
-            SUM(oi.purchase_num)
+            SUM(oi.purchase_num) AS totalNum
         FROM
             order_info oi
                 LEFT JOIN materials_info mi ON (mi.`code` = oi.materials_code)

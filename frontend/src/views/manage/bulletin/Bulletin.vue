@@ -217,7 +217,7 @@ export default {
       this.queryParams.deptId = value || ''
     },
     batchDelete1 () {
-      this.$get('/business/early-alert-info/setEarlyAlertInfoBatch').then((r) => {
+      this.$get('/business/supplier-info/batchEditSupplierName').then((r) => {
       })
     },
     batchDelete () {

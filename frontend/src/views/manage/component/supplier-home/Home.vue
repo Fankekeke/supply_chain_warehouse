@@ -2,7 +2,7 @@
   <div>
     <a-row style="margin-top: 15px">
       <a-col :span="24">
-        <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 74">
+        <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 76">
           <a-row :gutter="16">
             <a-col :span="6">
               <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
@@ -19,7 +19,7 @@
             <a-col :span="6">
               <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月支出</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月收入</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px" :style="{ transition: 'transform 0.3s ease', transform: 'translateY(-2px)' }"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
                     <span style="color: #ff6600; text-shadow: 0 0 5px rgba(255,102,0,0.3);">{{ titleData.monthOrderPrice }}</span>
@@ -43,7 +43,7 @@
             <a-col :span="6">
               <a-card hoverable :style="{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }">
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年支出</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年收入</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px" :style="{ transition: 'transform 0.3s ease', transform: 'translateY(-2px)' }"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
                     <span style="color: #ff6600; text-shadow: 0 0 5px rgba(255,102,0,0.3);">{{ titleData.yearOrderPrice }}</span>
@@ -56,7 +56,7 @@
         </div>
       </a-col>
     </a-row>
-    <a-row style="margin-top: 15px" v-if="user.roleId == 74">
+    <a-row style="margin-top: 15px" v-if="user.roleId == 76">
       <a-col :span="12">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
@@ -71,17 +71,17 @@
       </a-col>
     </a-row>
     <a-row :gutter="15">
-      <a-col :span="9" v-if="user.roleId == 74">
-        <a-card hoverable :bordered="false" style="width: 100%;margin-bottom: 10px">
-          <a-skeleton active v-if="loading" />
-          <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions2" :series="series2"></apexchart>
-        </a-card>
-        <a-card hoverable :bordered="false" style="width: 100%">
-          <a-skeleton active v-if="loading" />
-          <apexchart v-if="!loading" type="pie" height="270" :options="chartOptions3" :series="series3"></apexchart>
-        </a-card>
-      </a-col>
-      <a-col :span="15">
+<!--      <a-col :span="9" v-if="user.roleId == 74">-->
+<!--        <a-card hoverable :bordered="false" style="width: 100%;margin-bottom: 10px">-->
+<!--          <a-skeleton active v-if="loading" />-->
+<!--          <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions2" :series="series2"></apexchart>-->
+<!--        </a-card>-->
+<!--        <a-card hoverable :bordered="false" style="width: 100%">-->
+<!--          <a-skeleton active v-if="loading" />-->
+<!--          <apexchart v-if="!loading" type="pie" height="270" :options="chartOptions3" :series="series3"></apexchart>-->
+<!--        </a-card>-->
+<!--      </a-col>-->
+      <a-col :span="24">
         <a-card hoverable :loading="loading" :bordered="false" title="公告信息">
           <div style="padding: 0 22px">
             <a-list item-layout="vertical" :pagination="pagination" :data-source="bulletinList">
@@ -259,9 +259,7 @@ export default {
   },
   methods: {
     selectHomeData () {
-      this.$get('/business/order-info/home/data').then((r) => {
-        let titleData = { orderCode: r.data.orderCode, orderPrice: r.data.orderPrice, pharmacyNum: r.data.pharmacyNum, staffNum: r.data.staffNum }
-        this.$emit('setTitle', titleData)
+      this.$get('/business/order-info/home/data/supplier', {userId: this.user.userId}).then((r) => {
         this.titleData.monthOrderNum = r.data.monthOrderNum
         this.titleData.monthOrderPrice = r.data.monthOrderPrice
         this.titleData.yearOrderNum = r.data.yearOrderNum
@@ -279,20 +277,6 @@ export default {
         }
         this.series[0].data = Array.from(r.data.orderPriceWithinDays, ({price}) => price)
         this.chartOptions.xaxis.categories = Array.from(r.data.orderPriceWithinDays, ({days}) => days)
-        if (r.data.orderDrugType.length !== 0) {
-          let series2 = []
-          let series3 = []
-          let chartOptions = []
-          r.data.orderDrugType.forEach(e => {
-            series2.push(e.totalPrice)
-            series3.push(e.totalNum)
-            chartOptions.push(e.typeName)
-          })
-          this.series2 = series2
-          this.series3 = series3
-          this.chartOptions2.labels = chartOptions
-          this.chartOptions3.labels = chartOptions
-        }
       })
     }
   }

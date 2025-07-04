@@ -270,7 +270,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public LinkedHashMap<String, Object> homeDataBySupplier(Integer userId) {
         // 获取供应商信息
-        SupplierInfo supplierInfo = supplierInfoService.getById(userId);
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, userId));
         // 返回数据
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         // 本月订单数量
@@ -278,14 +278,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderList = orderList.stream().filter(e -> e.getSupplierId().equals(supplierInfo.getId())).collect(Collectors.toList());
         result.put("monthOrderNum", CollectionUtil.isEmpty(orderList) ? 0 : orderList.size());
         BigDecimal orderPrice = orderList.stream().filter(e -> Integer.parseInt(e.getStatus()) >= 1 && Integer.parseInt(e.getStatus()) != 4).map(OrderInfo::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
-        // 获取本月支出
+        // 获取本月收入
         result.put("monthOrderPrice", orderPrice);
 
         // 本年订单数量
         List<OrderInfo> orderYearList = baseMapper.selectOrderByYear();
         orderYearList = orderYearList.stream().filter(e -> e.getSupplierId().equals(supplierInfo.getId())).collect(Collectors.toList());
         result.put("yearOrderNum", CollectionUtil.isEmpty(orderYearList) ? 0 : orderYearList.size());
-        // 本年总支出
+        // 本年总收入
         BigDecimal orderYearPrice = orderYearList.stream().filter(e -> Integer.parseInt(e.getStatus()) >= 1 && Integer.parseInt(e.getStatus()) != 4).map(OrderInfo::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
         result.put("yearOrderPrice", orderYearPrice);
 

@@ -146,7 +146,7 @@ public class WarehouseInfoServiceImpl extends ServiceImpl<WarehouseInfoMapper, W
             outWarehouseInfo.setCode(warehouseInfoFromStock.getCode());
             outWarehouseInfo.setName(warehouseInfoFromStock.getName());
             outWarehouseInfo.setQuantity(warehouseInfo.getQuantity());
-            outWarehouseInfo.setTransactionType(1);
+            outWarehouseInfo.setTransactionType(2);
             outWarehouseInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
             outWarehouseInfo.setDeliveryOrderNumber(warehouseOutRecord.getCode());
             outWarehouseInfo.setUnitPrice(warehouseInfoFromStock.getUnitPrice());

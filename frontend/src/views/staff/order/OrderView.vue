@@ -1,16 +1,26 @@
 <template>
-  <a-modal v-model="show" title="采购订单详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="采购订单详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
       </a-button>
     </template>
     <div style="font-size: 13px;font-family: SimHei" v-if="moduleData !== null">
+      <div style="padding-left: 24px;padding-right: 24px;margin-bottom: 50px;margin-top: 50px">
+        <a-steps :current="current" progress-dot size="small">
+          <a-step title="未付款" />
+          <a-step title="已付款" />
+          <a-step title="已发货" />
+          <a-step title="检验中" />
+          <a-step title="已退货" />
+          <a-step title="已入库" />
+        </a-steps>
+      </div>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span
           class="view-title">采购订单信息</span></a-col>
         <a-col :span="8"><b>订单编号：</b>
-          {{ moduleData.orderCode }}
+          {{ moduleData.code }}
         </a-col>
         <a-col :span="8"><b>采购金额：</b>
           {{ moduleData.totalPrice }} 元
@@ -133,6 +143,7 @@ export default {
   },
   data () {
     return {
+      current: 0,
       loading: false,
       fileList: [],
       previewVisible: false,
@@ -142,6 +153,7 @@ export default {
   watch: {
     moduleShow: function (value) {
       if (value) {
+        this.current = this.moduleData.status
         if (this.moduleData.materialsImages !== null && this.moduleData.materialsImages !== '') {
           this.imagesInit(this.moduleData.materialsImages)
         }
@@ -179,5 +191,31 @@ export default {
 </script>
 
 <style scoped>
+/* 修改步骤条的未完成状态颜色 */
+.ant-steps-item-wait .ant-steps-item-icon {
+  background-color: #1890ff; /* 蓝色 */
+}
 
+/* 修改步骤条的已完成状态颜色 */
+.ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #52c41a; /* 绿色 */
+}
+
+/* 修改步骤条的错误状态颜色 */
+.ant-steps-item-error .ant-steps-item-icon {
+  background-color: #ff4d4f; /* 红色 */
+}
+.ant-steps .ant-steps-item .ant-steps-item-content {
+  font-size: 16px; /* 调整字体大小 */
+  line-height: 24px; /* 调整行高 */
+}
+.ant-steps {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 8px;
+}
+.ant-steps {
+  background-color: #f9f9f9; /* 浅灰色背景 */
+  border-radius: 8px;
+}
 </style>

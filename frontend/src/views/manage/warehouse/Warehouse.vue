@@ -99,6 +99,7 @@ export default {
         visiable: false,
         data: null
       },
+      selectedRows: [],
       queryParams: {},
       filteredInfo: null,
       sortedInfo: null,
@@ -204,8 +205,15 @@ export default {
     handleModuleViewClose () {
       this.moduleView.visiable = false
     },
-    onSelectChange (selectedRowKeys) {
+    onSelectChange (selectedRowKeys, selectedRows) {
+      selectedRows.forEach(item => {
+        if (item.quantity === 0) {
+          this.$message.warning('该物品没有库存！')
+          return false
+        }
+      })
       this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
@@ -216,6 +224,7 @@ export default {
         return
       }
       let goods = this.selectedRows
+      console.log(goods)
       goods.forEach(item => {
         item.max = item.quantity
       })

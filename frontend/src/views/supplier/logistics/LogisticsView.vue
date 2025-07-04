@@ -78,7 +78,7 @@
         </a-col>
       </a-row>
       <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="moduleData.status == 2">
         <a-col style="margin-bottom: 15px"><span
           class="view-title">物流更新</span></a-col>
         <a-col :span="24">

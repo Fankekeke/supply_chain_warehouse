@@ -54,7 +54,7 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -70,8 +70,17 @@
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
           <a-icon v-if="record.status == 0" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 15px"></a-icon>
-          <!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"-->
-          <!--                  style="margin-left: 15px"></a-icon>-->
+          <a-icon v-if="record.status == 3" type="carry-out" theme="twoTone" @click="orderStockOpen(record)" title="提 交" style="margin-left: 15px"></a-icon>
+          <a-popconfirm
+            title="是否确认收货?"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="orderGet(record)"
+          >
+            <a-icon v-if="record.status == 2" type="shopping" theme="twoTone" title="收 货" style="margin-left: 15px"></a-icon>
+          </a-popconfirm>
+<!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"-->
+<!--                  style="margin-left: 15px"></a-icon>-->
         </template>
       </a-table>
     </div>
@@ -91,6 +100,12 @@
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
+    <module-stock
+      @close="handleModuleStockClose"
+      @success="handleModuleStockSuccess"
+      :moduleShow="moduleStock.visiable"
+      :moduleData="moduleStock.data">
+    </module-stock>
   </a-card>
 </template>
 
@@ -99,6 +114,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import moduleAdd from './OrderAdd.vue'
 import moduleEdit from './OrderEdit.vue'
 import moduleView from './OrderView.vue'
+import moduleStock from './OrderStock.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -106,7 +122,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  components: {moduleAdd, moduleEdit, moduleView, moduleStock, RangeDate},
   data () {
     return {
       advanced: false,
@@ -117,6 +133,10 @@ export default {
         visiable: false
       },
       moduleView: {
+        visiable: false,
+        data: null
+      },
+      moduleStock: {
         visiable: false,
         data: null
       },
@@ -206,10 +226,10 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.supplierImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
@@ -264,10 +284,10 @@ export default {
           return <a-popover>
             <template slot="content">
               <a-avatar shape="square" size={132} icon="user"
-                        src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+                src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
             </template>
             <a-avatar shape="square" icon="user"
-                      src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
+              src={'http://127.0.0.1:9527/imagesWeb/' + record.materialsImages.split(',')[0]}/>
           </a-popover>
         }
       }, {
@@ -302,6 +322,16 @@ export default {
     this.fetch()
   },
   methods: {
+    orderGet (record) {
+      this.$get('/business/order-info/setOrderStatus', { id: record.id, status: '3' }).then((r) => {
+        this.$message.success('收货成功')
+        this.fetch()
+      })
+    },
+    orderStockOpen (record) {
+      this.moduleStock.data = record
+      this.moduleStock.visiable = true
+    },
     orderPay (record) {
       let data = { outTradeNo: record.code, subject: `${record.createDate}缴费信息`, totalAmount: record.totalPrice, body: '' }
       this.$post('/business/pay/alipay', data).then((r) => {
@@ -318,6 +348,18 @@ export default {
         document.forms[0].setAttribute('target', '_self') // 新开窗口跳转
         document.forms[0].submit()
       })
+    },
+    handleModuleStockOpen (row) {
+      this.moduleStock.data = row
+      this.moduleStock.visiable = true
+    },
+    handleModuleStockSuccess () {
+      this.moduleStock.visiable = false
+      this.$message.success('操作成功')
+      this.fetch()
+    },
+    handleModuleStockClose () {
+      this.moduleStock.visiable = false
     },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
