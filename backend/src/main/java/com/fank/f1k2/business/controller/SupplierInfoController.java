@@ -3,13 +3,10 @@ package com.fank.f1k2.business.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.fank.f1k2.business.entity.SupplierAuditRecord;
-import com.fank.f1k2.business.service.IOrderInfoService;
-import com.fank.f1k2.business.service.ISupplierAuditRecordService;
+import com.fank.f1k2.business.entity.*;
+import com.fank.f1k2.business.service.*;
 import com.fank.f1k2.common.utils.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fank.f1k2.business.entity.SupplierInfo;
-import com.fank.f1k2.business.service.ISupplierInfoService;
 import com.fank.f1k2.system.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +33,92 @@ public class SupplierInfoController {
     private final ISupplierAuditRecordService supplierAuditRecordService;
 
     private final UserService userService;
+
+    private final ISupplierMainService supplierMainService;
+
+    private final ISupplierContactService supplierContactService;
+
+    private final ISupplierFinanceService supplierFinanceService;
+
+    private final ISupplierPerformanceService supplierPerformanceService;
+
+    private final ISupplierQualificationService supplierQualificationService;
+
+    /**
+     * 查询供应商信息
+     *
+     * @param supplierUserId 供应商用户ID
+     * @return 供应商信息
+     */
+    @ApiOperation(value = "查询供应商信息", notes = "通过ID查询供应商信息")
+    @GetMapping("/querySupplierMainById")
+    public R querySupplierMainById(Integer supplierUserId) {
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, supplierUserId));
+        if (supplierInfo == null) {
+            return R.ok();
+        }
+        return R.ok(supplierMainService.getOne(Wrappers.<SupplierMain>lambdaQuery().eq(SupplierMain::getSupplierId, supplierInfo.getId())));
+    }
+
+    /**
+     * 获取供应商资质信息
+     *
+     * @param supplierUserId 供应商用户ID
+     * @return 供应商资质信息
+     */
+    @GetMapping("/querySupplierQualification")
+    public R querySupplierQualification(Integer supplierUserId) {
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, supplierUserId));
+        if (supplierInfo == null) {
+            return R.ok();
+        }
+        return R.ok(supplierQualificationService.list(Wrappers.<SupplierQualification>lambdaQuery().eq(SupplierQualification::getSupplierId, supplierInfo.getId())));
+    }
+
+    /**
+     * 获取供应商绩效信息
+     *
+     * @param supplierUserId 供应商用户ID
+     * @return 供应商绩效信息
+     */
+    @GetMapping("/querySupplierPerformance")
+    public R querySupplierPerformance(Integer supplierUserId) {
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, supplierUserId));
+        if (supplierInfo == null) {
+            return R.ok();
+        }
+        return R.ok(supplierPerformanceService.getOne(Wrappers.<SupplierPerformance>lambdaQuery().eq(SupplierPerformance::getSupplierId, supplierInfo.getId())));
+    }
+
+    /**
+     * 查询供应商财务信息
+     *
+     * @param supplierUserId 供应商用户ID
+     * @return 供应商财务信息
+     */
+    @GetMapping("/querySupplierFinance")
+    public R querySupplierFinance(Integer supplierUserId) {
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, supplierUserId));
+        if (supplierInfo == null) {
+            return R.ok();
+        }
+        return R.ok(supplierFinanceService.getOne(Wrappers.<SupplierFinance>lambdaQuery().eq(SupplierFinance::getSupplierId, supplierInfo.getId())));
+    }
+
+    /**
+     * 查询供应商联系人信息
+     *
+     * @param supplierUserId 供应商用户ID
+     * @return 供应商联系人信息
+     */
+    @GetMapping("/querySupplierContact")
+    public R querySupplierContact(Integer supplierUserId) {
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, supplierUserId));
+        if (supplierInfo == null) {
+            return R.ok(Collections.emptyList());
+        }
+        return R.ok(supplierContactService.list(Wrappers.<SupplierContact>lambdaQuery().eq(SupplierContact::getSupplierId, supplierInfo.getId())));
+    }
 
     /**
      * 分页获取供应商信息

@@ -89,6 +89,24 @@ public interface UserService extends IService<User> {
     /**
      * 注册员工
      *
+     * @param username 用户名
+     * @param password 密码
+     * @param staffName 员工姓名
+     */
+    void registStaff(String username, String password, String staffName) throws Exception;
+
+    /**
+     * 注册供应商
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param supplierName 供应商名称
+     */
+    void registSupplier(String username, String password, String supplierName) throws Exception;
+
+    /**
+     * 注册员工
+     *
      * @param staffInfo 员工信息
      */
     void registerStaff(StaffInfo staffInfo) throws Exception;

@@ -1,9 +1,12 @@
 package com.fank.f1k2.system.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.fank.f1k2.business.entity.StaffInfo;
 import com.fank.f1k2.business.entity.SupplierInfo;
+import com.fank.f1k2.business.entity.SupplierMain;
 import com.fank.f1k2.business.service.IStaffInfoService;
 import com.fank.f1k2.business.service.ISupplierInfoService;
+import com.fank.f1k2.business.service.ISupplierMainService;
 import com.fank.f1k2.common.domain.F1k2Constant;
 import com.fank.f1k2.common.domain.QueryRequest;
 import com.fank.f1k2.common.service.CacheService;
@@ -53,6 +56,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private ISupplierInfoService supplierInfoService;
+
+    @Autowired
+    private ISupplierMainService supplierMainService;
 
 
     @Override
@@ -193,6 +199,85 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 将用户相关信息保存到 Redis中
         userManager.loadUserRedisCache(user);
 
+    }
+
+    /**
+     * 注册员工
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param staffName 员工姓名
+     */
+    @Override
+    public void registStaff(String username, String password, String staffName) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册员工");
+        this.save(user);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(75L);
+        this.userRoleMapper.insert(ur);
+
+        StaffInfo staffInfo = new StaffInfo();
+        staffInfo.setCode("STF-" + System.currentTimeMillis());
+        staffInfo.setName(staffName);
+        staffInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        staffInfo.setSysUserId(Math.toIntExact(user.getUserId()));
+        staffInfo.setDelFlag("0");
+        staffInfoService.save(staffInfo);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
+    }
+
+    /**
+     * 注册供应商
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param supplierName 供应商名称
+     */
+    @Override
+    public void registSupplier(String username, String password, String supplierName) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册供应商");
+        this.save(user);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(76L);
+        this.userRoleMapper.insert(ur);
+
+        SupplierInfo supplierInfo = new SupplierInfo();
+        supplierInfo.setCode("SUP-" + System.currentTimeMillis());
+        supplierInfo.setSysUserId(Math.toIntExact(user.getUserId()));
+        supplierInfo.setStatus("0");
+        supplierInfo.setName(supplierName);
+        supplierInfoService.save(supplierInfo);
+
+        SupplierMain supplierMain = new SupplierMain();
+        supplierMain.setSupplierId(supplierInfo.getId());
+        supplierMain.setCorpName(supplierName);
+        supplierMainService.save(supplierMain);
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
     }
 
     /**

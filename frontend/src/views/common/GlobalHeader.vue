@@ -49,6 +49,156 @@ export default {
 }
 </script>
 
+<!--<style lang="less" scoped>-->
+<!--.global-header {-->
+<!--  padding: 0;-->
+<!--  box-shadow: 0 2px 8px rgba(0, 21, 41, 0.15);-->
+<!--  position: relative;-->
+
+<!--  &.light {-->
+<!--    background: #ffffff;-->
+<!--  }-->
+
+<!--  &.dark {-->
+<!--    background: #001529;-->
+<!--  }-->
+
+<!--  .logo {-->
+<!--    height: 64px;-->
+<!--    line-height: 64px;-->
+<!--    vertical-align: top;-->
+<!--    display: flex;-->
+<!--    align-items: center;-->
+<!--    padding: 0 24px;-->
+<!--    cursor: pointer;-->
+<!--    font-size: 20px;-->
+<!--    transition: all 0.3s;-->
+
+<!--    &.pc {-->
+<!--      padding: 0 24px;-->
+<!--    }-->
+
+<!--    &:hover {-->
+<!--      background: rgba(0, 0, 0, 0.025);-->
+<!--    }-->
+
+<!--    img {-->
+<!--      display: inline-block;-->
+<!--      vertical-align: middle;-->
+<!--      border-radius: 4px;-->
+<!--    }-->
+
+<!--    h1 {-->
+<!--      display: inline-block;-->
+<!--      font-size: 18px;-->
+<!--      font-weight: 600;-->
+<!--      margin-left: 12px;-->
+<!--    }-->
+
+<!--    &.dark h1 {-->
+<!--      color: #fff;-->
+<!--    }-->
+
+<!--    .trigger {-->
+<!--      font-size: 20px;-->
+<!--      line-height: 64px;-->
+<!--      padding: 0 24px;-->
+<!--      cursor: pointer;-->
+<!--      transition: all 0.3s;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      height: 100%;-->
+
+<!--      &:hover {-->
+<!--        background: rgba(0, 0, 0, 0.025);-->
+<!--      }-->
+
+<!--      .dark &:hover {-->
+<!--        background: rgba(255, 255, 255, 0.05);-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+
+<!--  .global-header-right {-->
+<!--    float: right;-->
+<!--    height: 100%;-->
+<!--    display: flex;-->
+<!--    align-items: center;-->
+
+<!--    &.dark {-->
+<!--      color: #fff;-->
+
+<!--      i {-->
+<!--        color: #fff;-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+
+<!--  .header-item {-->
+<!--    padding: 0 20px;-->
+<!--    display: flex;-->
+<!--    align-items: center;-->
+<!--    height: 100%;-->
+<!--    cursor: pointer;-->
+<!--    transition: all 0.3s;-->
+
+<!--    &:hover {-->
+<!--      background: rgba(0, 0, 0, 0.025);-->
+<!--    }-->
+
+<!--    .dark &:hover {-->
+<!--      background: rgba(255, 255, 255, 0.05);-->
+<!--    }-->
+
+<!--    i {-->
+<!--      font-size: 16px;-->
+<!--      color: rgba(0, 0, 0, 0.65);-->
+<!--    }-->
+<!--  }-->
+
+<!--  @media (max-width: 768px) {-->
+<!--    .global-header-wide {-->
+<!--      padding: 0 12px;-->
+<!--    }-->
+
+<!--    .logo {-->
+<!--      padding: 0 12px;-->
+
+<!--      h1 {-->
+<!--        font-size: 16px;-->
+<!--        margin-left: 8px;-->
+<!--      }-->
+<!--    }-->
+
+<!--    .trigger {-->
+<!--      padding: 0 16px;-->
+<!--    }-->
+
+<!--    .header-item {-->
+<!--      padding: 0 12px;-->
+<!--    }-->
+<!--  }-->
+
+<!--  .ant-header-fixedHeader {-->
+<!--    position: fixed;-->
+<!--    top: 0;-->
+<!--    right: 0;-->
+<!--    z-index: 15;-->
+<!--    width: 100%;-->
+<!--    transition: width 0.2s, padding-left 0.2s;-->
+
+<!--    &.ant-header-side-opened {-->
+<!--      width: calc(100% - 256px);-->
+<!--      padding-left: 256px;-->
+<!--    }-->
+
+<!--    &.ant-header-side-closed {-->
+<!--      width: calc(100% - 80px);-->
+<!--      padding-left: 80px;-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+</style>
 <style lang="less" scoped>
   .trigger {
     font-size: 20px;

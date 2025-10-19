@@ -17,10 +17,11 @@
 import GlobalFooter from '../common/GlobalFooter'
 import Login from './Login'
 import Regist from './Regist'
+import RegistStaff from './RegistStaff'
 
 export default {
   name: 'Common',
-  components: {GlobalFooter, Login, Regist},
+  components: {GlobalFooter, Login, Regist, RegistStaff},
   data () {
     return {
       componentName: 'Login'

@@ -26,9 +26,9 @@
             登录
           </a-button>
         </a-form-item>
-<!--        <div>-->
-<!--          <a style="float: right" @click="regist">注册账户</a>-->
-<!--        </div>-->
+        <div>
+         <a style="float: right;margin-left: 15px" @click="registStaff">注册员工</a><a style="float: right" @click="regist">注册供应商</a>
+        </div>
       </a-form>
     </div>
   </a-card>
@@ -93,6 +93,9 @@ export default {
     },
     regist () {
       this.$emit('regist', 'Regist')
+    },
+    registStaff () {
+      this.$emit('regist', 'RegistStaff')
     },
     getCaptcha () {
       this.$message.warning('暂未开发')
