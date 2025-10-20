@@ -1,11 +1,16 @@
 package com.fank.f1k2.business.entity;
 
 import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.time.LocalDate;
+
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -25,8 +30,8 @@ public class SupplierMain implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-    * 主键ID
-    */
+     * 主键ID
+     */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -34,7 +39,7 @@ public class SupplierMain implements Serializable {
     /**
      * 供应商ID（主键）
      */
-            @TableId(value = "supplier_id", type = IdType.AUTO)
+    @TableId(value = "supplier_id", type = IdType.AUTO)
     private Integer supplierId;
 
     /**
@@ -115,7 +120,7 @@ public class SupplierMain implements Serializable {
     /**
      * 企业成立时间
      */
-    private LocalDate establishDate;
+    private String establishDate;
 
     /**
      * 企业规模
@@ -150,7 +155,7 @@ public class SupplierMain implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createdAt;
+    private String createdAt;
 
 
 }

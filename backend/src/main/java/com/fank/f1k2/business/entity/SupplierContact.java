@@ -2,7 +2,9 @@ package com.fank.f1k2.business.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,8 +24,8 @@ public class SupplierContact implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-    * 主键ID
-    */
+     * 主键ID
+     */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -31,7 +33,7 @@ public class SupplierContact implements Serializable {
     /**
      * 联系人ID（主键）
      */
-            @TableId(value = "contact_id", type = IdType.AUTO)
+    @TableId(value = "contact_id", type = IdType.AUTO)
     private Integer contactId;
 
     /**

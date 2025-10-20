@@ -45,6 +45,39 @@ public class SupplierInfoController {
     private final ISupplierQualificationService supplierQualificationService;
 
     /**
+     * 供应商详情
+     *
+     * @param supplierUserId 供应商用户ID
+     * @return 供应商详情
+     */
+    @GetMapping("/querySupplierDetail")
+    @ApiOperation(value = "供应商详情", notes = "通过ID获取供应商详细信息")
+    public R querySupplierDetail(Integer supplierUserId) {
+        SupplierInfo supplierInfo = supplierInfoService.getOne(Wrappers.<SupplierInfo>lambdaQuery().eq(SupplierInfo::getSysUserId, supplierUserId));
+        if (supplierInfo == null) {
+            return R.ok();
+        }
+        // 返回数据
+
+        SupplierMain supplierMain = supplierMainService.getOne(Wrappers.<SupplierMain>lambdaQuery().eq(SupplierMain::getSupplierId, supplierInfo.getId()));
+        List<SupplierQualification> qualificationList = supplierQualificationService.list(Wrappers.<SupplierQualification>lambdaQuery().eq(SupplierQualification::getSupplierId, supplierInfo.getId()));
+        List<SupplierPerformance> performanceList = supplierPerformanceService.list(Wrappers.<SupplierPerformance>lambdaQuery().eq(SupplierPerformance::getSupplierId, supplierInfo.getId()));
+        List<SupplierFinance> financeList = supplierFinanceService.list(Wrappers.<SupplierFinance>lambdaQuery().eq(SupplierFinance::getSupplierId, supplierInfo.getId()));
+        List<SupplierContact> contactList = supplierContactService.list(Wrappers.<SupplierContact>lambdaQuery().eq(SupplierContact::getSupplierId, supplierInfo.getId()));
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("supplierInfo", supplierInfo);
+                put("supplierMain", supplierMain);
+                put("qualificationList", qualificationList);
+                put("performanceList", performanceList);
+                put("financeList", financeList);
+                put("contactList", contactList);
+            }
+        };
+        return R.ok(result);
+    }
+
+    /**
      * 查询供应商信息
      *
      * @param supplierUserId 供应商用户ID

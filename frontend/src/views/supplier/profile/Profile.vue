@@ -9,22 +9,22 @@
             <a-row :gutter="16">
               <a-col :span="6">
                 <a-form-item label="企业名称">
-                  <a-input v-decorator="['corp_name', { rules: [{ required: true, message: '请输入企业名称' }] }]" />
+                  <a-input v-decorator="['corpName', { rules: [{ required: true, message: '请输入企业名称' }] }]" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="公司法人">
-                  <a-input v-decorator="['legal_person']" />
+                  <a-input v-decorator="['legalPerson']" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="联系方式">
-                  <a-input v-decorator="['contact_info']" />
+                  <a-input v-decorator="['contactInfo']" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="注册资本 (万元)">
-                  <a-input-number v-decorator="['reg_capital']" style="width: 100%" />
+                  <a-input-number v-decorator="['regCapital']" style="width: 100%" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -32,17 +32,17 @@
             <a-row :gutter="16">
               <a-col :span="6">
                 <a-form-item label="营业执照号码">
-                  <a-input v-decorator="['license_num']" />
+                  <a-input v-decorator="['licenseNum']" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="行业类别">
-                  <a-input v-decorator="['industry_type']" />
+                  <a-input v-decorator="['industryType']" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="业务性质">
-                  <a-select v-decorator="['business_nature']">
+                  <a-select v-decorator="['businessNature']">
                     <a-select-option value="生产企业">生产企业</a-select-option>
                     <a-select-option value="销售公司">销售公司</a-select-option>
                     <a-select-option value="服务机构">服务机构</a-select-option>
@@ -51,7 +51,7 @@
               </a-col>
               <a-col :span="6">
                 <a-form-item label="资本类型">
-                  <a-select v-decorator="['capital_type']">
+                  <a-select v-decorator="['capitalType']">
                     <a-select-option value="有限责任公司">有限责任公司</a-select-option>
                     <a-select-option value="股份公司">股份公司</a-select-option>
                   </a-select>
@@ -60,32 +60,32 @@
             </a-row>
 
             <a-form-item label="股权结构情况">
-              <a-textarea v-decorator="['equity_structure']" :rows="3" />
+              <a-textarea v-decorator="['equityStructure']" :rows="3" />
             </a-form-item>
 
             <a-form-item label="主要经营范围">
-              <a-textarea v-decorator="['business_scope']" :rows="3" />
+              <a-textarea v-decorator="['businessScope']" :rows="3" />
             </a-form-item>
 
             <a-row :gutter="16">
               <a-col :span="6">
                 <a-form-item label="是否有进出口业务">
-                  <a-switch v-decorator="['has_import_export']" checked-children="是" un-checked-children="否" />
+                  <a-switch v-decorator="['hasImportExport']" checked-children="是" un-checked-children="否" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="进出口模式">
-                  <a-input v-decorator="['ie_mode']" />
+                  <a-input v-decorator="['ieMode']" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="企业注册地址">
-                  <a-input v-decorator="['reg_address']" />
+                  <a-input v-decorator="['regAddress']" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="邮政编码">
-                  <a-input v-decorator="['post_code']" />
+                  <a-input v-decorator="['postCode']" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -98,7 +98,7 @@
               </a-col>
               <a-col :span="6">
                 <a-form-item label="企业成立时间">
-                  <a-date-picker v-decorator="['establish_date']" style="width: 100%" />
+                  <a-date-picker v-decorator="['establishDate']" style="width: 100%" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
@@ -108,7 +108,7 @@
               </a-col>
               <a-col :span="6">
                 <a-form-item label="参保人数">
-                  <a-input-number v-decorator="['insured_num']" style="width: 100%" />
+                  <a-input-number v-decorator="['insuredNum']" style="width: 100%" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -116,18 +116,18 @@
             <a-row :gutter="16">
               <a-col :span="6">
                 <a-form-item label="年产值 (万人民币)">
-                  <a-input-number v-decorator="['annual_output']" style="width: 100%" />
+                  <a-input-number v-decorator="['annualOutput']" style="width: 100%" />
                 </a-form-item>
               </a-col>
               <a-col :span="6">
                 <a-form-item label="年销售额 (万人民币)">
-                  <a-input-number v-decorator="['annual_sales']" style="width: 100%" />
+                  <a-input-number v-decorator="['annualSales']" style="width: 100%" />
                 </a-form-item>
               </a-col>
             </a-row>
 
             <a-form-item label="公司简介">
-              <a-textarea v-decorator="['corp_profile']" :rows="4" />
+              <a-textarea v-decorator="['corpProfile']" :rows="4" />
             </a-form-item>
 
             <a-form-item>
@@ -357,8 +357,17 @@
   </a-card>
 </template>
 
-<script>export default {
+<script>
+import {mapState} from 'vuex'
+import moment from 'moment'
+moment.locale('zh-cn')
+export default {
   name: 'SupplierManagement',
+  computed: {
+    ...mapState({
+      currentUser: state => state.account.user
+    })
+  },
   data () {
     return {
       // 主要表单
@@ -423,21 +432,71 @@
         { title: '有效期至', dataIndex: 'expiry_date', key: 'expiry_date' },
         { title: '类型', dataIndex: 'type', key: 'type' },
         { title: '操作', key: 'action', scopedSlots: { customRender: 'action' } }
-      ]
+      ],
+      supplierMain: null,
+      supplierQualificationList: [],
+      supplierPerformanceList: [],
+      supplierFinanceList: [],
+      supplierContactList: []
     }
+  },
+  mounted () {
+    this.querySupplierMainById()
+    this.querySupplierQualification()
+    this.querySupplierPerformance()
+    this.querySupplierFinance()
+    this.querySupplierContact()
   },
   methods: {
     querySupplierMainById () {
-      this.$get('/business/supplier-info/list').then((r) => {
-        this.staffList = r.data.data
+      this.$get('/business/supplier-info/querySupplierMainById', {supplierUserId: this.currentUser.userId}).then((r) => {
+        this.supplierMain = r.data.data
+      })
+    },
+    setFormValues ({...supplier}) {
+      this.rowId = supplier.id
+      let fields = ['corpName', 'legalPerson', 'contactInfo','regCapital', 'licenseNum','industryType', 'businessNature','capitalType', 'equityStructure','businessScope', 'hasImportExport','ieMode', 'regAddress','postCode', 'website','establishDate', 'scale','insuredNum', 'annualOutput','annualSales', 'corpProfile','requiredCerts', '','', '','', '']
+      let obj = {}
+      Object.keys(supplier).forEach((key) => {
+        if (fields.indexOf(key) !== -1) {
+          this.form.getFieldDecorator(key)
+          obj[key] = supplier[key]
+        }
+      })
+      this.mainForm.setFieldsValue(obj)
+    },
+    querySupplierQualification () {
+      this.$get('/business/supplier-info/querySupplierQualification', {supplierUserId: this.currentUser.userId}).then((r) => {
+        this.qualificationData = r.data.data
+      })
+    },
+    querySupplierPerformance () {
+      this.$get('/business/supplier-info/querySupplierPerformance', {supplierUserId: this.currentUser.userId}).then((r) => {
+        this.performanceData = r.data.data
+      })
+    },
+    querySupplierFinance () {
+      this.$get('/business/supplier-info/querySupplierFinance', {supplierUserId: this.currentUser.userId}).then((r) => {
+        this.financeData = r.data.data
+      })
+    },
+    querySupplierContact () {
+      this.$get('/business/supplier-info/querySupplierContact', {supplierUserId: this.currentUser.userId}).then((r) => {
+        this.contactData = r.data.data
       })
     },
     // 保存基本信息
     saveMainInfo () {
       this.mainForm.validateFields((err, values) => {
         if (!err) {
+          values.id = this.supplierMain.id
           console.log('基本信息:', values)
-          this.$message.success('基本信息保存成功')
+          this.$put('/business/supplier-main', {
+            ...values
+          }).then((r) => {
+            this.$message.success('基本信息保存成功')
+            this.querySupplierMainById()
+          })
         }
       })
     },
@@ -456,8 +515,11 @@
     },
 
     deleteContact (record) {
-      this.contactData = this.contactData.filter(item => item.contact_id !== record.contact_id)
-      this.$message.success('删除成功')
+      // this.contactData = this.contactData.filter(item => item.contact_id !== record.contact_id)
+      this.$delete('/business/supplier-contact/' + record.id).then(() => {
+        this.$message.success('删除成功')
+        this.querySupplierContact()
+      })
     },
 
     saveContact () {
@@ -465,12 +527,22 @@
         if (!err) {
           if (this.editingContact) {
             // 编辑
-            const index = this.contactData.findIndex(item => item.contact_id === this.editingContact.contact_id)
-            this.contactData.splice(index, 1, { ...values, contact_id: this.editingContact.contact_id })
+            this.$put('/business/supplier-contact', {
+              ...values,
+            }).then(() => {
+              this.querySupplierContact()
+            })
+            // const index = this.contactData.findIndex(item => item.contact_id === this.editingContact.contact_id)
+            // this.contactData.splice(index, 1, { ...values, contact_id: this.editingContact.contact_id })
           } else {
             // 新增
-            const newContact = { ...values, contact_id: Date.now() }
-            this.contactData.push(newContact)
+            this.$post('/business/supplier-contact', {
+              ...values,
+            }).then(() => {
+              this.querySupplierContact()
+            })
+            // const newContact = { ...values, contact_id: Date.now() }
+            // this.contactData.push(newContact)
           }
           this.closeContactModal()
           this.$message.success('保存成功')
@@ -497,8 +569,11 @@
     },
 
     deleteFinance (record) {
-      this.financeData = this.financeData.filter(item => item.finance_id !== record.finance_id)
-      this.$message.success('删除成功')
+      // this.financeData = this.financeData.filter(item => item.finance_id !== record.finance_id)
+      this.$delete('/business/supplier-finance/' + record.id).then(() => {
+        this.$message.success('删除成功')
+        this.querySupplierFinance()
+      })
     },
 
     saveFinance () {
@@ -506,12 +581,22 @@
         if (!err) {
           if (this.editingFinance) {
             // 编辑
-            const index = this.financeData.findIndex(item => item.finance_id === this.editingFinance.finance_id)
-            this.financeData.splice(index, 1, { ...values, finance_id: this.editingFinance.finance_id })
+            // const index = this.financeData.findIndex(item => item.finance_id === this.editingFinance.finance_id)
+            // this.financeData.splice(index, 1, { ...values, finance_id: this.editingFinance.finance_id })
+            this.$put('/business/supplier-finance', {
+              ...values,
+            }).then(() => {
+              this.querySupplierFinance()
+            })
           } else {
             // 新增
-            const newFinance = { ...values, finance_id: Date.now() }
-            this.financeData.push(newFinance)
+            // const newFinance = { ...values, finance_id: Date.now() }
+            // this.financeData.push(newFinance)
+            this.$post('/business/supplier-finance', {
+              ...values,
+            }).then(() => {
+              this.querySupplierFinance()
+            })
           }
           this.closeFinanceModal()
           this.$message.success('保存成功')
@@ -538,8 +623,11 @@
     },
 
     deletePerformance (record) {
-      this.performanceData = this.performanceData.filter(item => item.performance_id !== record.performance_id)
-      this.$message.success('删除成功')
+      // this.performanceData = this.performanceData.filter(item => item.performance_id !== record.performance_id)
+      this.$delete('/business/supplier-performance/' + record.id).then(() => {
+        this.$message.success('删除成功')
+        this.querySupplierPerformance()
+      })
     },
 
     savePerformance () {
@@ -547,12 +635,22 @@
         if (!err) {
           if (this.editingPerformance) {
             // 编辑
-            const index = this.performanceData.findIndex(item => item.performance_id === this.editingPerformance.performance_id)
-            this.performanceData.splice(index, 1, { ...values, performance_id: this.editingPerformance.performance_id })
+            // const index = this.performanceData.findIndex(item => item.performance_id === this.editingPerformance.performance_id)
+            // this.performanceData.splice(index, 1, { ...values, performance_id: this.editingPerformance.performance_id })
+            this.$put('/business/supplier-performance', {
+              ...values,
+            }).then(() => {
+              this.querySupplierPerformance()
+            })
           } else {
             // 新增
-            const newPerformance = { ...values, performance_id: Date.now() }
-            this.performanceData.push(newPerformance)
+            // const newPerformance = { ...values, performance_id: Date.now() }
+            // this.performanceData.push(newPerformance)
+            this.$post('/business/supplier-performance', {
+              ...values,
+            }).then(() => {
+              this.querySupplierPerformance()
+            })
           }
           this.closePerformanceModal()
           this.$message.success('保存成功')
@@ -579,8 +677,10 @@
     },
 
     deleteQualification (record) {
-      this.qualificationData = this.qualificationData.filter(item => item.qual_id !== record.qual_id)
-      this.$message.success('删除成功')
+      this.$delete('/business/supplier-qualification/' + record.id).then(() => {
+        this.$message.success('删除成功')
+        this.querySupplierQualification()
+      })
     },
 
     saveQualification () {
@@ -588,12 +688,22 @@
         if (!err) {
           if (this.editingQualification) {
             // 编辑
-            const index = this.qualificationData.findIndex(item => item.qual_id === this.editingQualification.qual_id)
-            this.qualificationData.splice(index, 1, { ...values, qual_id: this.editingQualification.qual_id })
+            // const index = this.qualificationData.findIndex(item => item.qual_id === this.editingQualification.qual_id)
+            // this.qualificationData.splice(index, 1, { ...values, qual_id: this.editingQualification.qual_id })
+            this.$put('/business/supplier-qualification', {
+              ...values,
+            }).then(() => {
+              this.querySupplierQualification()
+            })
           } else {
             // 新增
-            const newQualification = { ...values, qual_id: Date.now() }
-            this.qualificationData.push(newQualification)
+            // const newQualification = { ...values, qual_id: Date.now() }
+            // this.qualificationData.push(newQualification)
+            this.$post('/business/supplier-qualification', {
+              ...values,
+            }).then(() => {
+              this.querySupplierQualification()
+            })
           }
           this.closeQualificationModal()
           this.$message.success('保存成功')
