@@ -28,10 +28,6 @@ public class SupplierQualification implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-
-            @TableId(value = "qual_id", type = IdType.AUTO)
-    private Integer qualId;
-
     private Integer supplierId;
 
     /**
@@ -52,12 +48,12 @@ public class SupplierQualification implements Serializable {
     /**
      * 签发日期
      */
-    private LocalDate issueDate;
+    private String issueDate;
 
     /**
      * 有效期至
      */
-    private LocalDate expiryDate;
+    private String expiryDate;
 
     /**
      * 类型（认证/专利/授权代理）

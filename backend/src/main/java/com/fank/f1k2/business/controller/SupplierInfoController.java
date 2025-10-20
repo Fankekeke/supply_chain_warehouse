@@ -44,6 +44,10 @@ public class SupplierInfoController {
 
     private final ISupplierQualificationService supplierQualificationService;
 
+    private final IOrderInfoService orderInfoService;
+
+    private final ISupplierEvaluateService evaluateService;
+
     /**
      * 供应商详情
      *
@@ -58,7 +62,6 @@ public class SupplierInfoController {
             return R.ok();
         }
         // 返回数据
-
         SupplierMain supplierMain = supplierMainService.getOne(Wrappers.<SupplierMain>lambdaQuery().eq(SupplierMain::getSupplierId, supplierInfo.getId()));
         List<SupplierQualification> qualificationList = supplierQualificationService.list(Wrappers.<SupplierQualification>lambdaQuery().eq(SupplierQualification::getSupplierId, supplierInfo.getId()));
         List<SupplierPerformance> performanceList = supplierPerformanceService.list(Wrappers.<SupplierPerformance>lambdaQuery().eq(SupplierPerformance::getSupplierId, supplierInfo.getId()));
@@ -72,6 +75,8 @@ public class SupplierInfoController {
                 put("performanceList", performanceList);
                 put("financeList", financeList);
                 put("contactList", contactList);
+                put("orderList", orderInfoService.queryListBySupplier(supplierUserId));
+                put("evaluateList", evaluateService.list(Wrappers.<SupplierEvaluate>lambdaQuery().eq(SupplierEvaluate::getSupplierId, supplierInfo.getId())));
             }
         };
         return R.ok(result);
@@ -120,7 +125,7 @@ public class SupplierInfoController {
         if (supplierInfo == null) {
             return R.ok();
         }
-        return R.ok(supplierPerformanceService.getOne(Wrappers.<SupplierPerformance>lambdaQuery().eq(SupplierPerformance::getSupplierId, supplierInfo.getId())));
+        return R.ok(supplierPerformanceService.list(Wrappers.<SupplierPerformance>lambdaQuery().eq(SupplierPerformance::getSupplierId, supplierInfo.getId())));
     }
 
     /**
@@ -135,7 +140,7 @@ public class SupplierInfoController {
         if (supplierInfo == null) {
             return R.ok();
         }
-        return R.ok(supplierFinanceService.getOne(Wrappers.<SupplierFinance>lambdaQuery().eq(SupplierFinance::getSupplierId, supplierInfo.getId())));
+        return R.ok(supplierFinanceService.list(Wrappers.<SupplierFinance>lambdaQuery().eq(SupplierFinance::getSupplierId, supplierInfo.getId())));
     }
 
     /**

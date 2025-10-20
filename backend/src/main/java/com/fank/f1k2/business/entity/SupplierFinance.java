@@ -29,13 +29,6 @@ public class SupplierFinance implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-
-    /**
-     * 财务记录ID（主键）
-     */
-            @TableId(value = "finance_id", type = IdType.AUTO)
-    private Integer financeId;
-
     /**
      * 供应商ID（外键）
      */

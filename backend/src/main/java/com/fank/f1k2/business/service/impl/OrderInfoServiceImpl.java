@@ -66,6 +66,17 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     /**
+     * 供应商订单数据
+     *
+     * @param supplierId 供应商ID
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryListBySupplier(Integer supplierId) {
+        return baseMapper.queryListBySupplier(supplierId);
+    }
+
+    /**
      * 设置采购订单状态
      *
      * @param id     主键ID

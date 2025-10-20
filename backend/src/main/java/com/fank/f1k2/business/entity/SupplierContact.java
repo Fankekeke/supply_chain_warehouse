@@ -29,13 +29,6 @@ public class SupplierContact implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-
-    /**
-     * 联系人ID（主键）
-     */
-    @TableId(value = "contact_id", type = IdType.AUTO)
-    private Integer contactId;
-
     /**
      * 供应商ID（外键）
      */

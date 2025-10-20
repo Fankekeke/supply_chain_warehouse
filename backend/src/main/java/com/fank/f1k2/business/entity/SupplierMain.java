@@ -39,7 +39,6 @@ public class SupplierMain implements Serializable {
     /**
      * 供应商ID（主键）
      */
-    @TableId(value = "supplier_id", type = IdType.AUTO)
     private Integer supplierId;
 
     /**

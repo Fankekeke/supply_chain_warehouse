@@ -174,7 +174,7 @@
               </a-form-item>
 
               <a-form-item label="联系方式">
-                <a-input v-decorator="['contact_num']" />
+                <a-input v-decorator="['contactNum']" />
               </a-form-item>
 
               <a-form-item label="电子邮箱">
@@ -209,19 +209,19 @@
           <a-modal title="财务信息" :visible="financeModalVisible" @ok="saveFinance" @cancel="closeFinanceModal">
             <a-form :form="financeForm">
               <a-form-item label="年份">
-                <a-year-picker v-decorator="['year', { rules: [{ required: true, message: '请选择年份' }] }]" style="width: 100%" />
+                <a-input-number v-decorator="['year', { rules: [{ required: true, message: '请选择年份' }] }]" style="width: 100%" />
               </a-form-item>
 
               <a-form-item label="收入总额 (万人民币)">
-                <a-input-number v-decorator="['total_revenue']" style="width: 100%" />
+                <a-input-number v-decorator="['totalRevenue']" style="width: 100%" />
               </a-form-item>
 
               <a-form-item label="净利润总额 (万人民币)">
-                <a-input-number v-decorator="['net_profit']" style="width: 100%" />
+                <a-input-number v-decorator="['netProfit']" style="width: 100%" />
               </a-form-item>
 
               <a-form-item label="其他财务数据">
-                <a-textarea v-decorator="['other_data']" :rows="3" />
+                <a-textarea v-decorator="['otherData']" :rows="3" />
               </a-form-item>
             </a-form>
           </a-modal>
@@ -258,18 +258,18 @@
               <a-row :gutter="16">
                 <a-col :span="12">
                   <a-form-item label="销售额 (万人民币)">
-                    <a-input-number v-decorator="['sales_amount']" style="width: 100%" />
+                    <a-input-number v-decorator="['salesAmount']" style="width: 100%" />
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
                   <a-form-item label="占总销售额百分比">
-                    <a-input-number v-decorator="['sales_percentage']" style="width: 100%" />
+                    <a-input-number v-decorator="['salesPercentage']" style="width: 100%" />
                   </a-form-item>
                 </a-col>
               </a-row>
 
               <a-form-item label="优势概述/产品说明">
-                <a-textarea v-decorator="['advantage_overview']" :rows="3" />
+                <a-textarea v-decorator="['advantageOverview']" :rows="3" />
               </a-form-item>
 
               <a-form-item label="客户名称（仅业绩字段）">
@@ -279,12 +279,12 @@
               <a-row :gutter="16">
                 <a-col :span="12">
                   <a-form-item label="项目周期（仅业绩字段）">
-                    <a-input v-decorator="['project_cycle']" />
+                    <a-input v-decorator="['projectCycle']" />
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
                   <a-form-item label="验收状况（仅业绩字段）">
-                    <a-input v-decorator="['acceptance_status']" />
+                    <a-input v-decorator="['acceptanceStatus']" />
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -314,7 +314,7 @@
           <a-modal title="资质信息" :visible="qualificationModalVisible" @ok="saveQualification" @cancel="closeQualificationModal" width="600px">
             <a-form :form="qualificationForm">
               <a-form-item label="证书名称/类型">
-                <a-input v-decorator="['cert_name', { rules: [{ required: true, message: '请输入证书名称' }] }]" />
+                <a-input v-decorator="['certName', { rules: [{ required: true, message: '请输入证书名称' }] }]" />
               </a-form-item>
 
               <a-form-item label="认证/授予机构">
@@ -322,18 +322,18 @@
               </a-form-item>
 
               <a-form-item label="适用范围">
-                <a-input v-decorator="['apply_to']" />
+                <a-input v-decorator="['applyTo']" />
               </a-form-item>
 
               <a-row :gutter="16">
                 <a-col :span="12">
                   <a-form-item label="签发日期">
-                    <a-date-picker v-decorator="['issue_date']" style="width: 100%" />
+                    <a-date-picker v-decorator="['issueDate']" style="width: 100%" />
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
                   <a-form-item label="有效期至">
-                    <a-date-picker v-decorator="['expiry_date']" style="width: 100%" />
+                    <a-date-picker v-decorator="['expiryDate']" style="width: 100%" />
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -347,7 +347,7 @@
               </a-form-item>
 
               <a-form-item label="特点与价值（仅专利字段）">
-                <a-textarea v-decorator="['features_value']" :rows="3" />
+                <a-textarea v-decorator="['featuresValue']" :rows="3" />
               </a-form-item>
             </a-form>
           </a-modal>
@@ -405,31 +405,31 @@ export default {
         { title: '部门', dataIndex: 'department', key: 'department' },
         { title: '联系方式', dataIndex: 'contact_num', key: 'contact_num' },
         { title: '电子邮箱', dataIndex: 'email', key: 'email' },
-        { title: '类型', dataIndex: 'contact_type', key: 'contact_type' },
+        { title: '类型', dataIndex: 'contactType', key: 'contactType' },
         { title: '操作', key: 'action', scopedSlots: { customRender: 'action' } }
       ],
 
       financeColumns: [
         { title: '年份', dataIndex: 'year', key: 'year' },
-        { title: '收入总额(万元)', dataIndex: 'total_revenue', key: 'total_revenue' },
-        { title: '净利润(万元)', dataIndex: 'net_profit', key: 'net_profit' },
+        { title: '收入总额(万元)', dataIndex: 'totalRevenue', key: 'totalRevenue' },
+        { title: '净利润(万元)', dataIndex: 'netProfit', key: 'netProfit' },
         { title: '操作', key: 'action', scopedSlots: { customRender: 'action' } }
       ],
 
       performanceColumns: [
         { title: '类型', dataIndex: 'type', key: 'type' },
         { title: '名称', dataIndex: 'name', key: 'name' },
-        { title: '销售额(万元)', dataIndex: 'sales_amount', key: 'sales_amount' },
-        { title: '占比(%)', dataIndex: 'sales_percentage', key: 'sales_percentage' },
+        { title: '销售额(万元)', dataIndex: 'salesAmount', key: 'salesAmount' },
+        { title: '占比(%)', dataIndex: 'salesPercentage', key: 'salesPercentage' },
         { title: '客户', dataIndex: 'customer', key: 'customer' },
         { title: '操作', key: 'action', scopedSlots: { customRender: 'action' } }
       ],
 
       qualificationColumns: [
-        { title: '证书名称', dataIndex: 'cert_name', key: 'cert_name' },
+        { title: '证书名称', dataIndex: 'certName', key: 'certName' },
         { title: '机构', dataIndex: 'agency', key: 'agency' },
-        { title: '签发日期', dataIndex: 'issue_date', key: 'issue_date' },
-        { title: '有效期至', dataIndex: 'expiry_date', key: 'expiry_date' },
+        { title: '签发日期', dataIndex: 'issueDate', key: 'issueDate' },
+        { title: '有效期至', dataIndex: 'expiryDate', key: 'expiryDate' },
         { title: '类型', dataIndex: 'type', key: 'type' },
         { title: '操作', key: 'action', scopedSlots: { customRender: 'action' } }
       ],
@@ -451,15 +451,22 @@ export default {
     querySupplierMainById () {
       this.$get('/business/supplier-info/querySupplierMainById', {supplierUserId: this.currentUser.userId}).then((r) => {
         this.supplierMain = r.data.data
+        if (this.supplierMain) {
+          console.log(this.supplierMain)
+          this.setFormValues(this.supplierMain)
+        }
       })
     },
     setFormValues ({...supplier}) {
       this.rowId = supplier.id
-      let fields = ['corpName', 'legalPerson', 'contactInfo','regCapital', 'licenseNum','industryType', 'businessNature','capitalType', 'equityStructure','businessScope', 'hasImportExport','ieMode', 'regAddress','postCode', 'website','establishDate', 'scale','insuredNum', 'annualOutput','annualSales', 'corpProfile','requiredCerts', '','', '','', '']
+      let fields = ['corpName', 'legalPerson', 'contactInfo', 'regCapital', 'licenseNum', 'industryType', 'businessNature', 'capitalType', 'equityStructure', 'businessScope', 'hasImportExport', 'ieMode', 'regAddress', 'postCode', 'website', 'establishDate', 'scale', 'insuredNum', 'annualOutput', 'annualSales', 'corpProfile', 'requiredCerts', '', '', '', '', '']
       let obj = {}
       Object.keys(supplier).forEach((key) => {
+        if (key === 'establishDate' && supplier[key] != null) {
+          supplier[key] = moment(supplier[key])
+        }
         if (fields.indexOf(key) !== -1) {
-          this.form.getFieldDecorator(key)
+          this.mainForm.getFieldDecorator(key)
           obj[key] = supplier[key]
         }
       })
@@ -489,6 +496,12 @@ export default {
     saveMainInfo () {
       this.mainForm.validateFields((err, values) => {
         if (!err) {
+          if (values.hasImportExport !== undefined && values.establishDate) {
+            values.establishDate = moment(values.establishDate).format('YYYY-MM-DD')
+          }
+          if (values.hasImportExport !== undefined) {
+            values.hasImportExport = values.hasImportExport ? 1 : 0
+          }
           values.id = this.supplierMain.id
           console.log('基本信息:', values)
           this.$put('/business/supplier-main', {
@@ -510,8 +523,10 @@ export default {
 
     editContact (record) {
       this.editingContact = record
-      this.contactForm.setFieldsValue(record)
       this.contactModalVisible = true
+      this.$nextTick(() => {
+        this.contactForm.setFieldsValue(record)
+      })
     },
 
     deleteContact (record) {
@@ -527,8 +542,9 @@ export default {
         if (!err) {
           if (this.editingContact) {
             // 编辑
+            values.id = this.editingContact.id
             this.$put('/business/supplier-contact', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierContact()
             })
@@ -536,8 +552,9 @@ export default {
             // this.contactData.splice(index, 1, { ...values, contact_id: this.editingContact.contact_id })
           } else {
             // 新增
+            values.supplierId = this.supplierMain.supplierId
             this.$post('/business/supplier-contact', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierContact()
             })
@@ -564,8 +581,10 @@ export default {
 
     editFinance (record) {
       this.editingFinance = record
-      this.financeForm.setFieldsValue(record)
       this.financeModalVisible = true
+      this.$nextTick(() => {
+        this.financeForm.setFieldsValue(record)
+      })
     },
 
     deleteFinance (record) {
@@ -583,8 +602,9 @@ export default {
             // 编辑
             // const index = this.financeData.findIndex(item => item.finance_id === this.editingFinance.finance_id)
             // this.financeData.splice(index, 1, { ...values, finance_id: this.editingFinance.finance_id })
+            values.id = this.editingFinance.id
             this.$put('/business/supplier-finance', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierFinance()
             })
@@ -592,8 +612,9 @@ export default {
             // 新增
             // const newFinance = { ...values, finance_id: Date.now() }
             // this.financeData.push(newFinance)
+            values.supplierId = this.supplierMain.supplierId
             this.$post('/business/supplier-finance', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierFinance()
             })
@@ -618,8 +639,10 @@ export default {
 
     editPerformance (record) {
       this.editingPerformance = record
-      this.performanceForm.setFieldsValue(record)
       this.performanceModalVisible = true
+      this.$nextTick(() => {
+        this.performanceForm.setFieldsValue(record)
+      })
     },
 
     deletePerformance (record) {
@@ -637,8 +660,9 @@ export default {
             // 编辑
             // const index = this.performanceData.findIndex(item => item.performance_id === this.editingPerformance.performance_id)
             // this.performanceData.splice(index, 1, { ...values, performance_id: this.editingPerformance.performance_id })
+            values.id = this.editingPerformance.id
             this.$put('/business/supplier-performance', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierPerformance()
             })
@@ -646,8 +670,9 @@ export default {
             // 新增
             // const newPerformance = { ...values, performance_id: Date.now() }
             // this.performanceData.push(newPerformance)
+            values.supplierId = this.supplierMain.supplierId
             this.$post('/business/supplier-performance', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierPerformance()
             })
@@ -672,8 +697,10 @@ export default {
 
     editQualification (record) {
       this.editingQualification = record
-      this.qualificationForm.setFieldsValue(record)
       this.qualificationModalVisible = true
+      this.$nextTick(() => {
+        this.qualificationForm.setFieldsValue(record)
+      })
     },
 
     deleteQualification (record) {
@@ -690,8 +717,15 @@ export default {
             // 编辑
             // const index = this.qualificationData.findIndex(item => item.qual_id === this.editingQualification.qual_id)
             // this.qualificationData.splice(index, 1, { ...values, qual_id: this.editingQualification.qual_id })
+            values.id = this.editingQualification.id
+            if (values.issueDate) {
+              values.issueDate = moment(values.issueDate).format('YYYY-MM-DD')
+            }
+            if (values.expiryDate) {
+              values.expiryDate = moment(values.expiryDate).format('YYYY-MM-DD')
+            }
             this.$put('/business/supplier-qualification', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierQualification()
             })
@@ -699,8 +733,15 @@ export default {
             // 新增
             // const newQualification = { ...values, qual_id: Date.now() }
             // this.qualificationData.push(newQualification)
+            values.supplierId = this.supplierMain.supplierId
+            if (values.issueDate) {
+              values.issueDate = moment(values.issueDate).format('YYYY-MM-DD')
+            }
+            if (values.expiryDate) {
+              values.expiryDate = moment(values.expiryDate).format('YYYY-MM-DD')
+            }
             this.$post('/business/supplier-qualification', {
-              ...values,
+              ...values
             }).then(() => {
               this.querySupplierQualification()
             })

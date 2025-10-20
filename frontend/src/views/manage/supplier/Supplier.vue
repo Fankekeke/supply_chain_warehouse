@@ -65,8 +65,8 @@
                @change="handleTableChange">
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleModuleViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"
-                  style="margin-left: 15px"></a-icon>
+          <a-icon type="codepen" @click="handleModuleDetailOpen(record)" title="供货能力" style="margin-left: 15px" v-if="record.sysUserId != null"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -86,6 +86,11 @@
       :moduleShow="moduleView.visiable"
       :moduleData="moduleView.data">
     </module-view>
+    <module-detail
+      @close="handleModuleDetailClose"
+      :moduleShow="moduleDetail.visiable"
+      :moduleData="moduleDetail.data">
+    </module-detail>
   </a-card>
 </template>
 
@@ -94,6 +99,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import moduleAdd from './SupplierAdd.vue'
 import moduleEdit from './SupplierEdit.vue'
 import moduleView from './SupplierView.vue'
+import moduleDetail from './SupplierDetail.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 
@@ -101,7 +107,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'module',
-  components: {moduleAdd, moduleEdit, moduleView, RangeDate},
+  components: {moduleAdd, moduleEdit, moduleView, moduleDetail, RangeDate},
   data () {
     return {
       advanced: false,
@@ -112,6 +118,10 @@ export default {
         visiable: false
       },
       moduleView: {
+        visiable: false,
+        data: null
+      },
+      moduleDetail: {
         visiable: false,
         data: null
       },
@@ -258,6 +268,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleModuleDetailOpen (row) {
+      this.moduleDetail.data = row
+      this.moduleDetail.visiable = true
+    },
+    handleModuleDetailClose () {
+      this.moduleDetail.visiable = false
+    },
     handleModuleViewOpen (row) {
       this.moduleView.data = row
       this.moduleView.visiable = true

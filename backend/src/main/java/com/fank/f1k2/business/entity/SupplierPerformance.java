@@ -28,13 +28,6 @@ public class SupplierPerformance implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-
-    /**
-     * 记录ID（主键）
-     */
-            @TableId(value = "performance_id", type = IdType.AUTO)
-    private Integer performanceId;
-
     /**
      * 供应商ID（外键）
      */
